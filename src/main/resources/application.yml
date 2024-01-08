@@ -1,1 +1,39 @@
+spring:
+  datasource:
+    password: ${DB_PASSWORD}
+    driver-class-name: ${DB_DRIVER}
+    username: ${DB_USER}
+    url: ${DB_URL}
 
+  data:
+    redis:
+      port: ${REDIS_PORT}
+      host: ${REDIS_HOST}
+
+  jackson:
+    time-zone: Asia/Seoul
+
+  jpa:
+    properties:
+      hibernate:
+        use_sql_comments: 'true'
+        format_sql: 'true'
+        show_sql: 'true'
+    hibernate:
+      ddl-auto: create-drop
+
+# swagger
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+jwt:
+  secret:
+    key: ${JWT_KEY}
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+#    operations-sorter: method
+#    doc-expansion: none
