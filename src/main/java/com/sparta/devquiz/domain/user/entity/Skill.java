@@ -6,7 +6,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "skills")
 @Getter
 @Builder
 @AllArgsConstructor
@@ -14,7 +13,6 @@ import lombok.*;
 public class Skill extends BaseTimeEntity {
 
     @Id
-    @Column(name = "skill_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

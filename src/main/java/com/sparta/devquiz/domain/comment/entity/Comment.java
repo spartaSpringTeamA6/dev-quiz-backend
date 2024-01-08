@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "comments")
 @Getter
 @Builder
 @AllArgsConstructor
@@ -19,7 +18,6 @@ import java.util.List;
 public class Comment extends BaseTimeEntity {
 
     @Id
-    @Column(name = "comment_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -35,7 +33,8 @@ public class Comment extends BaseTimeEntity {
 
     private LocalDateTime deletedAt;
 
-    private boolean isDeleted;
+    @Column(nullable = false)
+    private Boolean isDeleted = false;
 
     @OneToMany(mappedBy = "comment")
     private List<CommentLike> commentLikeList = new ArrayList<>();

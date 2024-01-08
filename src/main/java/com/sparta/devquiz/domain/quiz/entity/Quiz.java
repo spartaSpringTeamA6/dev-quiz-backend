@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "quizzes")
 @Getter
 @Builder
 @AllArgsConstructor
@@ -17,7 +16,6 @@ import java.util.List;
 public class Quiz extends BaseTimeEntity {
 
     @Id
-    @Column(name = "quiz_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

@@ -8,7 +8,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "points")
 @Builder
 @Getter
 @AllArgsConstructor
@@ -16,7 +15,6 @@ import lombok.*;
 public class Point extends BaseTimeEntity {
 
     @Id
-    @Column(name = "point_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

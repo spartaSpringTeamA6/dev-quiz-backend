@@ -1,17 +1,16 @@
-package com.sparta.devquiz.domain.comment.entity;
+package com.sparta.devquiz.domain.team.entity;
 
 import jakarta.persistence.Embeddable;
 import java.io.Serializable;
 import java.util.Objects;
 import lombok.Getter;
 
-
 @Getter
 @Embeddable
-public class CommentLikeId implements Serializable {
+public class UserTeamId implements Serializable {
 
     private Long userId;
-    private Long commentId;
+    private Long teamId;
 
     @Override
     public boolean equals(Object o) {
@@ -21,13 +20,13 @@ public class CommentLikeId implements Serializable {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        CommentLikeId commentLikeId = (CommentLikeId) o;
-        return Objects.equals(getUserId(), commentLikeId.getUserId()) && Objects.equals(
-            getCommentId(), commentLikeId.getCommentId());
+        UserTeamId userTeamId = (UserTeamId) o;
+        return Objects.equals(getUserId(), userTeamId.getUserId()) && Objects.equals(
+            getTeamId(), userTeamId.getTeamId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getUserId(), getCommentId());
+        return Objects.hash(getUserId(), getTeamId());
     }
 }

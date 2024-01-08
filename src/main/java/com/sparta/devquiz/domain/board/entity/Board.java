@@ -8,7 +8,6 @@ import lombok.*;
 
 
 @Entity
-@Table(name = "boards")
 @Getter
 @Builder
 @AllArgsConstructor
@@ -16,7 +15,6 @@ import lombok.*;
 public class Board extends BaseTimeEntity {
 
     @Id
-    @Column(name = "board_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -35,7 +33,5 @@ public class Board extends BaseTimeEntity {
     private String content;
 
     @Column(nullable = false)
-    private boolean isDeleted = false;
-
-
+    private Boolean isDeleted = false;
 }

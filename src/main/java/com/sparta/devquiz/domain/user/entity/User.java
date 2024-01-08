@@ -2,18 +2,26 @@ package com.sparta.devquiz.domain.user.entity;
 
 import com.sparta.devquiz.domain.point.entity.Point;
 import com.sparta.devquiz.domain.quiz.entity.UserQuiz;
-import com.sparta.devquiz.domain.score.entity.Score;
 import com.sparta.devquiz.domain.user.enums.UserRole;
 import com.sparta.devquiz.global.entity.BaseTimeEntity;
-import jakarta.persistence.*;
-import lombok.*;
-
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "users")
 @Getter
 @Builder
 @AllArgsConstructor
@@ -21,11 +29,10 @@ import java.util.List;
 public class User extends BaseTimeEntity {
 
     @Id
-    @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 10)
+    @Column(nullable = false, length = 10, unique = true)
     private String nickname;
 
     @Column(nullable = false)
@@ -36,13 +43,10 @@ public class User extends BaseTimeEntity {
     private LocalDateTime deletedAt;
 
     @Column(nullable = false)
-    private Boolean isDeleted;
+    private Boolean isDeleted = false;
 
     @OneToMany(mappedBy = "user")
     private List<Skill> skillList = new ArrayList<>();
-
-    @OneToMany(mappedBy = "user")
-    private List<Score> scoreList = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
     private List<Point> pointList = new ArrayList<>();

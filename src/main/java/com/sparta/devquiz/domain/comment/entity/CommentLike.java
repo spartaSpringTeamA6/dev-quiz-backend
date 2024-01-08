@@ -6,7 +6,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "comment_likes")
 @Getter
 @Builder
 @AllArgsConstructor
@@ -16,11 +15,13 @@ public class CommentLike extends BaseTimeEntity {
     @EmbeddedId
     private CommentLikeId commentLikeId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
     @MapsId("userId")
     private User user;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "comment_id")
     @MapsId("commentId")
     private Comment comment;
 
