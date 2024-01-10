@@ -20,7 +20,7 @@ spring:
         format_sql: 'true'
         show_sql: 'true'
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
 
 # swagger
   mvc:
@@ -34,6 +34,7 @@ jwt:
 springdoc:
   swagger-ui:
     path: /swagger-ui.html
+    display-operation-id: true
     tags-sorter: alpha
 #    operations-sorter: method
 #    doc-expansion: none
