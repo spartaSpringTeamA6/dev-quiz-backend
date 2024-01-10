@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 public class BoardService {
 
     private final BoardRepository boardRepository;
-    private final UserRepository userRepository;
+
     private final QuizRepository quizRepository;
 
     @Transactional
