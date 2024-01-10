@@ -29,7 +29,7 @@ public class BoardController {
                                                                                  @Valid @RequestBody BoardRequestDto boardRequestDto,
                                                                                  @AuthUser User user) {
 
-        Board board = boardService.createBoard(quiz_id, boardRequestDto, user.getUsername());
+        Board board = boardService.createBoard(quiz_id, boardRequestDto, user);
 
         BoardCreateResponseDto boardCreateResponseDto = new BoardCreateResponseDto(board.getId(), board.getTitle(), board.getContent());
 

@@ -27,10 +27,7 @@ public class BoardService {
     private final QuizRepository quizRepository;
 
     @Transactional
-    public Board createBoard(Long quizId, BoardRequestDto boardRequestDto, String username) {
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-        // new CustomException(HttpStatus.NOT_FOUND, "404", "User not found"));
+    public Board createBoard(Long quizId, BoardRequestDto boardRequestDto, User user) {
 
         Quiz quiz = quizRepository.findById(quizId)
                 .orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, "404", "Quiz not found"));
