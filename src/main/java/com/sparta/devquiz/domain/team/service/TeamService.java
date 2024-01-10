@@ -22,7 +22,7 @@ public class TeamService {
     private final UserTeamService userTeamService;
 
     @Transactional
-    public TeamCreateResponse createTeam(TeamCreateRequest request) {
+    public TeamCreateResponse createTeam(User user, TeamCreateRequest request) {
 
         Team team = Team.builder()
                 .name(request.getName())
@@ -37,7 +37,7 @@ public class TeamService {
         Team team = getTeamById(teamId);
         User loginUser = userService.getUserById(user.getId());
 
-        if(!userTeamService.isExistedUser(loginUser,team)){
+        if(!userTeamService.isExistedUser(team, loginUser)){
             throw new TeamCustomException(TeamExceptionCode.FORBIDDEN_TEAM_USER);
         }
 

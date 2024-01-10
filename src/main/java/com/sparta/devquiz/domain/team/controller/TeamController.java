@@ -4,6 +4,8 @@ import com.sparta.devquiz.domain.team.dto.request.TeamCreateRequest;
 import com.sparta.devquiz.domain.team.dto.response.TeamCreateResponse;
 import com.sparta.devquiz.domain.team.response.TeamResponseCode;
 import com.sparta.devquiz.domain.team.service.TeamService;
+import com.sparta.devquiz.domain.user.entity.User;
+import com.sparta.devquiz.global.annotation.AuthUser;
 import com.sparta.devquiz.global.response.CommonResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -27,10 +29,11 @@ public class TeamController {
     @Operation(summary = "팀 생성")
     @PostMapping("/team")
     public ResponseEntity<CommonResponseDto> createTeam(
+            @AuthUser User user,
             @RequestBody TeamCreateRequest request
     ) {
 
-        TeamCreateResponse response = teamService.createTeam(request);
+        TeamCreateResponse response = teamService.createTeam(user, request);
 
         return ResponseEntity.status(TeamResponseCode.CREATED_TEAM.getHttpStatus())
                 .body(new CommonResponseDto(TeamResponseCode.CREATED_TEAM.getHttpStatus().value(),

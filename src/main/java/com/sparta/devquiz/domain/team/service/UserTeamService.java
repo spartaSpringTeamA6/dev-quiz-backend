@@ -15,11 +15,15 @@ public class UserTeamService {
 
     private final UserTeamRepository userTeamRepository;
 
-    public Boolean isExistedUser(User user, Team team){
+    public void saveUserTeam(Team team, User user){
+
+    }
+
+    public Boolean isExistedUser(Team team, User user){
         return userTeamRepository.existsByUserIdAndTeamIdAndIsAcceptedTrue(user.getId(), team.getId());
     }
 
-    public Boolean isExistedAdmin(User user, Team team){
+    public Boolean isExistedAdmin(Team team, User user){
         return userTeamRepository.existsByUserIdAndTeamIdAndIsAcceptedTrueAndUserRole(user.getId(), team.getId(),
                 TeamUserRole.ADMIN);
     }
