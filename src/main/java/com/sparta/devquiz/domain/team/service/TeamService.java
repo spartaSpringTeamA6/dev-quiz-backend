@@ -2,8 +2,10 @@ package com.sparta.devquiz.domain.team.service;
 
 import com.sparta.devquiz.domain.team.dto.request.TeamCreateRequest;
 import com.sparta.devquiz.domain.team.dto.request.TeamGetRequest;
+import com.sparta.devquiz.domain.team.dto.request.TeamUpdateNameRequest;
 import com.sparta.devquiz.domain.team.dto.response.TeamCreateResponse;
 import com.sparta.devquiz.domain.team.dto.response.TeamGetResponse;
+import com.sparta.devquiz.domain.team.dto.response.TeamUpdateNameResponse;
 import com.sparta.devquiz.domain.team.entity.Team;
 import com.sparta.devquiz.domain.team.entity.TeamUser;
 import com.sparta.devquiz.domain.team.exception.TeamCustomException;
@@ -50,6 +52,19 @@ public class TeamService {
         return TeamGetResponse.of(team,admin,userList);
     }
 
+    public TeamUpdateNameResponse updateTeamName(User user, Long teamId, TeamUpdateNameRequest request) {
+        Team team = getTeamAndCheckAuth(user,teamId);
+
+        if(teamRepository.existsByName(request.getName())){
+            throw new TeamCustomException(TeamExceptionCode.CONFLICT_TEAM_NAME_IN_USE);
+        }
+
+        team.updateName(request.getName());
+        teamRepository.save(team);
+
+        return new TeamUpdateNameResponse();
+    }
+
 
 
     public Team getTeamAndCheckAuth(User user, Long teamId){
@@ -68,6 +83,5 @@ public class TeamService {
                 () -> new TeamCustomException(TeamExceptionCode.NOT_FOUND_TEAM)
         );
     }
-
 
 }

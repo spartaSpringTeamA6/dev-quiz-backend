@@ -16,9 +16,11 @@ public enum TeamExceptionCode {
 
     // FORBIDDEN 403
     FORBIDDEN_TEAM_USER(HttpStatus.FORBIDDEN, "TEAM-002", "해당 유저는 팀 유저 권한이 없습니다."),
-    FORBIDDEN_TEAM_ADMIN(HttpStatus.FORBIDDEN, "TEAM-003", "해당 유저는 팀 관리자 권한이 없습니다."),;
+    FORBIDDEN_TEAM_ADMIN(HttpStatus.FORBIDDEN, "TEAM-003", "해당 유저는 팀 관리자 권한이 없습니다."),
 
     // CONFLICT 409
+    CONFLICT_TEAM_NAME_IN_USE(HttpStatus.CONFLICT, "TEAM-005", "해당 팀 이름이 이미 사용 중 입니다")
+    ;
 
     private final HttpStatus httpStatus;
     private final String errorCode;

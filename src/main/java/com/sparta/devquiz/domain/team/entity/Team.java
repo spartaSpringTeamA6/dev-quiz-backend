@@ -39,4 +39,8 @@ public class Team extends BaseTimeEntity {
     @OneToMany(mappedBy = "team")
     private List<TeamUser> teamUserList = new ArrayList<>();
 
+    public void updateName(String name){
+        this.name = name;
+    }
+
 }

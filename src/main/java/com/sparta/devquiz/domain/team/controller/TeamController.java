@@ -2,8 +2,10 @@ package com.sparta.devquiz.domain.team.controller;
 
 import com.sparta.devquiz.domain.team.dto.request.TeamCreateRequest;
 import com.sparta.devquiz.domain.team.dto.request.TeamGetRequest;
+import com.sparta.devquiz.domain.team.dto.request.TeamUpdateNameRequest;
 import com.sparta.devquiz.domain.team.dto.response.TeamCreateResponse;
 import com.sparta.devquiz.domain.team.dto.response.TeamGetResponse;
+import com.sparta.devquiz.domain.team.dto.response.TeamUpdateNameResponse;
 import com.sparta.devquiz.domain.team.response.TeamResponseCode;
 import com.sparta.devquiz.domain.team.service.TeamService;
 import com.sparta.devquiz.domain.user.entity.User;
@@ -48,9 +50,8 @@ public class TeamController {
     @SecurityRequirement(name = "Bearer Authentication")
     @Operation(operationId = "TEAM-002",summary = "팀 상세조회")
     @GetMapping("/{team_id}")
-    public ResponseEntity<CommonResponseDto> createTeam(
-            @AuthUser User user,
-            @PathVariable Long team_id,
+    public ResponseEntity<CommonResponseDto> getTeam(
+            @AuthUser User user, @PathVariable Long team_id,
             @RequestBody TeamGetRequest request
     ) {
 
@@ -61,6 +62,23 @@ public class TeamController {
                         TeamResponseCode.OK_GET_TEAM_INFO.getMessage(), response));
 
     }
+
+    @SecurityRequirement(name = "Bearer Authentication")
+    @Operation(operationId = "TEAM-003",summary = "팀 이름 수정")
+    @GetMapping("/{team_id}")
+    public ResponseEntity<CommonResponseDto> updateTeamName(
+            @AuthUser User user, @PathVariable Long team_id,
+            @RequestBody TeamUpdateNameRequest request
+    ) {
+
+        TeamUpdateNameResponse response = teamService.updateTeamName(user, team_id, request);
+
+        return ResponseEntity.status(TeamResponseCode.NO_CONTENT_UPDATE_TEAM_NAME.getHttpStatus())
+                .body(new CommonResponseDto(TeamResponseCode.NO_CONTENT_UPDATE_TEAM_NAME.getHttpStatus().value(),
+                        TeamResponseCode.NO_CONTENT_UPDATE_TEAM_NAME.getMessage(), response));
+
+    }
+
 
 
 }
