@@ -5,5 +5,8 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserRepository extends JpaRepository<User, Long> {
-  Optional<User> findByOauthId(String oauthId);
+  Optional<User> findByIdAndIsDeletedFalse(Long id);
+  Optional<User> findByOauthIdAndIsDeletedFalse(String oauthId);
+  Optional<User> findByNicknameAndIsDeletedFalse(String nickname);
+  Optional<User> existsByNickname(String nickname);
 }
