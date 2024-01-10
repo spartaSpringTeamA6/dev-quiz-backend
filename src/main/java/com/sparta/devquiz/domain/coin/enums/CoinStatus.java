@@ -1,12 +1,14 @@
-package com.sparta.devquiz.domain.point.enums;
+package com.sparta.devquiz.domain.coin.enums;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum PointStatus {
+public enum CoinStatus {
+
     SAVE("SAVE"),
     USE("USE");
+
     private final String status;
 }

@@ -1,6 +1,6 @@
 package com.sparta.devquiz.domain.user.entity;
 
-import com.sparta.devquiz.domain.point.entity.Point;
+import com.sparta.devquiz.domain.coin.entity.Coin;
 import com.sparta.devquiz.domain.quiz.entity.UserQuiz;
 import com.sparta.devquiz.domain.user.enums.UserRole;
 import com.sparta.devquiz.global.entity.BaseTimeEntity;
@@ -52,7 +52,7 @@ public class User extends BaseTimeEntity {
     private List<Skill> skillList = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
-    private List<Point> pointList = new ArrayList<>();
+    private List<Coin> coinList = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
     private List<UserQuiz> userQuizList = new ArrayList<>();
