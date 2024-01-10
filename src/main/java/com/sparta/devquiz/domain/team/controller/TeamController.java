@@ -17,6 +17,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -65,7 +66,7 @@ public class TeamController {
 
     @SecurityRequirement(name = "Bearer Authentication")
     @Operation(operationId = "TEAM-003",summary = "팀 이름 수정")
-    @GetMapping("/{team_id}")
+    @PatchMapping("/{team_id}/name")
     public ResponseEntity<CommonResponseDto> updateTeamName(
             @AuthUser User user, @PathVariable Long team_id,
             @RequestBody TeamUpdateNameRequest request
