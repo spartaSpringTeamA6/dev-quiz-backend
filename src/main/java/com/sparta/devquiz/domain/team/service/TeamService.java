@@ -1,13 +1,19 @@
 package com.sparta.devquiz.domain.team.service;
 
 import com.sparta.devquiz.domain.team.dto.request.TeamCreateRequest;
+import com.sparta.devquiz.domain.team.dto.request.TeamGetRequest;
 import com.sparta.devquiz.domain.team.dto.response.TeamCreateResponse;
+import com.sparta.devquiz.domain.team.dto.response.TeamGetResponse;
 import com.sparta.devquiz.domain.team.entity.Team;
+import com.sparta.devquiz.domain.team.entity.TeamUser;
 import com.sparta.devquiz.domain.team.exception.TeamCustomException;
 import com.sparta.devquiz.domain.team.exception.TeamExceptionCode;
 import com.sparta.devquiz.domain.team.repository.TeamRepository;
 import com.sparta.devquiz.domain.user.entity.User;
 import com.sparta.devquiz.domain.user.service.UserService;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,6 +42,16 @@ public class TeamService {
         return TeamCreateResponse.of(team);
     }
 
+    public TeamGetResponse getTeam(User user, Long teamId, TeamGetRequest request) {
+        Team team = getTeamAndCheckAuth(user,teamId);
+        TeamUser admin= teamUserService.getTeamAdmin(team);
+        List<TeamUser> userList = teamUserService.getTeamUser(team);
+
+        return TeamGetResponse.of(team,admin,userList);
+    }
+
+
+
     public Team getTeamAndCheckAuth(User user, Long teamId){
         Team team = getTeamById(teamId);
         User loginUser = userService.getUserById(user.getId());
@@ -52,5 +68,6 @@ public class TeamService {
                 () -> new TeamCustomException(TeamExceptionCode.NOT_FOUND_TEAM)
         );
     }
+
 
 }
