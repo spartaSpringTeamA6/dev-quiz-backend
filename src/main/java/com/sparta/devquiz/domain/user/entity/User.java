@@ -32,6 +32,9 @@ public class User extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true)
+    private String oauthId;
+
     @Column(nullable = false, length = 10, unique = true)
     private String nickname;
 
