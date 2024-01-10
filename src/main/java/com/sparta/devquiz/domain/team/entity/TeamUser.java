@@ -24,10 +24,10 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class UserTeam extends BaseTimeEntity {
+public class TeamUser extends BaseTimeEntity {
 
     @EmbeddedId
-    private UserTeamId userTeamId;
+    private TeamUserId teamUserId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")

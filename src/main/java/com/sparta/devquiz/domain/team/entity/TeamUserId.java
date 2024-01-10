@@ -7,7 +7,7 @@ import lombok.Getter;
 
 @Getter
 @Embeddable
-public class UserTeamId implements Serializable {
+public class TeamUserId implements Serializable {
 
     private Long userId;
     private Long teamId;
@@ -20,9 +20,9 @@ public class UserTeamId implements Serializable {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        UserTeamId userTeamId = (UserTeamId) o;
-        return Objects.equals(getUserId(), userTeamId.getUserId()) && Objects.equals(
-            getTeamId(), userTeamId.getTeamId());
+        TeamUserId teamUserId = (TeamUserId) o;
+        return Objects.equals(getUserId(), teamUserId.getUserId()) && Objects.equals(
+            getTeamId(), teamUserId.getTeamId());
     }
 
     @Override

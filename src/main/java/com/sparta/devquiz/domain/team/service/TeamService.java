@@ -19,7 +19,7 @@ public class TeamService {
 
     private final TeamRepository teamRepository;
     private final UserService userService;
-    private final UserTeamService userTeamService;
+    private final TeamUserService userTeamService;
 
     @Transactional
     public TeamCreateResponse createTeam(User user, TeamCreateRequest request) {

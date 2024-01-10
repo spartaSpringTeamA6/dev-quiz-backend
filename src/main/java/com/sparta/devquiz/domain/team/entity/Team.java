@@ -37,6 +37,6 @@ public class Team extends BaseTimeEntity {
     private LocalDateTime deletedAt;
 
     @OneToMany(mappedBy = "team")
-    private List<UserTeam> userTeamList = new ArrayList<>();
+    private List<TeamUser> teamUserList = new ArrayList<>();
 
 }
