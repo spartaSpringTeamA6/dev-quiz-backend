@@ -1,18 +1,15 @@
 package com.sparta.devquiz.domain.board.dto;
 
-import com.sparta.devquiz.domain.board.entity.Board;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
+@AllArgsConstructor
 public class BoardSingleGetResponseDto {
 
-    private String statusCode;
-    private String message;
-    private Board data;
+    private Long id;
+    private String title;
+    private String content;
 
-    public BoardSingleGetResponseDto(String statusCode, String message, Board data) {
-        this.statusCode = statusCode;
-        this.message = message;
-        this.data = data;
-    }
 }
+
