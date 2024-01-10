@@ -42,13 +42,23 @@ public class TeamUserService {
         return teamUserRepository.findAllByTeamIdAndIsAcceptedTrueAndUserRole(team.getId(), TeamUserRole.USER);
     }
 
+    public void updateTeamUserRole(Team team, User user, TeamUserRole teamUserRole){
+        TeamUser teamUser = getTeamUserByTeamIdAndUserId(team, user);
+        teamUser.updateTeamUserRole(teamUserRole);
+    }
+
+    public TeamUser getTeamUserByTeamIdAndUserId(Team team, User user){
+        return teamUserRepository.findByTeamIdAndUserId(team.getId(), user.getId()).orElseThrow(
+                () -> new TeamCustomException(TeamExceptionCode.NOT_FOUND_TEAM_USER)
+        );
+    }
 
     public Boolean isExistedUser(Team team, User user){
-        return teamUserRepository.existsByUserIdAndTeamIdAndIsAcceptedTrue(user.getId(), team.getId());
+        return teamUserRepository.existsByTeamIdAndUserIdAndIsAcceptedTrue(team.getId(), user.getId());
     }
 
     public Boolean isExistedAdmin(Team team, User user){
-        return teamUserRepository.existsByUserIdAndTeamIdAndIsAcceptedTrueAndUserRole(user.getId(), team.getId(),
+        return teamUserRepository.existsByTeamIdAndUserIdAndIsAcceptedTrueAndUserRole(team.getId(), user.getId(),
                 TeamUserRole.ADMIN);
     }
 

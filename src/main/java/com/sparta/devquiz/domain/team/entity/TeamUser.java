@@ -51,4 +51,8 @@ public class TeamUser extends BaseTimeEntity {
 
     @Column
     private LocalDateTime rejectedAt;
+
+    public void updateTeamUserRole(TeamUserRole teamUserRole){
+        this.userRole = teamUserRole;
+    }
 }
