@@ -13,6 +13,7 @@ public enum TeamExceptionCode {
     // NOT FOUND 404
     NOT_FOUND_TEAM(HttpStatus.NOT_FOUND, "TEAM-001", "해당 팀을 찾을 수 없습니다."),
     NOT_FOUND_TEAM_ADMIN(HttpStatus.NOT_FOUND, "TEAM-004", "해당 팀의 관리자를 찾을 수 없습니다."),
+    NOT_FOUND_TEAM_USER(HttpStatus.NOT_FOUND, "TEAM-006", "해당 팀의 해당 유저를 찾을 수 없습니다."),
 
     // FORBIDDEN 403
     FORBIDDEN_TEAM_USER(HttpStatus.FORBIDDEN, "TEAM-002", "해당 유저는 팀 유저 권한이 없습니다."),

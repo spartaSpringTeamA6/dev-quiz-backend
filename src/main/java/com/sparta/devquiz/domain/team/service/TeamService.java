@@ -2,12 +2,15 @@ package com.sparta.devquiz.domain.team.service;
 
 import com.sparta.devquiz.domain.team.dto.request.TeamCreateRequest;
 import com.sparta.devquiz.domain.team.dto.request.TeamGetRequest;
+import com.sparta.devquiz.domain.team.dto.request.TeamUpdateAdminRequest;
 import com.sparta.devquiz.domain.team.dto.request.TeamUpdateNameRequest;
 import com.sparta.devquiz.domain.team.dto.response.TeamCreateResponse;
 import com.sparta.devquiz.domain.team.dto.response.TeamGetResponse;
+import com.sparta.devquiz.domain.team.dto.response.TeamUpdateAdminResponse;
 import com.sparta.devquiz.domain.team.dto.response.TeamUpdateNameResponse;
 import com.sparta.devquiz.domain.team.entity.Team;
 import com.sparta.devquiz.domain.team.entity.TeamUser;
+import com.sparta.devquiz.domain.team.enums.TeamUserRole;
 import com.sparta.devquiz.domain.team.exception.TeamCustomException;
 import com.sparta.devquiz.domain.team.exception.TeamExceptionCode;
 import com.sparta.devquiz.domain.team.repository.TeamRepository;
@@ -65,6 +68,23 @@ public class TeamService {
         return new TeamUpdateNameResponse();
     }
 
+    public TeamUpdateAdminResponse updateTeamAdmin(User user, Long teamId, TeamUpdateAdminRequest request) {
+        Team team = getTeamAndCheckAuth(user,teamId);
+
+        if(!teamUserService.isExistedAdmin(team,user)){
+            throw new TeamCustomException(TeamExceptionCode.FORBIDDEN_TEAM_ADMIN);
+        }
+
+        User newAdmin = userService.getUserByNickname(request.getNickname());
+        if(!teamUserService.isExistedUser(team,newAdmin)){
+            throw new TeamCustomException(TeamExceptionCode.NOT_FOUND_TEAM_USER);
+        }
+
+        teamUserService.updateTeamUserRole(team, user, TeamUserRole.USER);
+        teamUserService.updateTeamUserRole(team, newAdmin, TeamUserRole.ADMIN);
+
+        return new TeamUpdateAdminResponse();
+    }
 
 
     public Team getTeamAndCheckAuth(User user, Long teamId){
@@ -83,5 +103,6 @@ public class TeamService {
                 () -> new TeamCustomException(TeamExceptionCode.NOT_FOUND_TEAM)
         );
     }
+
 
 }

@@ -2,9 +2,11 @@ package com.sparta.devquiz.domain.team.controller;
 
 import com.sparta.devquiz.domain.team.dto.request.TeamCreateRequest;
 import com.sparta.devquiz.domain.team.dto.request.TeamGetRequest;
+import com.sparta.devquiz.domain.team.dto.request.TeamUpdateAdminRequest;
 import com.sparta.devquiz.domain.team.dto.request.TeamUpdateNameRequest;
 import com.sparta.devquiz.domain.team.dto.response.TeamCreateResponse;
 import com.sparta.devquiz.domain.team.dto.response.TeamGetResponse;
+import com.sparta.devquiz.domain.team.dto.response.TeamUpdateAdminResponse;
 import com.sparta.devquiz.domain.team.dto.response.TeamUpdateNameResponse;
 import com.sparta.devquiz.domain.team.response.TeamResponseCode;
 import com.sparta.devquiz.domain.team.service.TeamService;
@@ -35,8 +37,7 @@ public class TeamController {
     @SecurityRequirement(name = "Bearer Authentication")
     @Operation(operationId = "TEAM-001",summary = "팀 생성")
     @PostMapping("")
-    public ResponseEntity<CommonResponseDto> createTeam(
-            @AuthUser User user,
+    public ResponseEntity<CommonResponseDto> createTeam(@AuthUser User user,
             @RequestBody TeamCreateRequest request
     ) {
 
@@ -51,8 +52,7 @@ public class TeamController {
     @SecurityRequirement(name = "Bearer Authentication")
     @Operation(operationId = "TEAM-002",summary = "팀 상세조회")
     @GetMapping("/{team_id}")
-    public ResponseEntity<CommonResponseDto> getTeam(
-            @AuthUser User user, @PathVariable Long team_id,
+    public ResponseEntity<CommonResponseDto> getTeam(@AuthUser User user, @PathVariable Long team_id,
             @RequestBody TeamGetRequest request
     ) {
 
@@ -67,8 +67,7 @@ public class TeamController {
     @SecurityRequirement(name = "Bearer Authentication")
     @Operation(operationId = "TEAM-003",summary = "팀 이름 수정")
     @PatchMapping("/{team_id}/name")
-    public ResponseEntity<CommonResponseDto> updateTeamName(
-            @AuthUser User user, @PathVariable Long team_id,
+    public ResponseEntity<CommonResponseDto> updateTeamName(@AuthUser User user, @PathVariable Long team_id,
             @RequestBody TeamUpdateNameRequest request
     ) {
 
@@ -77,6 +76,21 @@ public class TeamController {
         return ResponseEntity.status(TeamResponseCode.NO_CONTENT_UPDATE_TEAM_NAME.getHttpStatus())
                 .body(new CommonResponseDto(TeamResponseCode.NO_CONTENT_UPDATE_TEAM_NAME.getHttpStatus().value(),
                         TeamResponseCode.NO_CONTENT_UPDATE_TEAM_NAME.getMessage(), response));
+
+    }
+
+    @SecurityRequirement(name = "Bearer Authentication")
+    @Operation(operationId = "TEAM-004",summary = "팀 관리자 변경")
+    @PatchMapping("/{team_id}/admin")
+    public ResponseEntity<CommonResponseDto> updateTeamAdmin(@AuthUser User user, @PathVariable Long team_id,
+            @RequestBody TeamUpdateAdminRequest request
+    ) {
+
+        TeamUpdateAdminResponse response = teamService.updateTeamAdmin(user, team_id, request);
+
+        return ResponseEntity.status(TeamResponseCode.NO_CONTENT_CHANGE_TEAM_ADMIN.getHttpStatus())
+                .body(new CommonResponseDto(TeamResponseCode.NO_CONTENT_CHANGE_TEAM_ADMIN.getHttpStatus().value(),
+                        TeamResponseCode.NO_CONTENT_CHANGE_TEAM_ADMIN.getMessage(), response));
 
     }
 
