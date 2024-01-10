@@ -1,8 +1,9 @@
 package com.sparta.devquiz.domain.board.service;
 
+import com.sparta.devquiz.domain.board.dto.BoardListGetResponseDto;
 import com.sparta.devquiz.domain.board.dto.BoardRequestDto;
 import com.sparta.devquiz.domain.board.dto.BoardSingleGetResponseDto;
-import com.sparta.devquiz.domain.board.dto.BoardListGetResponseDto;
+import com.sparta.devquiz.domain.board.dto.BoardUpdateRequestDto;
 import com.sparta.devquiz.domain.board.entity.Board;
 import com.sparta.devquiz.domain.board.repository.BoardRepository;
 import com.sparta.devquiz.domain.quiz.entity.Quiz;
@@ -29,7 +30,7 @@ public class BoardService {
     public Board createBoard(Long quizId, BoardRequestDto boardRequestDto, String username) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-        // new CustomException(HttpStatus.NOT_FOUND, "404", "Quiz not found"));
+        // new CustomException(HttpStatus.NOT_FOUND, "404", "User not found"));
 
         Quiz quiz = quizRepository.findById(quizId)
                 .orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, "404", "Quiz not found"));
@@ -61,6 +62,21 @@ public class BoardService {
                 .collect(Collectors.toList());
 
         return new BoardListGetResponseDto(boardSingleGetResponseDtoList);
+    }
+
+    @Transactional
+    public void updateBoard(Long boardId, BoardUpdateRequestDto boardUpdateRequestDto) {
+        Board board = boardRepository.findById(boardId)
+                .orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, "404", "Board not found"));
+
+        if (boardUpdateRequestDto.getTitle() != null) {
+            board.updateTitle(boardUpdateRequestDto.getTitle());
+        }
+        if (boardUpdateRequestDto.getContent() != null) {
+            board.updateContent(boardUpdateRequestDto.getContent());
+        }
+
+        board.updateTitleAndContent(boardUpdateRequestDto.getTitle(), boardUpdateRequestDto.getContent());
     }
 
 }

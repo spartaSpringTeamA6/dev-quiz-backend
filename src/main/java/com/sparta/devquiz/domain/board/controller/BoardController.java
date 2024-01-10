@@ -1,9 +1,6 @@
 package com.sparta.devquiz.domain.board.controller;
 
-import com.sparta.devquiz.domain.board.dto.BoardCreateResponseDto;
-import com.sparta.devquiz.domain.board.dto.BoardRequestDto;
-import com.sparta.devquiz.domain.board.dto.BoardSingleGetResponseDto;
-import com.sparta.devquiz.domain.board.dto.BoardListGetResponseDto;
+import com.sparta.devquiz.domain.board.dto.*;
 import com.sparta.devquiz.domain.board.entity.Board;
 import com.sparta.devquiz.domain.board.response.BoardResponseCode;
 import com.sparta.devquiz.domain.board.service.BoardService;
@@ -73,6 +70,22 @@ public class BoardController {
         );
 
         return new ResponseEntity<>(commonResponseDto, HttpStatus.OK);
+    }
+
+    @Operation(summary = "Board 수정")
+    @PatchMapping("/boards/{board_id}")
+    public ResponseEntity<CommonResponseDto<Void>> updateBoard(@PathVariable Long board_id,
+                                                               @Valid @RequestBody BoardUpdateRequestDto boardUpdateRequestDto) {
+
+        boardService.updateBoard(board_id, boardUpdateRequestDto);
+
+        CommonResponseDto<Void> commonResponseDto = CommonResponseDto.of(
+                BoardResponseCode.NO_CONTENT_UPDATE_BOARD.getHttpStatus(),
+                BoardResponseCode.NO_CONTENT_UPDATE_BOARD.getMessage(),
+                null
+        );
+
+        return new ResponseEntity<>(commonResponseDto, HttpStatus.NO_CONTENT);
     }
 
 
