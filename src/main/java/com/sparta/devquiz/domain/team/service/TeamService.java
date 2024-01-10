@@ -19,16 +19,19 @@ public class TeamService {
 
     private final TeamRepository teamRepository;
     private final UserService userService;
-    private final TeamUserService userTeamService;
+    private final TeamUserService teamUserService;
 
     @Transactional
     public TeamCreateResponse createTeam(User user, TeamCreateRequest request) {
+        User createdBy = userService.getUserById(user.getId());
 
         Team team = Team.builder()
                 .name(request.getName())
                 .isDeleted(false)
                 .build();
         teamRepository.save(team);
+
+        teamUserService.saveTeamAdmin(team,createdBy);
 
         return TeamCreateResponse.of(team);
     }
@@ -37,7 +40,7 @@ public class TeamService {
         Team team = getTeamById(teamId);
         User loginUser = userService.getUserById(user.getId());
 
-        if(!userTeamService.isExistedUser(team, loginUser)){
+        if(!teamUserService.isExistedUser(team, loginUser)){
             throw new TeamCustomException(TeamExceptionCode.FORBIDDEN_TEAM_USER);
         }
 
