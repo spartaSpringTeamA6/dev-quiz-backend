@@ -6,6 +6,8 @@ import com.sparta.devquiz.domain.team.entity.Team;
 import com.sparta.devquiz.domain.team.exception.TeamCustomException;
 import com.sparta.devquiz.domain.team.exception.TeamExceptionCode;
 import com.sparta.devquiz.domain.team.repository.TeamRepository;
+import com.sparta.devquiz.domain.user.entity.User;
+import com.sparta.devquiz.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class TeamService {
 
     private final TeamRepository teamRepository;
+    private final UserService userService;
+    private final UserTeamService userTeamService;
 
     @Transactional
     public TeamCreateResponse createTeam(TeamCreateRequest request) {
@@ -27,6 +31,17 @@ public class TeamService {
         teamRepository.save(team);
 
         return TeamCreateResponse.of(team);
+    }
+
+    public Team getTeamAndCheckAuth(User user, Long teamId){
+        Team team = getTeamById(teamId);
+        User loginUser = userService.getUserById(user.getId());
+
+        if(!userTeamService.isExistedUser(loginUser,team)){
+            throw new TeamCustomException(TeamExceptionCode.FORBIDDEN_TEAM_USER);
+        }
+
+        return team;
     }
 
     public Team getTeamById(Long id) {
