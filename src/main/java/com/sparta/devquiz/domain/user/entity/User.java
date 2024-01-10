@@ -42,6 +42,9 @@ public class User extends BaseTimeEntity {
     @Enumerated(value = EnumType.STRING)
     private UserRole role;
 
+    @Column(nullable = false)
+    private Long totalCoin = 0L;
+
     @Column
     private LocalDateTime deletedAt;
 
