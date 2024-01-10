@@ -3,6 +3,7 @@ package com.sparta.devquiz.domain.board.controller;
 import com.sparta.devquiz.domain.board.dto.BoardCreateResponseDto;
 import com.sparta.devquiz.domain.board.dto.BoardRequestDto;
 import com.sparta.devquiz.domain.board.dto.BoardSingleGetResponseDto;
+import com.sparta.devquiz.domain.board.dto.BoardListGetResponseDto;
 import com.sparta.devquiz.domain.board.entity.Board;
 import com.sparta.devquiz.domain.board.response.BoardResponseCode;
 import com.sparta.devquiz.domain.board.service.BoardService;
@@ -55,6 +56,20 @@ public class BoardController {
                 BoardResponseCode.OK_GET_BOARD_INFO.getHttpStatus(),
                 BoardResponseCode.OK_GET_BOARD_INFO.getMessage(),
                 boardSingleGetResponseDto
+        );
+
+        return new ResponseEntity<>(commonResponseDto, HttpStatus.OK);
+    }
+
+    @Operation(summary = "퀴즈에 속한 모든 Board 조회")
+    @GetMapping("/quizzes/{quiz_id}/boards")
+    public ResponseEntity<CommonResponseDto<BoardListGetResponseDto>> getBoardList(@PathVariable Long quiz_id) {
+        BoardListGetResponseDto boardListGetResponseDto = boardService.getBoardList(quiz_id);
+
+        CommonResponseDto<BoardListGetResponseDto> commonResponseDto = CommonResponseDto.of(
+                BoardResponseCode.OK_GET_BOARDLIST_INFO.getHttpStatus(),
+                BoardResponseCode.OK_GET_BOARDLIST_INFO.getMessage(),
+                boardListGetResponseDto
         );
 
         return new ResponseEntity<>(commonResponseDto, HttpStatus.OK);

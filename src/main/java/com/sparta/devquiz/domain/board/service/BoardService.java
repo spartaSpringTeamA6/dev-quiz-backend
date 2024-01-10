@@ -2,8 +2,8 @@ package com.sparta.devquiz.domain.board.service;
 
 import com.sparta.devquiz.domain.board.dto.BoardRequestDto;
 import com.sparta.devquiz.domain.board.dto.BoardSingleGetResponseDto;
+import com.sparta.devquiz.domain.board.dto.BoardListGetResponseDto;
 import com.sparta.devquiz.domain.board.entity.Board;
-import com.sparta.devquiz.domain.board.exception.QuizNotFoundException;
 import com.sparta.devquiz.domain.board.repository.BoardRepository;
 import com.sparta.devquiz.domain.quiz.entity.Quiz;
 import com.sparta.devquiz.domain.user.entity.User;
@@ -13,6 +13,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -47,6 +50,17 @@ public class BoardService {
                 .orElseThrow(() -> new CustomException(HttpStatus.NO_CONTENT, "404", "Board not found"));
 
         return new BoardSingleGetResponseDto(board.getId(), board.getTitle(), board.getContent());
+    }
+
+    public BoardListGetResponseDto getBoardList(Long quizId) {
+
+        List<Board> boards = boardRepository.findAllBoardByQuizId(quizId);
+
+        List<BoardSingleGetResponseDto> boardSingleGetResponseDtoList = boards.stream()
+                .map(board -> new BoardSingleGetResponseDto(board.getId(), board.getTitle(), board.getContent()))
+                .collect(Collectors.toList());
+
+        return new BoardListGetResponseDto(boardSingleGetResponseDtoList);
     }
 
 }
