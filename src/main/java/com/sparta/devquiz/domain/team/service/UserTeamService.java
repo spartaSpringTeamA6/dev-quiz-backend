@@ -20,7 +20,7 @@ public class UserTeamService {
     }
 
     public Boolean isExistedAdmin(User user, Team team){
-        return userTeamRepository.existsByUserIdAndTeamIdAndUserRoleAndIsAcceptedTrue(user.getId(), team.getId(),
+        return userTeamRepository.existsByUserIdAndTeamIdAndIsAcceptedTrueAndUserRole(user.getId(), team.getId(),
                 TeamUserRole.ADMIN);
     }
 

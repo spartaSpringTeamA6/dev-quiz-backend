@@ -8,5 +8,5 @@ public interface UserTeamRepository extends JpaRepository<UserTeam, Long> {
 
     Boolean existsByUserIdAndTeamIdAndIsAcceptedTrue(Long userId, Long teamId);
 
-    Boolean existsByUserIdAndTeamIdAndUserRoleAndIsAcceptedTrue(Long userId, Long teamId, TeamUserRole userRole);
+    Boolean existsByUserIdAndTeamIdAndIsAcceptedTrueAndUserRole(Long userId, Long teamId, TeamUserRole userRole);
 }
