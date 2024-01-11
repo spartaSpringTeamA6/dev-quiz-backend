@@ -43,4 +43,8 @@ public class Board extends BaseTimeEntity {
             this.content = content;
         }
     }
+
+    public void setDeleted(boolean isDeleted) {
+        this.isDeleted = isDeleted;
+    }
 }

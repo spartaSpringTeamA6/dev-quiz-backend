@@ -1,6 +1,10 @@
 package com.sparta.devquiz.domain.board.controller;
 
-import com.sparta.devquiz.domain.board.dto.*;
+import com.sparta.devquiz.domain.board.dto.RequestDto.BoardRequestDto;
+import com.sparta.devquiz.domain.board.dto.RequestDto.BoardUpdateRequestDto;
+import com.sparta.devquiz.domain.board.dto.ResponseDto.BoardCreateResponseDto;
+import com.sparta.devquiz.domain.board.dto.ResponseDto.BoardListGetResponseDto;
+import com.sparta.devquiz.domain.board.dto.ResponseDto.BoardSingleGetResponseDto;
 import com.sparta.devquiz.domain.board.entity.Board;
 import com.sparta.devquiz.domain.board.response.BoardResponseCode;
 import com.sparta.devquiz.domain.board.service.BoardService;
@@ -33,13 +37,14 @@ public class BoardController {
 
         BoardCreateResponseDto boardCreateResponseDto = new BoardCreateResponseDto(board.getId(), board.getTitle(), board.getContent());
 
-        CommonResponseDto<BoardCreateResponseDto> commonResponseDto = CommonResponseDto.of(
-                BoardResponseCode.CREATED_BOARD.getHttpStatus(),
-                BoardResponseCode.CREATED_BOARD.getMessage(),
-                boardCreateResponseDto
+        return new ResponseEntity<>(
+                new CommonResponseDto<>(
+                        BoardResponseCode.CREATED_BOARD.getHttpStatus(),
+                        BoardResponseCode.CREATED_BOARD.getMessage(),
+                        boardCreateResponseDto
+                ),
+                HttpStatus.CREATED
         );
-
-        return new ResponseEntity<>(commonResponseDto, HttpStatus.CREATED);
     }
 
     @Operation(summary = "단일 Board 조회")
@@ -49,13 +54,14 @@ public class BoardController {
 
         BoardSingleGetResponseDto boardSingleGetResponseDto = boardService.getSingleBoard(board_id);
 
-        CommonResponseDto<BoardSingleGetResponseDto> commonResponseDto = CommonResponseDto.of(
-                BoardResponseCode.OK_GET_BOARD_INFO.getHttpStatus(),
-                BoardResponseCode.OK_GET_BOARD_INFO.getMessage(),
-                boardSingleGetResponseDto
+        return new ResponseEntity<>(
+                new CommonResponseDto<>(
+                        BoardResponseCode.OK_GET_BOARD_INFO.getHttpStatus(),
+                        BoardResponseCode.OK_GET_BOARD_INFO.getMessage(),
+                        boardSingleGetResponseDto
+                ),
+                HttpStatus.OK
         );
-
-        return new ResponseEntity<>(commonResponseDto, HttpStatus.OK);
     }
 
     @Operation(summary = "퀴즈에 속한 모든 Board 조회")
@@ -63,13 +69,14 @@ public class BoardController {
     public ResponseEntity<CommonResponseDto<BoardListGetResponseDto>> getBoardList(@PathVariable Long quiz_id) {
         BoardListGetResponseDto boardListGetResponseDto = boardService.getBoardList(quiz_id);
 
-        CommonResponseDto<BoardListGetResponseDto> commonResponseDto = CommonResponseDto.of(
-                BoardResponseCode.OK_GET_BOARDLIST_INFO.getHttpStatus(),
-                BoardResponseCode.OK_GET_BOARDLIST_INFO.getMessage(),
-                boardListGetResponseDto
+        return new ResponseEntity<>(
+                new CommonResponseDto<>(
+                        BoardResponseCode.OK_GET_BOARDLIST_INFO.getHttpStatus(),
+                        BoardResponseCode.OK_GET_BOARDLIST_INFO.getMessage(),
+                        boardListGetResponseDto
+                ),
+                HttpStatus.OK
         );
-
-        return new ResponseEntity<>(commonResponseDto, HttpStatus.OK);
     }
 
     @Operation(summary = "Board 수정")
@@ -79,13 +86,29 @@ public class BoardController {
 
         boardService.updateBoard(board_id, boardUpdateRequestDto);
 
-        CommonResponseDto<Void> commonResponseDto = CommonResponseDto.of(
-                BoardResponseCode.NO_CONTENT_UPDATE_BOARD.getHttpStatus(),
-                BoardResponseCode.NO_CONTENT_UPDATE_BOARD.getMessage(),
-                null
+        return new ResponseEntity<>(
+                new CommonResponseDto<>(
+                        BoardResponseCode.NO_CONTENT_UPDATE_BOARD.getHttpStatus(),
+                        BoardResponseCode.NO_CONTENT_UPDATE_BOARD.getMessage(),
+                        null
+                ),
+                HttpStatus.NO_CONTENT
         );
+    }
 
-        return new ResponseEntity<>(commonResponseDto, HttpStatus.NO_CONTENT);
+    @Operation(summary = "Board 삭제")
+    @DeleteMapping("/boards/{board_id}")
+    public ResponseEntity<CommonResponseDto<Void>> deleteBoard(@PathVariable Long board_id) {
+        boardService.deleteBoard(board_id);
+
+        return new ResponseEntity<>(
+                new CommonResponseDto<>(
+                        BoardResponseCode.NO_CONTENT_DELETE_BOARD.getHttpStatus(),
+                        BoardResponseCode.NO_CONTENT_DELETE_BOARD.getMessage(),
+                        null
+                ),
+                HttpStatus.NO_CONTENT
+        );
     }
 
 
