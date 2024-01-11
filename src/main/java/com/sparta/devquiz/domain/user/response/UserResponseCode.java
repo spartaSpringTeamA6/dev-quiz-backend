@@ -1,6 +1,5 @@
 package com.sparta.devquiz.domain.user.response;
 
-import com.sparta.devquiz.global.response.GlobalResponseCode;
 import com.sparta.devquiz.global.response.ResponseCode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -37,11 +36,11 @@ public enum UserResponseCode implements ResponseCode {
     private final HttpStatus httpStatus;
     private final String message;
 
-    public HttpStatus getHttpStatus(GlobalResponseCode responseCode) {
+    public HttpStatus getHttpStatus(UserResponseCode responseCode) {
         return responseCode.getHttpStatus();
     }
 
-    public String getMessage(GlobalResponseCode responseCode){
+    public String getMessage(UserResponseCode responseCode){
         return responseCode.getMessage();
     }
 
