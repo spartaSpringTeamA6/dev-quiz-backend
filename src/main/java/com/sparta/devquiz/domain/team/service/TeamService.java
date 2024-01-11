@@ -68,14 +68,13 @@ public class TeamService {
         return new TeamUpdateNameResponse();
     }
 
-    public TeamUpdateAdminResponse updateTeamAdmin(User user, Long teamId, TeamUpdateAdminRequest request) {
-        if(user.getUsername().equals(request.getUsername())){
-            // TODO: exceptioncode
-            throw new TeamCustomException(TeamExceptionCode.FORBIDDEN_TEAM_ADMIN);
+    public TeamUpdateAdminResponse updateTeamAdmin(User admin, Long teamId, TeamUpdateAdminRequest request) {
+        if(admin.getUsername().equals(request.getUsername())){
+            throw new TeamCustomException(TeamExceptionCode.BAD_REQUEST_INVALID_REQUEST_USERNAME);
         }
 
-        Team team = getTeamAndCheckAuth(user,teamId);
-        if(!teamUserService.isExistedAdmin(team,user)){
+        Team team = getTeamAndCheckAuth(admin,teamId);
+        if(!teamUserService.isExistedAdmin(team,admin)){
             throw new TeamCustomException(TeamExceptionCode.FORBIDDEN_TEAM_ADMIN);
         }
 
@@ -84,16 +83,16 @@ public class TeamService {
             throw new TeamCustomException(TeamExceptionCode.NOT_FOUND_TEAM_USER);
         }
 
-        teamUserService.updateTeamUserRole(team, user, TeamUserRole.USER);
+        teamUserService.updateTeamUserRole(team, admin, TeamUserRole.USER);
         teamUserService.updateTeamUserRole(team, newAdmin, TeamUserRole.ADMIN);
 
         return new TeamUpdateAdminResponse();
     }
 
-    public TeamDeleteUserResponse deleteTeamUser(User user, Long teamId, TeamDeleteUserRequest request) {
-        Team team = getTeamAndCheckAuth(user,teamId);
+    public TeamDeleteUserResponse deleteTeamUser(User admin, Long teamId, TeamDeleteUserRequest request) {
+        Team team = getTeamAndCheckAuth(admin,teamId);
 
-        if(!teamUserService.isExistedAdmin(team,user)){
+        if(!teamUserService.isExistedAdmin(team,admin)){
             throw new TeamCustomException(TeamExceptionCode.FORBIDDEN_TEAM_ADMIN);
         }
 
@@ -102,7 +101,7 @@ public class TeamService {
             throw new TeamCustomException(TeamExceptionCode.NOT_FOUND_TEAM_USER);
         }
 
-        teamUserService.deleteTeamUser(team,user);
+        teamUserService.deleteTeamUser(team,admin);
 
         return new TeamDeleteUserResponse();
     }

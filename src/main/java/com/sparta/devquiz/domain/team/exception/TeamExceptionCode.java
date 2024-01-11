@@ -10,8 +10,8 @@ public enum TeamExceptionCode {
 
     // BAD REQUEST 400
     BAD_REQUEST_INVALID_REQUEST_TEAM_NAME(HttpStatus.BAD_REQUEST, "TEAM-007", "유효하지 않은 팀 이름입니다."),
-    BAD_REQUEST_INVALID_REQUEST_USER_NICKNAME(HttpStatus.BAD_REQUEST, "TEAM-008", "유효하지 않은 유저 닉네임입니다"),
-    BAD_REQUEST_INVALID_REQUEST_DELETE_ADMIN(HttpStatus.BAD_REQUEST, "TEAM-009", "유효하지 않은 삭제할 유저 닉네임입니다"),
+    BAD_REQUEST_INVALID_REQUEST_USERNAME(HttpStatus.BAD_REQUEST, "TEAM-008", "유효하지 않은 유저 닉네임입니다."),
+    BAD_REQUEST_INVALID_REQUEST_DELETE_ADMIN(HttpStatus.BAD_REQUEST, "TEAM-009", "관리자는 삭제할 수 없습니다."),
 
     // NOT FOUND 404
     NOT_FOUND_TEAM(HttpStatus.NOT_FOUND, "TEAM-001", "해당 팀을 찾을 수 없습니다."),
