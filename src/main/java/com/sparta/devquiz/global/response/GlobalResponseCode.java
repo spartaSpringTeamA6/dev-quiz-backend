@@ -1,12 +1,13 @@
 package com.sparta.devquiz.global.response;
 
+import com.sparta.devquiz.domain.team.response.TeamResponseCode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 @Getter
 @AllArgsConstructor
-public enum GlobalResponseCode {
+public enum GlobalResponseCode implements ResponseCode {
 
     // OK 200
     OK(HttpStatus.OK, "REQUEST SUCCESS, OK"),
@@ -24,4 +25,11 @@ public enum GlobalResponseCode {
     private final HttpStatus httpStatus;
     private final String message;
 
+    public HttpStatus getHttpStatus(GlobalResponseCode responseCode){
+        return responseCode.getHttpStatus();
+    }
+
+    public String getMessage(GlobalResponseCode responseCode){
+        return responseCode.getMessage();
+    }
 }

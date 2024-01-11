@@ -33,8 +33,7 @@ public class TeamController {
         TeamCreateResponse response = teamService.createTeam(request);
 
         return ResponseEntity.status(TeamResponseCode.CREATED_TEAM.getHttpStatus())
-                .body(new CommonResponseDto(TeamResponseCode.CREATED_TEAM.getHttpStatus().value(),
-                        TeamResponseCode.CREATED_TEAM.getMessage(), response));
+                .body(CommonResponseDto.of(TeamResponseCode.CREATED_TEAM, response));
 
     }
 

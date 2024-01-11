@@ -1,12 +1,13 @@
 package com.sparta.devquiz.domain.team.response;
 
+import com.sparta.devquiz.global.response.ResponseCode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 @Getter
 @AllArgsConstructor
-public enum TeamResponseCode {
+public enum TeamResponseCode implements ResponseCode {
 
     // OK 200
     OK_GET_TEAM_INFO(HttpStatus.OK, "GET TEAM INFORMATION"),
@@ -27,5 +28,13 @@ public enum TeamResponseCode {
 
     private final HttpStatus httpStatus;
     private final String message;
+
+    public HttpStatus getHttpStatus(TeamResponseCode responseCode){
+        return responseCode.getHttpStatus();
+    }
+
+    public String getMessage(TeamResponseCode responseCode){
+        return responseCode.getMessage();
+    }
 
 }
