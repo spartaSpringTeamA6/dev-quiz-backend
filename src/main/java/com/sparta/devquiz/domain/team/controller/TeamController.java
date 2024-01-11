@@ -47,8 +47,7 @@ public class TeamController {
         TeamCreateResponse response = teamService.createTeam(user, request);
 
         return ResponseEntity.status(TeamResponseCode.CREATED_TEAM.getHttpStatus())
-                .body(new CommonResponseDto(TeamResponseCode.CREATED_TEAM.getHttpStatus().value(),
-                        TeamResponseCode.CREATED_TEAM.getMessage(), response));
+                .body(CommonResponseDto.of(TeamResponseCode.CREATED_TEAM, response));
 
     }
 
@@ -62,8 +61,7 @@ public class TeamController {
         TeamGetResponse response = teamService.getTeam(user, team_id, request);
 
         return ResponseEntity.status(TeamResponseCode.OK_GET_TEAM_INFO.getHttpStatus())
-                .body(new CommonResponseDto(TeamResponseCode.OK_GET_TEAM_INFO.getHttpStatus().value(),
-                        TeamResponseCode.OK_GET_TEAM_INFO.getMessage(), response));
+                .body(CommonResponseDto.of(TeamResponseCode.OK_GET_TEAM_INFO, response));
 
     }
 
@@ -77,8 +75,7 @@ public class TeamController {
         TeamUpdateNameResponse response = teamService.updateTeamName(user, team_id, request);
 
         return ResponseEntity.status(TeamResponseCode.NO_CONTENT_UPDATE_TEAM_NAME.getHttpStatus())
-                .body(new CommonResponseDto(TeamResponseCode.NO_CONTENT_UPDATE_TEAM_NAME.getHttpStatus().value(),
-                        TeamResponseCode.NO_CONTENT_UPDATE_TEAM_NAME.getMessage(), response));
+                .body(CommonResponseDto.of(TeamResponseCode.NO_CONTENT_UPDATE_TEAM_NAME, response));
 
     }
 
@@ -92,13 +89,12 @@ public class TeamController {
         TeamUpdateAdminResponse response = teamService.updateTeamAdmin(user, team_id, request);
 
         return ResponseEntity.status(TeamResponseCode.NO_CONTENT_CHANGE_TEAM_ADMIN.getHttpStatus())
-                .body(new CommonResponseDto(TeamResponseCode.NO_CONTENT_CHANGE_TEAM_ADMIN.getHttpStatus().value(),
-                        TeamResponseCode.NO_CONTENT_CHANGE_TEAM_ADMIN.getMessage(), response));
+                .body(CommonResponseDto.of(TeamResponseCode.NO_CONTENT_CHANGE_TEAM_ADMIN, response));
 
     }
 
     @SecurityRequirement(name = "Bearer Authentication")
-    @Operation(operationId = "TEAM-004",summary = "팀 멤버 추방")
+    @Operation(operationId = "TEAM-005",summary = "팀 멤버 추방")
     @DeleteMapping("/{team_id}/user")
     public ResponseEntity<CommonResponseDto> deleteTeamUser(@AuthUser User user, @PathVariable Long team_id,
             @RequestBody TeamDeleteUserRequest request
@@ -107,8 +103,7 @@ public class TeamController {
         TeamDeleteUserResponse response = teamService.deleteTeamUser(user, team_id, request);
 
         return ResponseEntity.status(TeamResponseCode.NO_CONTENT_EXPEL_TEAM_MEMBER.getHttpStatus())
-                .body(new CommonResponseDto(TeamResponseCode.NO_CONTENT_EXPEL_TEAM_MEMBER.getHttpStatus().value(),
-                        TeamResponseCode.NO_CONTENT_EXPEL_TEAM_MEMBER.getMessage(), response));
+                .body(CommonResponseDto.of(TeamResponseCode.NO_CONTENT_EXPEL_TEAM_MEMBER, response));
 
     }
 

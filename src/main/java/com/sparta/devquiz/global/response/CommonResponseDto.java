@@ -19,7 +19,7 @@ public class CommonResponseDto<T> {
         return new CommonResponseDto<T>(status, message, data);
     }
 
-    public static <T> CommonResponseDto<T> of(GlobalResponseCode responseCode, T data) {
+    public static <T> CommonResponseDto<T> of(ResponseCode responseCode, T data) {
         return new CommonResponseDto<T>(
                 responseCode.getHttpStatus().value(),
                 responseCode.getMessage(),
