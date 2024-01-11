@@ -44,13 +44,10 @@ public class TeamUser extends BaseTimeEntity {
     private TeamUserRole userRole;
 
     @Column
-    private Boolean isAccepted;
+    private boolean isAccepted;
 
     @Column
     private LocalDateTime acceptedAt;
-
-    @Column
-    private LocalDateTime rejectedAt;
 
     public void updateTeamUserRole(TeamUserRole teamUserRole){
         this.userRole = teamUserRole;

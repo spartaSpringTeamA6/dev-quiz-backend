@@ -31,7 +31,7 @@ public class Team extends BaseTimeEntity {
     private String name;
 
     @Column(nullable = false)
-    private Boolean isDeleted;
+    private boolean isDeleted;
 
     @Column
     private LocalDateTime deletedAt;
