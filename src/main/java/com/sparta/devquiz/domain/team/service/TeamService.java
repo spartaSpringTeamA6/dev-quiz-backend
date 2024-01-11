@@ -5,11 +5,13 @@ import com.sparta.devquiz.domain.team.dto.request.TeamDeleteUserRequest;
 import com.sparta.devquiz.domain.team.dto.request.TeamGetRequest;
 import com.sparta.devquiz.domain.team.dto.request.TeamUpdateAdminRequest;
 import com.sparta.devquiz.domain.team.dto.request.TeamUpdateNameRequest;
+import com.sparta.devquiz.domain.team.dto.request.TeamWithdrawRequest;
 import com.sparta.devquiz.domain.team.dto.response.TeamCreateResponse;
 import com.sparta.devquiz.domain.team.dto.response.TeamDeleteUserResponse;
 import com.sparta.devquiz.domain.team.dto.response.TeamGetResponse;
 import com.sparta.devquiz.domain.team.dto.response.TeamUpdateAdminResponse;
 import com.sparta.devquiz.domain.team.dto.response.TeamUpdateNameResponse;
+import com.sparta.devquiz.domain.team.dto.response.TeamWithdrawResponse;
 import com.sparta.devquiz.domain.team.entity.Team;
 import com.sparta.devquiz.domain.team.entity.TeamUser;
 import com.sparta.devquiz.domain.team.enums.TeamUserRole;
@@ -69,6 +71,7 @@ public class TeamService {
     }
 
     public TeamUpdateAdminResponse updateTeamAdmin(User admin, Long teamId, TeamUpdateAdminRequest request) {
+
         if(admin.getUsername().equals(request.getUsername())){
             throw new TeamCustomException(TeamExceptionCode.BAD_REQUEST_INVALID_REQUEST_USERNAME);
         }
@@ -101,9 +104,21 @@ public class TeamService {
             throw new TeamCustomException(TeamExceptionCode.NOT_FOUND_TEAM_USER);
         }
 
-        teamUserService.deleteTeamUser(team,admin);
+        teamUserService.deleteTeamUser(team,deleteUser);
 
         return new TeamDeleteUserResponse();
+    }
+
+    public TeamWithdrawResponse withdrawTeam(User user, Long teamId, TeamWithdrawRequest request) {
+        Team team = getTeamAndCheckAuth(user,teamId);
+
+        if(!teamUserService.isExistedUser(team,user)){
+            throw new TeamCustomException(TeamExceptionCode.FORBIDDEN_TEAM_USER);
+        }
+
+        teamUserService.deleteTeamUser(team,user);
+
+        return new TeamWithdrawResponse();
     }
 
 
@@ -123,6 +138,5 @@ public class TeamService {
                 () -> new TeamCustomException(TeamExceptionCode.NOT_FOUND_TEAM)
         );
     }
-
 
 }

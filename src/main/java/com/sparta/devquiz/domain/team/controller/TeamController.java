@@ -5,11 +5,13 @@ import com.sparta.devquiz.domain.team.dto.request.TeamDeleteUserRequest;
 import com.sparta.devquiz.domain.team.dto.request.TeamGetRequest;
 import com.sparta.devquiz.domain.team.dto.request.TeamUpdateAdminRequest;
 import com.sparta.devquiz.domain.team.dto.request.TeamUpdateNameRequest;
+import com.sparta.devquiz.domain.team.dto.request.TeamWithdrawRequest;
 import com.sparta.devquiz.domain.team.dto.response.TeamCreateResponse;
 import com.sparta.devquiz.domain.team.dto.response.TeamDeleteUserResponse;
 import com.sparta.devquiz.domain.team.dto.response.TeamGetResponse;
 import com.sparta.devquiz.domain.team.dto.response.TeamUpdateAdminResponse;
 import com.sparta.devquiz.domain.team.dto.response.TeamUpdateNameResponse;
+import com.sparta.devquiz.domain.team.dto.response.TeamWithdrawResponse;
 import com.sparta.devquiz.domain.team.response.TeamResponseCode;
 import com.sparta.devquiz.domain.team.service.TeamService;
 import com.sparta.devquiz.domain.user.entity.User;
@@ -107,6 +109,18 @@ public class TeamController {
 
     }
 
+    @SecurityRequirement(name = "Bearer Authentication")
+    @Operation(operationId = "TEAM-006",summary = "팀 탈퇴")
+    @DeleteMapping("/{team_id}/withdraw")
+    public ResponseEntity<CommonResponseDto> withdrawTeam(@AuthUser User user, @PathVariable Long team_id,
+            @RequestBody TeamWithdrawRequest request
+    ) {
 
+        TeamWithdrawResponse response = teamService.withdrawTeam(user, team_id, request);
+
+        return ResponseEntity.status(TeamResponseCode.NO_CONTENT_WITHDRAW_TEAM.getHttpStatus())
+                .body(CommonResponseDto.of(TeamResponseCode.NO_CONTENT_WITHDRAW_TEAM, response));
+
+    }
 
 }
