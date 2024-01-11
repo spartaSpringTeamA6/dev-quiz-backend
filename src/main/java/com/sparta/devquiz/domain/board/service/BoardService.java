@@ -69,6 +69,7 @@ public class BoardService {
 
     @Transactional
     public void deleteBoard(Long boardId) {
+
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, "404", "Board not found"));
 

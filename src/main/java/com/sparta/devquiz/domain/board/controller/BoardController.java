@@ -99,6 +99,7 @@ public class BoardController {
     @Operation(summary = "Board 삭제")
     @DeleteMapping("/boards/{board_id}")
     public ResponseEntity<CommonResponseDto<Void>> deleteBoard(@PathVariable Long board_id) {
+
         boardService.deleteBoard(board_id);
 
         return new ResponseEntity<>(
