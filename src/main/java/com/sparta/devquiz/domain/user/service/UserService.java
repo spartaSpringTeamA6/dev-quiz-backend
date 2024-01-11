@@ -31,4 +31,8 @@ public class UserService {
             () -> new UserCustomException(UserExceptionCode.NOT_FOUND_USER)
     );
   }
+
+  public boolean isExistedNickname(String nickname){
+    return userRepository.existsByNickname(nickname);
+  }
 }
