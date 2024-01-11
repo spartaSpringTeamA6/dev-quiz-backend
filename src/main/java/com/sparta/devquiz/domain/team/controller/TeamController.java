@@ -1,12 +1,14 @@
 package com.sparta.devquiz.domain.team.controller;
 
 import com.sparta.devquiz.domain.team.dto.request.TeamCreateRequest;
+import com.sparta.devquiz.domain.team.dto.request.TeamDeleteRequest;
 import com.sparta.devquiz.domain.team.dto.request.TeamDeleteUserRequest;
 import com.sparta.devquiz.domain.team.dto.request.TeamGetRequest;
 import com.sparta.devquiz.domain.team.dto.request.TeamUpdateAdminRequest;
 import com.sparta.devquiz.domain.team.dto.request.TeamUpdateNameRequest;
 import com.sparta.devquiz.domain.team.dto.request.TeamWithdrawRequest;
 import com.sparta.devquiz.domain.team.dto.response.TeamCreateResponse;
+import com.sparta.devquiz.domain.team.dto.response.TeamDeleteResponse;
 import com.sparta.devquiz.domain.team.dto.response.TeamDeleteUserResponse;
 import com.sparta.devquiz.domain.team.dto.response.TeamGetResponse;
 import com.sparta.devquiz.domain.team.dto.response.TeamUpdateAdminResponse;
@@ -45,12 +47,10 @@ public class TeamController {
     public ResponseEntity<CommonResponseDto> createTeam(@AuthUser User user,
             @RequestBody TeamCreateRequest request
     ) {
-
         TeamCreateResponse response = teamService.createTeam(user, request);
 
         return ResponseEntity.status(TeamResponseCode.CREATED_TEAM.getHttpStatus())
                 .body(CommonResponseDto.of(TeamResponseCode.CREATED_TEAM, response));
-
     }
 
     @SecurityRequirement(name = "Bearer Authentication")
@@ -59,12 +59,10 @@ public class TeamController {
     public ResponseEntity<CommonResponseDto> getTeam(@AuthUser User user, @PathVariable Long team_id,
             @RequestBody TeamGetRequest request
     ) {
-
         TeamGetResponse response = teamService.getTeam(user, team_id, request);
 
         return ResponseEntity.status(TeamResponseCode.OK_GET_TEAM_INFO.getHttpStatus())
                 .body(CommonResponseDto.of(TeamResponseCode.OK_GET_TEAM_INFO, response));
-
     }
 
     @SecurityRequirement(name = "Bearer Authentication")
@@ -73,12 +71,10 @@ public class TeamController {
     public ResponseEntity<CommonResponseDto> updateTeamName(@AuthUser User user, @PathVariable Long team_id,
             @RequestBody TeamUpdateNameRequest request
     ) {
-
         TeamUpdateNameResponse response = teamService.updateTeamName(user, team_id, request);
 
         return ResponseEntity.status(TeamResponseCode.NO_CONTENT_UPDATE_TEAM_NAME.getHttpStatus())
                 .body(CommonResponseDto.of(TeamResponseCode.NO_CONTENT_UPDATE_TEAM_NAME, response));
-
     }
 
     @SecurityRequirement(name = "Bearer Authentication")
@@ -87,12 +83,10 @@ public class TeamController {
     public ResponseEntity<CommonResponseDto> updateTeamAdmin(@AuthUser User user, @PathVariable Long team_id,
             @RequestBody TeamUpdateAdminRequest request
     ) {
-
         TeamUpdateAdminResponse response = teamService.updateTeamAdmin(user, team_id, request);
 
         return ResponseEntity.status(TeamResponseCode.NO_CONTENT_CHANGE_TEAM_ADMIN.getHttpStatus())
                 .body(CommonResponseDto.of(TeamResponseCode.NO_CONTENT_CHANGE_TEAM_ADMIN, response));
-
     }
 
     @SecurityRequirement(name = "Bearer Authentication")
@@ -101,12 +95,10 @@ public class TeamController {
     public ResponseEntity<CommonResponseDto> deleteTeamUser(@AuthUser User user, @PathVariable Long team_id,
             @RequestBody TeamDeleteUserRequest request
     ) {
-
         TeamDeleteUserResponse response = teamService.deleteTeamUser(user, team_id, request);
 
         return ResponseEntity.status(TeamResponseCode.NO_CONTENT_EXPEL_TEAM_MEMBER.getHttpStatus())
                 .body(CommonResponseDto.of(TeamResponseCode.NO_CONTENT_EXPEL_TEAM_MEMBER, response));
-
     }
 
     @SecurityRequirement(name = "Bearer Authentication")
@@ -115,12 +107,22 @@ public class TeamController {
     public ResponseEntity<CommonResponseDto> withdrawTeam(@AuthUser User user, @PathVariable Long team_id,
             @RequestBody TeamWithdrawRequest request
     ) {
-
         TeamWithdrawResponse response = teamService.withdrawTeam(user, team_id, request);
 
         return ResponseEntity.status(TeamResponseCode.NO_CONTENT_WITHDRAW_TEAM.getHttpStatus())
                 .body(CommonResponseDto.of(TeamResponseCode.NO_CONTENT_WITHDRAW_TEAM, response));
+    }
 
+    @SecurityRequirement(name = "Bearer Authentication")
+    @Operation(operationId = "TEAM-007",summary = "팀 삭제")
+    @DeleteMapping("/{team_id}")
+    public ResponseEntity<CommonResponseDto> deleteTeam(@AuthUser User user, @PathVariable Long team_id,
+            @RequestBody TeamDeleteRequest request
+    ) {
+        TeamDeleteResponse response = teamService.deleteTeam(user, team_id, request);
+
+        return ResponseEntity.status(TeamResponseCode.NO_CONTENT_DELETE_TEAM.getHttpStatus())
+                .body(CommonResponseDto.of(TeamResponseCode.NO_CONTENT_DELETE_TEAM, response));
     }
 
 }

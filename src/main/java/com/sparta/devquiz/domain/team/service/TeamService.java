@@ -1,12 +1,14 @@
 package com.sparta.devquiz.domain.team.service;
 
 import com.sparta.devquiz.domain.team.dto.request.TeamCreateRequest;
+import com.sparta.devquiz.domain.team.dto.request.TeamDeleteRequest;
 import com.sparta.devquiz.domain.team.dto.request.TeamDeleteUserRequest;
 import com.sparta.devquiz.domain.team.dto.request.TeamGetRequest;
 import com.sparta.devquiz.domain.team.dto.request.TeamUpdateAdminRequest;
 import com.sparta.devquiz.domain.team.dto.request.TeamUpdateNameRequest;
 import com.sparta.devquiz.domain.team.dto.request.TeamWithdrawRequest;
 import com.sparta.devquiz.domain.team.dto.response.TeamCreateResponse;
+import com.sparta.devquiz.domain.team.dto.response.TeamDeleteResponse;
 import com.sparta.devquiz.domain.team.dto.response.TeamDeleteUserResponse;
 import com.sparta.devquiz.domain.team.dto.response.TeamGetResponse;
 import com.sparta.devquiz.domain.team.dto.response.TeamUpdateAdminResponse;
@@ -119,6 +121,18 @@ public class TeamService {
         teamUserService.deleteTeamUser(team,user);
 
         return new TeamWithdrawResponse();
+    }
+
+    public TeamDeleteResponse deleteTeam(User admin, Long teamId, TeamDeleteRequest request) {
+        Team team = getTeamAndCheckAuth(admin,teamId);
+
+        if(!teamUserService.isExistedAdmin(team,admin)){
+            throw new TeamCustomException(TeamExceptionCode.FORBIDDEN_TEAM_ADMIN);
+        }
+
+        teamRepository.deleteById(teamId);
+
+        return new TeamDeleteResponse();
     }
 
 
