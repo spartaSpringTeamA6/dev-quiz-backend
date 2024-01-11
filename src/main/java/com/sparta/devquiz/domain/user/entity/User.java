@@ -2,6 +2,7 @@ package com.sparta.devquiz.domain.user.entity;
 
 import com.sparta.devquiz.domain.coin.entity.Coin;
 import com.sparta.devquiz.domain.quiz.entity.UserQuiz;
+import com.sparta.devquiz.domain.user.enums.OauthType;
 import com.sparta.devquiz.domain.user.enums.UserRole;
 import com.sparta.devquiz.global.entity.BaseTimeEntity;
 import jakarta.persistence.Column;
@@ -35,21 +36,28 @@ public class User extends BaseTimeEntity {
     @Column(unique = true)
     private String oauthId;
 
-    @Column(nullable = false, length = 10, unique = true)
-    private String nickname;
+    @Column
+    @Enumerated(value = EnumType.STRING)
+    private OauthType oauthType;
+
+    @Column
+    private String password;
+
+    @Column(nullable = false, length = 30, unique = true)
+    private String username;
 
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
     private UserRole role;
 
     @Column(nullable = false)
-    private Long totalCoin = 0L;
+    private long totalCoin;
 
     @Column
     private LocalDateTime deletedAt;
 
     @Column(nullable = false)
-    private Boolean isDeleted = false;
+    private boolean isDeleted;
 
     @OneToMany(mappedBy = "user")
     private List<Skill> skillList = new ArrayList<>();

@@ -19,19 +19,19 @@ public class UserService {
     );
   }
 
-  public User getUserByOauthId(String oauthId) {
+  public User getOptUserByOauthId(String oauthId) {
     return userRepository.findByOauthIdAndIsDeletedFalse(oauthId).orElseThrow(
         () -> new UserCustomException(UserExceptionCode.NOT_FOUND_USER)
     );
   }
 
-  public User getUserByNickname(String nickname){
-    return userRepository.findByNicknameAndIsDeletedFalse(nickname).orElseThrow(
+  public User getUserByUsername(String nickname){
+    return userRepository.findByUsernameAndIsDeletedFalse(nickname).orElseThrow(
             () -> new UserCustomException(UserExceptionCode.NOT_FOUND_USER)
     );
   }
 
   public boolean isExistedNickname(String nickname){
-    return userRepository.existsByNickname(nickname);
+    return userRepository.existsByUsername(nickname);
   }
 }
