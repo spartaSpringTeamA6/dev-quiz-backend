@@ -65,13 +65,6 @@ public class BoardService {
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, "404", "Board not found"));
 
-        if (boardUpdateRequestDto.getTitle() != null) {
-            board.updateTitle(boardUpdateRequestDto.getTitle());
-        }
-        if (boardUpdateRequestDto.getContent() != null) {
-            board.updateContent(boardUpdateRequestDto.getContent());
-        }
-
         board.updateTitleAndContent(boardUpdateRequestDto.getTitle(), boardUpdateRequestDto.getContent());
     }
 
