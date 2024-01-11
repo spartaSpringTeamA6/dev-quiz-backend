@@ -1,5 +1,4 @@
-// BoardUpdateRequestDto.java
-package com.sparta.devquiz.domain.board.dto;
+package com.sparta.devquiz.domain.board.dto.RequestDto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

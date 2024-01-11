@@ -1,4 +1,4 @@
-package com.sparta.devquiz.domain.board.dto;
+package com.sparta.devquiz.domain.board.dto.RequestDto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Size;
