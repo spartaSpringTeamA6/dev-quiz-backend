@@ -4,6 +4,7 @@ import com.sparta.devquiz.domain.team.dto.request.TeamCreateRequest;
 import com.sparta.devquiz.domain.team.dto.request.TeamDeleteRequest;
 import com.sparta.devquiz.domain.team.dto.request.TeamDeleteUserRequest;
 import com.sparta.devquiz.domain.team.dto.request.TeamGetRequest;
+import com.sparta.devquiz.domain.team.dto.request.TeamInviteUserRequest;
 import com.sparta.devquiz.domain.team.dto.request.TeamUpdateAdminRequest;
 import com.sparta.devquiz.domain.team.dto.request.TeamUpdateNameRequest;
 import com.sparta.devquiz.domain.team.dto.request.TeamWithdrawRequest;
@@ -11,6 +12,7 @@ import com.sparta.devquiz.domain.team.dto.response.TeamCreateResponse;
 import com.sparta.devquiz.domain.team.dto.response.TeamDeleteResponse;
 import com.sparta.devquiz.domain.team.dto.response.TeamDeleteUserResponse;
 import com.sparta.devquiz.domain.team.dto.response.TeamGetResponse;
+import com.sparta.devquiz.domain.team.dto.response.TeamInviteUserResponse;
 import com.sparta.devquiz.domain.team.dto.response.TeamUpdateAdminResponse;
 import com.sparta.devquiz.domain.team.dto.response.TeamUpdateNameResponse;
 import com.sparta.devquiz.domain.team.dto.response.TeamWithdrawResponse;
@@ -123,6 +125,18 @@ public class TeamController {
 
         return ResponseEntity.status(TeamResponseCode.NO_CONTENT_DELETE_TEAM.getHttpStatus())
                 .body(CommonResponseDto.of(TeamResponseCode.NO_CONTENT_DELETE_TEAM, response));
+    }
+
+    @SecurityRequirement(name = "Bearer Authentication")
+    @Operation(operationId = "TEAM-008",summary = "팀 유저 초대")
+    @PostMapping("/{team_id}/invitation")
+    public ResponseEntity<CommonResponseDto> inviteTeamUser(@AuthUser User user, @PathVariable Long team_id,
+            @RequestBody TeamInviteUserRequest request
+    ) {
+        TeamInviteUserResponse response = teamService.inviteTeamUser(user, team_id, request);
+
+        return ResponseEntity.status(TeamResponseCode.NO_CONTENT_INVITE_TEAM_USER.getHttpStatus())
+                .body(CommonResponseDto.of(TeamResponseCode.NO_CONTENT_INVITE_TEAM_USER, response));
     }
 
 }

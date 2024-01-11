@@ -19,15 +19,9 @@ public class TeamUserService {
 
     private final TeamUserRepository teamUserRepository;
 
-    public void saveTeamAdmin(Team team, User user){
+    public void saveTeamUser(Team team, User user, TeamUserRole teamUserRole){
         TeamUser teamUser = TeamUser.builder().team(team).user(user)
-                .userRole(TeamUserRole.ADMIN).build();
-        teamUserRepository.save(teamUser);
-    }
-
-    public void saveTeamUser(Team team, User user){
-        TeamUser teamUser = TeamUser.builder().team(team).user(user)
-                .userRole(TeamUserRole.USER).build();
+                .userRole(teamUserRole).build();
         teamUserRepository.save(teamUser);
     }
 
@@ -45,10 +39,12 @@ public class TeamUserService {
     public void updateTeamUserRole(Team team, User user, TeamUserRole teamUserRole){
         TeamUser teamUser = getTeamUserByTeamIdAndUserId(team, user);
         teamUser.updateTeamUserRole(teamUserRole);
+        teamUserRepository.save(teamUser);
     }
 
     public void deleteTeamUser(Team team, User user) {
-
+        TeamUser teamUser = getTeamUserByTeamIdAndUserId(team,user);
+        teamUserRepository.delete(teamUser);
     }
 
     public TeamUser getTeamUserByTeamIdAndUserId(Team team, User user){

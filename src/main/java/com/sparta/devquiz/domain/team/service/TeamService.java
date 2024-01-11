@@ -4,6 +4,7 @@ import com.sparta.devquiz.domain.team.dto.request.TeamCreateRequest;
 import com.sparta.devquiz.domain.team.dto.request.TeamDeleteRequest;
 import com.sparta.devquiz.domain.team.dto.request.TeamDeleteUserRequest;
 import com.sparta.devquiz.domain.team.dto.request.TeamGetRequest;
+import com.sparta.devquiz.domain.team.dto.request.TeamInviteUserRequest;
 import com.sparta.devquiz.domain.team.dto.request.TeamUpdateAdminRequest;
 import com.sparta.devquiz.domain.team.dto.request.TeamUpdateNameRequest;
 import com.sparta.devquiz.domain.team.dto.request.TeamWithdrawRequest;
@@ -11,6 +12,7 @@ import com.sparta.devquiz.domain.team.dto.response.TeamCreateResponse;
 import com.sparta.devquiz.domain.team.dto.response.TeamDeleteResponse;
 import com.sparta.devquiz.domain.team.dto.response.TeamDeleteUserResponse;
 import com.sparta.devquiz.domain.team.dto.response.TeamGetResponse;
+import com.sparta.devquiz.domain.team.dto.response.TeamInviteUserResponse;
 import com.sparta.devquiz.domain.team.dto.response.TeamUpdateAdminResponse;
 import com.sparta.devquiz.domain.team.dto.response.TeamUpdateNameResponse;
 import com.sparta.devquiz.domain.team.dto.response.TeamWithdrawResponse;
@@ -46,7 +48,7 @@ public class TeamService {
                 .build();
         teamRepository.save(team);
 
-        teamUserService.saveTeamAdmin(team,createdBy);
+        teamUserService.saveTeamUser(team,createdBy, TeamUserRole.ADMIN);
 
         return TeamCreateResponse.of(team);
     }
@@ -133,6 +135,24 @@ public class TeamService {
         teamRepository.deleteById(teamId);
 
         return new TeamDeleteResponse();
+    }
+
+    public TeamInviteUserResponse inviteTeamUser(User admin, Long teamId, TeamInviteUserRequest request) {
+        Team team = getTeamAndCheckAuth(admin,teamId);
+
+        if(!teamUserService.isExistedAdmin(team,admin)){
+            throw new TeamCustomException(TeamExceptionCode.FORBIDDEN_TEAM_ADMIN);
+        }
+
+        for(String username: request.getUser()){
+            User inviteUser = userService.getUserByUsername(username);
+            if(teamUserService.isExistedUser(team,inviteUser)){
+                throw new TeamCustomException(TeamExceptionCode.CONFLICT_INVITE_USERNAME_IN_TEAM);
+            }
+            teamUserService.saveTeamUser(team,inviteUser,TeamUserRole.USER);
+        }
+
+        return new TeamInviteUserResponse();
     }
 
 
