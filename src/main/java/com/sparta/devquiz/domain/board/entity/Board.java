@@ -35,11 +35,12 @@ public class Board extends BaseTimeEntity {
     @Column(nullable = false)
     private Boolean isDeleted = false;
 
-    public void updateTitle(String title) {
-        this.title = title;
-    }
-
-    public void updateContent(String content) {
-        this.content = content;
+    public void updateTitleAndContent(String title, String content) {
+        if (title != null) {
+            this.title = title;
+        }
+        if (content != null) {
+            this.content = content;
+        }
     }
 }
