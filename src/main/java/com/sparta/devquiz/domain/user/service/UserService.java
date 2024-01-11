@@ -13,7 +13,6 @@ public class UserService {
 
   private final UserRepository userRepository;
 
-
   public User getUserById(Long userId) {
     return userRepository.findByIdAndIsDeletedFalse(userId).orElseThrow(
         () -> new UserCustomException(UserExceptionCode.NOT_FOUND_USER)

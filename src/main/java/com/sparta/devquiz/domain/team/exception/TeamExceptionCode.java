@@ -9,6 +9,9 @@ import org.springframework.http.HttpStatus;
 public enum TeamExceptionCode {
 
     // BAD REQUEST 400
+    BAD_REQUEST_INVALID_REQUEST_TEAM_NAME(HttpStatus.BAD_REQUEST, "TEAM-007", "유효하지 않은 팀 이름입니다."),
+    BAD_REQUEST_INVALID_REQUEST_USER_NICKNAME(HttpStatus.BAD_REQUEST, "TEAM-008", "유효하지 않은 유저 닉네임입니다"),
+    BAD_REQUEST_INVALID_REQUEST_DELETE_ADMIN(HttpStatus.BAD_REQUEST, "TEAM-009", "유효하지 않은 삭제할 유저 닉네임입니다"),
 
     // NOT FOUND 404
     NOT_FOUND_TEAM(HttpStatus.NOT_FOUND, "TEAM-001", "해당 팀을 찾을 수 없습니다."),
@@ -20,8 +23,7 @@ public enum TeamExceptionCode {
     FORBIDDEN_TEAM_ADMIN(HttpStatus.FORBIDDEN, "TEAM-003", "해당 유저는 팀 관리자 권한이 없습니다."),
 
     // CONFLICT 409
-    CONFLICT_TEAM_NAME_IN_USE(HttpStatus.CONFLICT, "TEAM-005", "해당 팀 이름이 이미 사용 중 입니다")
-    ;
+    CONFLICT_TEAM_NAME_IN_USE(HttpStatus.CONFLICT, "TEAM-005", "해당 팀 이름이 이미 사용 중 입니다");
 
     private final HttpStatus httpStatus;
     private final String errorCode;

@@ -1,10 +1,12 @@
 package com.sparta.devquiz.domain.team.controller;
 
 import com.sparta.devquiz.domain.team.dto.request.TeamCreateRequest;
+import com.sparta.devquiz.domain.team.dto.request.TeamDeleteUserRequest;
 import com.sparta.devquiz.domain.team.dto.request.TeamGetRequest;
 import com.sparta.devquiz.domain.team.dto.request.TeamUpdateAdminRequest;
 import com.sparta.devquiz.domain.team.dto.request.TeamUpdateNameRequest;
 import com.sparta.devquiz.domain.team.dto.response.TeamCreateResponse;
+import com.sparta.devquiz.domain.team.dto.response.TeamDeleteUserResponse;
 import com.sparta.devquiz.domain.team.dto.response.TeamGetResponse;
 import com.sparta.devquiz.domain.team.dto.response.TeamUpdateAdminResponse;
 import com.sparta.devquiz.domain.team.dto.response.TeamUpdateNameResponse;
@@ -18,6 +20,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -91,6 +94,21 @@ public class TeamController {
         return ResponseEntity.status(TeamResponseCode.NO_CONTENT_CHANGE_TEAM_ADMIN.getHttpStatus())
                 .body(new CommonResponseDto(TeamResponseCode.NO_CONTENT_CHANGE_TEAM_ADMIN.getHttpStatus().value(),
                         TeamResponseCode.NO_CONTENT_CHANGE_TEAM_ADMIN.getMessage(), response));
+
+    }
+
+    @SecurityRequirement(name = "Bearer Authentication")
+    @Operation(operationId = "TEAM-004",summary = "팀 멤버 추방")
+    @DeleteMapping("/{team_id}/user")
+    public ResponseEntity<CommonResponseDto> deleteTeamUser(@AuthUser User user, @PathVariable Long team_id,
+            @RequestBody TeamDeleteUserRequest request
+    ) {
+
+        TeamDeleteUserResponse response = teamService.deleteTeamUser(user, team_id, request);
+
+        return ResponseEntity.status(TeamResponseCode.NO_CONTENT_EXPEL_TEAM_MEMBER.getHttpStatus())
+                .body(new CommonResponseDto(TeamResponseCode.NO_CONTENT_EXPEL_TEAM_MEMBER.getHttpStatus().value(),
+                        TeamResponseCode.NO_CONTENT_EXPEL_TEAM_MEMBER.getMessage(), response));
 
     }
 

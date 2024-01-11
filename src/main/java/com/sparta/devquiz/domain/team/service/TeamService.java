@@ -1,10 +1,12 @@
 package com.sparta.devquiz.domain.team.service;
 
 import com.sparta.devquiz.domain.team.dto.request.TeamCreateRequest;
+import com.sparta.devquiz.domain.team.dto.request.TeamDeleteUserRequest;
 import com.sparta.devquiz.domain.team.dto.request.TeamGetRequest;
 import com.sparta.devquiz.domain.team.dto.request.TeamUpdateAdminRequest;
 import com.sparta.devquiz.domain.team.dto.request.TeamUpdateNameRequest;
 import com.sparta.devquiz.domain.team.dto.response.TeamCreateResponse;
+import com.sparta.devquiz.domain.team.dto.response.TeamDeleteUserResponse;
 import com.sparta.devquiz.domain.team.dto.response.TeamGetResponse;
 import com.sparta.devquiz.domain.team.dto.response.TeamUpdateAdminResponse;
 import com.sparta.devquiz.domain.team.dto.response.TeamUpdateNameResponse;
@@ -67,8 +69,12 @@ public class TeamService {
     }
 
     public TeamUpdateAdminResponse updateTeamAdmin(User user, Long teamId, TeamUpdateAdminRequest request) {
-        Team team = getTeamAndCheckAuth(user,teamId);
+        if(user.getNickname().equals(request.getNickname())){
+            // TODO: exceptioncode
+            throw new TeamCustomException(TeamExceptionCode.FORBIDDEN_TEAM_ADMIN);
+        }
 
+        Team team = getTeamAndCheckAuth(user,teamId);
         if(!teamUserService.isExistedAdmin(team,user)){
             throw new TeamCustomException(TeamExceptionCode.FORBIDDEN_TEAM_ADMIN);
         }
@@ -82,6 +88,23 @@ public class TeamService {
         teamUserService.updateTeamUserRole(team, newAdmin, TeamUserRole.ADMIN);
 
         return new TeamUpdateAdminResponse();
+    }
+
+    public TeamDeleteUserResponse deleteTeamUser(User user, Long teamId, TeamDeleteUserRequest request) {
+        Team team = getTeamAndCheckAuth(user,teamId);
+
+        if(!teamUserService.isExistedAdmin(team,user)){
+            throw new TeamCustomException(TeamExceptionCode.FORBIDDEN_TEAM_ADMIN);
+        }
+
+        User deleteUser = userService.getUserByNickname(request.getNickname());
+        if(!teamUserService.isExistedUser(team,deleteUser)){
+            throw new TeamCustomException(TeamExceptionCode.NOT_FOUND_TEAM_USER);
+        }
+
+        teamUserService.deleteTeamUser(team,user);
+
+        return new TeamDeleteUserResponse();
     }
 
 
@@ -101,5 +124,6 @@ public class TeamService {
                 () -> new TeamCustomException(TeamExceptionCode.NOT_FOUND_TEAM)
         );
     }
+
 
 }

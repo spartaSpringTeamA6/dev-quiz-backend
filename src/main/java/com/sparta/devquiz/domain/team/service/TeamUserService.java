@@ -47,6 +47,10 @@ public class TeamUserService {
         teamUser.updateTeamUserRole(teamUserRole);
     }
 
+    public void deleteTeamUser(Team team, User user) {
+
+    }
+
     public TeamUser getTeamUserByTeamIdAndUserId(Team team, User user){
         return teamUserRepository.findByTeamIdAndUserId(team.getId(), user.getId()).orElseThrow(
                 () -> new TeamCustomException(TeamExceptionCode.NOT_FOUND_TEAM_USER)
