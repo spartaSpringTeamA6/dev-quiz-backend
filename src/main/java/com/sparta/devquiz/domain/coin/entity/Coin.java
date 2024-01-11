@@ -1,7 +1,6 @@
 package com.sparta.devquiz.domain.coin.entity;
 
 import com.sparta.devquiz.domain.coin.enums.CoinContent;
-import com.sparta.devquiz.domain.coin.enums.CoinStatus;
 import com.sparta.devquiz.domain.user.entity.User;
 import com.sparta.devquiz.global.entity.BaseTimeEntity;
 import jakarta.persistence.*;
@@ -22,15 +21,30 @@ public class Coin extends BaseTimeEntity {
     private Long coins;
 
     @Column(nullable = false)
-    @Enumerated(value = EnumType.STRING)
-    private CoinStatus status;
+    private String status;
 
     @Column(nullable = false)
-    @Enumerated(value = EnumType.STRING)
-    private CoinContent content;
+    private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
+    public static Coin saveCoins(User user, CoinContent coinContent) {
+        return Coin.builder()
+                .user(user)
+                .coins(coinContent.getCoinSupplier().get())
+                .status(coinContent.getStatus())
+                .content(coinContent.getContent())
+                .build();
+    }
+
+    public static Coin useCoins(User user, Long payment, CoinContent coinContent) {
+        return Coin.builder()
+                .user(user)
+                .coins(-payment)
+                .status(coinContent.getStatus())
+                .content(coinContent.getContent())
+                .build();
+    }
 }

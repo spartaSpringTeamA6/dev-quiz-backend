@@ -32,12 +32,11 @@ public class CoinController {
         SaveCoinResponse saveCoinResponse = coinService.saveCoin(userId, saveCoinRequest, authUser);
 
         return ResponseEntity.status(CoinResponseCode.CREATED_SAVE_COIN.getHttpStatus())
-                .body(new CommonResponseDto<>(CoinResponseCode.CREATED_SAVE_COIN.getHttpStatus().value(),
-                        CoinResponseCode.CREATED_SAVE_COIN.getMessage(), saveCoinResponse));
+                .body(CommonResponseDto.of(CoinResponseCode.CREATED_SAVE_COIN, saveCoinResponse));
     }
 
     @SecurityRequirement(name = "Bearer Authentication")
-    @Operation(summary = "코인 사용")
+    @Operation(operationId = "COIN-002", summary = "코인 사용")
     @PostMapping("/use")
     public ResponseEntity<CommonResponseDto<UseCoinResponse>> useCoin(@PathVariable Long userId, @RequestBody UseCoinRequest useCoinRequest,
                                                                       @AuthUser User authUser) {
@@ -45,13 +44,12 @@ public class CoinController {
         UseCoinResponse useCoinResponse = coinService.useCoin(userId, useCoinRequest, authUser);
 
         return ResponseEntity.status(CoinResponseCode.NO_CONTENT_USE_COIN.getHttpStatus())
-                .body(new CommonResponseDto<>(CoinResponseCode.NO_CONTENT_USE_COIN.getHttpStatus().value(),
-                        CoinResponseCode.NO_CONTENT_USE_COIN.name(), useCoinResponse));
+                .body(CommonResponseDto.of(CoinResponseCode.NO_CONTENT_USE_COIN, useCoinResponse));
     }
 
 
     @SecurityRequirement(name = "Bearer Authentication")
-    @Operation(summary = "코인 조회")
+    @Operation(operationId = "COIN-003", summary = "코인 조회")
     @GetMapping
 
     public ResponseEntity<CommonResponseDto<GetCoinInfoResponse>> getCoinInfo(@PathVariable Long userId, @AuthUser User authUser) {
@@ -59,8 +57,7 @@ public class CoinController {
         GetCoinInfoResponse getCoinInfoResponse = coinService.getCoinInfo(userId, authUser);
 
         return ResponseEntity.status(CoinResponseCode.OK_GET_MY_COIN.getHttpStatus())
-                .body(new CommonResponseDto<>(CoinResponseCode.OK_GET_MY_COIN.getHttpStatus().value(),
-                        CoinResponseCode.OK_GET_MY_COIN.getMessage(), getCoinInfoResponse));
+                .body(CommonResponseDto.of(CoinResponseCode.OK_GET_MY_COIN, getCoinInfoResponse));
     }
 
 }
