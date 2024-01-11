@@ -1,6 +1,5 @@
 package com.sparta.devquiz.global.response;
 
-import com.sparta.devquiz.domain.team.response.TeamResponseCode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
