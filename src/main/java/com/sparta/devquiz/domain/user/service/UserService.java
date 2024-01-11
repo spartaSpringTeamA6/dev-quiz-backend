@@ -13,16 +13,25 @@ public class UserService {
 
   private final UserRepository userRepository;
 
-
   public User getUserById(Long userId) {
-    return userRepository.findById(userId).orElseThrow(
-        () -> new UserCustomException(UserExceptionCode.NOT_FOUND_USER)
+    return userRepository.findByIdAndIsDeletedFalse(userId).orElseThrow(
+            () -> new UserCustomException(UserExceptionCode.NOT_FOUND_USER)
     );
   }
 
   public User getUserByOauthId(String oauthId) {
-    return userRepository.findByOauthId(oauthId).orElseThrow(
-        () -> new UserCustomException(UserExceptionCode.NOT_FOUND_USER)
+    return userRepository.findByOauthIdAndIsDeletedFalse(oauthId).orElseThrow(
+            () -> new UserCustomException(UserExceptionCode.NOT_FOUND_USER)
     );
+  }
+
+  public User getUserByNickname(String nickname){
+    return userRepository.findByNicknameAndIsDeletedFalse(nickname).orElseThrow(
+            () -> new UserCustomException(UserExceptionCode.NOT_FOUND_USER)
+    );
+  }
+
+  public boolean isExistedNickname(String nickname){
+    return userRepository.existsByNickname(nickname);
   }
 }
