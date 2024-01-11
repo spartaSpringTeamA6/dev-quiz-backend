@@ -69,7 +69,7 @@ public class TeamService {
     }
 
     public TeamUpdateAdminResponse updateTeamAdmin(User user, Long teamId, TeamUpdateAdminRequest request) {
-        if(user.getNickname().equals(request.getNickname())){
+        if(user.getUsername().equals(request.getUsername())){
             // TODO: exceptioncode
             throw new TeamCustomException(TeamExceptionCode.FORBIDDEN_TEAM_ADMIN);
         }
@@ -79,7 +79,7 @@ public class TeamService {
             throw new TeamCustomException(TeamExceptionCode.FORBIDDEN_TEAM_ADMIN);
         }
 
-        User newAdmin = userService.getUserByNickname(request.getNickname());
+        User newAdmin = userService.getUserByUsername(request.getUsername());
         if(!teamUserService.isExistedUser(team,newAdmin)){
             throw new TeamCustomException(TeamExceptionCode.NOT_FOUND_TEAM_USER);
         }
@@ -97,7 +97,7 @@ public class TeamService {
             throw new TeamCustomException(TeamExceptionCode.FORBIDDEN_TEAM_ADMIN);
         }
 
-        User deleteUser = userService.getUserByNickname(request.getNickname());
+        User deleteUser = userService.getUserByUsername(request.getUsername());
         if(!teamUserService.isExistedUser(team,deleteUser)){
             throw new TeamCustomException(TeamExceptionCode.NOT_FOUND_TEAM_USER);
         }

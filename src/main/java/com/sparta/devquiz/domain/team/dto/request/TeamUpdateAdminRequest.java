@@ -9,7 +9,7 @@ import lombok.Getter;
 public class TeamUpdateAdminRequest {
 
     @Column
-    @Schema(description = "유저 닉네임", defaultValue = "도로롱")
-    private String nickname;
+    @Schema(description = "유저 이름", defaultValue = "도로롱")
+    private String username;
 
 }
