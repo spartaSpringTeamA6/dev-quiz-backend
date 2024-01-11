@@ -1,6 +1,6 @@
 package com.sparta.devquiz.domain.user.entity;
 
-import com.sparta.devquiz.domain.point.entity.Point;
+import com.sparta.devquiz.domain.coin.entity.Coin;
 import com.sparta.devquiz.domain.quiz.entity.UserQuiz;
 import com.sparta.devquiz.domain.user.enums.UserRole;
 import com.sparta.devquiz.global.entity.BaseTimeEntity;
@@ -32,12 +32,18 @@ public class User extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true)
+    private String oauthId;
+
     @Column(nullable = false, length = 10, unique = true)
     private String nickname;
 
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
     private UserRole role;
+
+    @Column(nullable = false)
+    private Long totalCoin = 0L;
 
     @Column
     private LocalDateTime deletedAt;
@@ -49,9 +55,8 @@ public class User extends BaseTimeEntity {
     private List<Skill> skillList = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
-    private List<Point> pointList = new ArrayList<>();
+    private List<Coin> coinList = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
     private List<UserQuiz> userQuizList = new ArrayList<>();
-
 }
