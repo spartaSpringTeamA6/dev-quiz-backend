@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface UserRepository extends JpaRepository<User, Long> {
   Optional<User> findByIdAndIsDeletedFalse(Long id);
   Optional<User> findByOauthIdAndIsDeletedFalse(String oauthId);
-  Optional<User> findByNicknameAndIsDeletedFalse(String nickname);
-  boolean existsByNickname(String nickname);
+  Optional<User> findByUsernameAndIsDeletedFalse(String username);
+  boolean existsByUsername(String username);
 }
