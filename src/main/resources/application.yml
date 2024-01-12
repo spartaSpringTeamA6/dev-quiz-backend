@@ -40,10 +40,6 @@ spring:
           github:
             client-id: ${GITHUB_CLIENT_ID}
             client-secret: ${GITHUB_SECRET}
-
-logging:
-  level:
-    org.springframework.security: DEBUG
 jwt:
   secret:
     key: ${JWT_KEY}
