@@ -18,7 +18,7 @@ public class Coin extends BaseTimeEntity {
     private Long id;
 
     @Column(nullable = false)
-    private long coins;
+    private int coins;
 
     @Column(nullable = false)
     private String status;

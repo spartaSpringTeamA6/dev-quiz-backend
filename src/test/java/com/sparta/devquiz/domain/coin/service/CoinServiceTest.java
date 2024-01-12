@@ -61,10 +61,10 @@ class CoinServiceTest {
         Long userId = 1L;
 
         List<SaveCoinRequest> saveCoinRequestList = Arrays.asList(
-        new SaveCoinRequest(0L, CoinContent.FIRST),
-        new SaveCoinRequest(0L, CoinContent.CORRECT),
-        new SaveCoinRequest(0L, CoinContent.FAIL),
-        new SaveCoinRequest(0L, CoinContent.PASS)
+        new SaveCoinRequest(0, CoinContent.FIRST),
+        new SaveCoinRequest(0, CoinContent.CORRECT),
+        new SaveCoinRequest(0, CoinContent.FAIL),
+        new SaveCoinRequest(0, CoinContent.PASS)
         );
         when(userService.getUserById(userId)).thenReturn(user);
 
@@ -93,16 +93,16 @@ class CoinServiceTest {
     void useCoin() {
         // GIVEN
         Long userId = 1L;
-        UseCoinRequest useCoinRequest = new UseCoinRequest(0L, CoinContent.ITEM_CAT);
+        UseCoinRequest useCoinRequest = new UseCoinRequest(0, CoinContent.ITEM_CAT);
 
-        SaveCoinRequest saveCoinRequest1 = new SaveCoinRequest(0L, CoinContent.FIRST);
-        SaveCoinRequest saveCoinRequest2 = new SaveCoinRequest(0L, CoinContent.FIRST);
+        SaveCoinRequest saveCoinRequest1 = new SaveCoinRequest(0, CoinContent.FIRST);
+        SaveCoinRequest saveCoinRequest2 = new SaveCoinRequest(0, CoinContent.FIRST);
 
         Coin coin1 = Coin.saveCoins(user, saveCoinRequest1.getCoinContent());
         Coin coin2 = Coin.saveCoins(user, saveCoinRequest2.getCoinContent());
 
-        Long totalCoin = coin1.getCoins() + coin2.getCoins();
-        Long payment = useCoinRequest.getCoinContent().getCoinSupplier().get();
+        int totalCoin = coin1.getCoins() + coin2.getCoins();
+        int payment = useCoinRequest.getCoinContent().getCoinSupplier().get();
 
         List<Coin> coins = Arrays.asList(coin1, coin2);
 
@@ -114,21 +114,21 @@ class CoinServiceTest {
         UseCoinResponse response = coinService.useCoin(userId, useCoinRequest, user);
 
         // THEN
-        assertEquals(15L, response.getCoins());
+        assertEquals(15, response.getCoins());
     }
     @Test
     @DisplayName("코인 사용 실패 - 한도 초과")
     void failToUseCoin() {
         // GIVEN
         Long userId = 1L;
-        UseCoinRequest useCoinRequest = new UseCoinRequest(0L, CoinContent.ITEM_DOG);
-        SaveCoinRequest saveCoinRequest1 = new SaveCoinRequest(0L, CoinContent.FIRST);
-        SaveCoinRequest saveCoinRequest2 = new SaveCoinRequest(0L, CoinContent.FIRST);
+        UseCoinRequest useCoinRequest = new UseCoinRequest(0, CoinContent.ITEM_DOG);
+        SaveCoinRequest saveCoinRequest1 = new SaveCoinRequest(0, CoinContent.FIRST);
+        SaveCoinRequest saveCoinRequest2 = new SaveCoinRequest(0, CoinContent.FIRST);
 
         Coin coin1 = Coin.saveCoins(user, saveCoinRequest1.getCoinContent());
         Coin coin2 = Coin.saveCoins(user, saveCoinRequest2.getCoinContent());
 
-        Long totalCoin = coin1.getCoins() + coin2.getCoins();
+        int totalCoin = coin1.getCoins() + coin2.getCoins();
 
         List<Coin> coins = Arrays.asList(coin1, coin2);
 
@@ -151,8 +151,8 @@ class CoinServiceTest {
         // GIVEN
         Long userId = 1L;
 
-        SaveCoinRequest saveCoinRequest1 = new SaveCoinRequest(0L, CoinContent.FIRST);
-        SaveCoinRequest saveCoinRequest2 = new SaveCoinRequest(0L, CoinContent.FIRST);
+        SaveCoinRequest saveCoinRequest1 = new SaveCoinRequest(0, CoinContent.FIRST);
+        SaveCoinRequest saveCoinRequest2 = new SaveCoinRequest(0, CoinContent.FIRST);
 
         Coin coin1 = Coin.saveCoins(user, saveCoinRequest1.getCoinContent());
         Coin coin2 = Coin.saveCoins(user, saveCoinRequest2.getCoinContent());
@@ -166,6 +166,6 @@ class CoinServiceTest {
         GetCoinInfoResponse response = coinService.getCoinInfo(userId, user);
 
         // THEN
-        assertEquals(40L, response.getCoins());
+        assertEquals(40, response.getCoins());
     }
 }

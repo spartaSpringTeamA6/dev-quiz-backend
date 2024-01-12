@@ -7,5 +7,5 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class GetCoinInfoResponse {
 
-    private final long coins;
+    private final int coins;
 }

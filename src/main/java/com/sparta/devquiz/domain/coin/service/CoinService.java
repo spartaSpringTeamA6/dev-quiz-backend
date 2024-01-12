@@ -44,15 +44,15 @@ public class CoinService {
         User user = userService.getUserById(userId);
         checkUserPermission(authUser, user);
 
-        Long totalCoin = getTotalCoin(userId);
+        int totalCoin = getTotalCoin(userId);
 
-        Long payment = useCoinRequest.getCoinContent().getCoinSupplier().get();
+        int payment = useCoinRequest.getCoinContent().getCoinSupplier().get();
 
         if (totalCoin < payment) {
             throw new CoinCustomException(CoinExceptionCode.BAD_REQUEST_NOT_ENOUGH_COIN);
         }
 
-        Long changeCoins = totalCoin - payment;
+        int changeCoins = totalCoin - payment;
 
         CoinContent coinContent = useCoinRequest.getCoinContent();
         Coin coin = Coin.useCoins(user, coinContent);
@@ -65,7 +65,7 @@ public class CoinService {
         User user = userService.getUserById(userId);
         checkUserPermission(authUser, user);
 
-        Long totalCoin = getTotalCoin(userId);
+        int totalCoin = getTotalCoin(userId);
 
         return new GetCoinInfoResponse(totalCoin);
     }
@@ -76,9 +76,9 @@ public class CoinService {
         }
     }
 
-    private Long getTotalCoin(Long userId) {
+    private int getTotalCoin(Long userId) {
         return coinRepository.findAllByUserId(userId).stream()
-                .mapToLong(Coin::getCoins)
+                .mapToInt(Coin::getCoins)
                 .sum();
     }
 }
