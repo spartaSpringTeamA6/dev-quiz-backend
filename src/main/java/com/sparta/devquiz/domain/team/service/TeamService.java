@@ -8,6 +8,7 @@ import com.sparta.devquiz.domain.team.dto.request.TeamUpdateNameRequest;
 import com.sparta.devquiz.domain.team.dto.request.TeamWithdrawRequest;
 import com.sparta.devquiz.domain.team.dto.response.TeamCreateResponse;
 import com.sparta.devquiz.domain.team.dto.response.TeamGetResponse;
+import com.sparta.devquiz.domain.team.dto.response.TeamGetUserRankingResponse;
 import com.sparta.devquiz.domain.team.entity.Team;
 import com.sparta.devquiz.domain.team.entity.TeamUser;
 import com.sparta.devquiz.domain.team.enums.TeamUserRole;
@@ -138,12 +139,12 @@ public class TeamService {
         }
     }
 
-//    public TeamGetMyRankingResponse getMyRankingInTeam(User user, Long teamId, Long userId, TeamGetMyRankingRequest request) {
+//    public TeamGetUserRankingResponse getUserRankingInTeam(User user, Long teamId, Long userId, TeamGetUserRankingResponse request) {
 //        if(!user.getId().equals(userId)){
 //
 //        }
-//        Team team = getTeamAndCheckAuth()
-//        return new TeamGetMyRankingResponse();
+//        Team team = getTeamAndCheckAuth(user,teamId);
+//        return TeamGetUserRankingResponse.;
 //    }
 
     public Team getTeamAndCheckAuth(User user, Long teamId){

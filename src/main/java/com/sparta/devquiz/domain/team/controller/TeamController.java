@@ -8,6 +8,7 @@ import com.sparta.devquiz.domain.team.dto.request.TeamUpdateNameRequest;
 import com.sparta.devquiz.domain.team.dto.request.TeamWithdrawRequest;
 import com.sparta.devquiz.domain.team.dto.response.TeamCreateResponse;
 import com.sparta.devquiz.domain.team.dto.response.TeamGetResponse;
+import com.sparta.devquiz.domain.team.dto.response.TeamGetUserRankingResponse;
 import com.sparta.devquiz.domain.team.response.TeamResponseCode;
 import com.sparta.devquiz.domain.team.service.TeamService;
 import com.sparta.devquiz.domain.user.entity.User;
@@ -147,19 +148,17 @@ public class TeamController {
     }
 
 //    @SecurityRequirement(name = "Bearer Authentication")
-//    @Operation(operationId = "TEAM-009",summary = "팀 내 나의 랭킹 확인 ")
+//    @Operation(operationId = "TEAM-009",summary = "팀 내 유저 랭킹, 나의 랭킹 조회")
 //    @PostMapping("/{team_id}/users/{user_id}/ranking")
-//    public ResponseEntity<CommonResponseDto> getMyRankingInTeam(
+//    public ResponseEntity<CommonResponseDto> getUserRankingInTeam(
 //            @AuthUser User user,
 //            @PathVariable Long team_id,
-//            @PathVariable Long user_id,
-//            @RequestBody TeamGetMyRankingRequest request
+//            @PathVariable Long user_id
 //    ) {
-//        TeamGetMyRankingResponse response = teamService.getMyRankingInTeam(user, team_id, user_id, request);
+//        TeamGetUserRankingResponse response = teamService.getUserRankingInTeam(user, team_id, user_id, request);
 //
-//        return ResponseEntity.status(TeamResponseCode.NO_CONTENT_INVITE_TEAM_USER.getHttpStatus())
-//                .body(CommonResponseDto.of(TeamResponseCode.NO_CONTENT_INVITE_TEAM_USER, response));
+//        return ResponseEntity.status(TeamResponseCode.OK_GET_USER_RANKING_IN_TEAM.getHttpStatus())
+//                .body(CommonResponseDto.of(TeamResponseCode.OK_GET_USER_RANKING_IN_TEAM, response));
 //    }
-
-
+    
 }
