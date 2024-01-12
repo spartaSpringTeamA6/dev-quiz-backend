@@ -12,6 +12,7 @@ import com.sparta.devquiz.global.annotation.AuthUser;
 import com.sparta.devquiz.global.response.CommonResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/users/{userId}/coins")
 @RequiredArgsConstructor
+@Tag(name = "3. Coin API", description = "Coin 관련 API 입니다.")
 public class CoinController {
 
     private final CoinService coinService;
