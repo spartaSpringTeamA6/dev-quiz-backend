@@ -61,18 +61,26 @@ public class BoardService {
     }
 
     @Transactional
-    public void updateBoard(Long boardId, BoardUpdateRequestDto boardUpdateRequestDto) {
+    public void updateBoard(Long boardId, BoardUpdateRequestDto boardUpdateRequestDto, User currentUser) {
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new BoardCustomException(BoardExceptionCode.NOT_FOUND_BOARD));
+
+        if (!board.getUser().equals(currentUser)) {
+            throw new BoardCustomException(BoardExceptionCode.UNAUTHORIZED_USER);
+        }
 
         board.updateTitleAndContent(boardUpdateRequestDto.getTitle(), boardUpdateRequestDto.getContent());
     }
 
-    @Transactional
-    public void deleteBoard(Long boardId) {
 
+    @Transactional
+    public void deleteBoard(Long boardId, User user) {
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new BoardCustomException(BoardExceptionCode.NOT_FOUND_BOARD));
+
+        if (!board.getUser().equals(user)) {
+            throw new BoardCustomException(BoardExceptionCode.UNAUTHORIZED_USER);
+        }
 
         board.setDeleted(true);
         boardRepository.save(board);

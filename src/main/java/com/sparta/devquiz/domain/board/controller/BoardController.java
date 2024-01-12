@@ -82,9 +82,10 @@ public class BoardController {
     @Operation(summary = "Board 수정")
     @PatchMapping("/boards/{board_id}")
     public ResponseEntity<CommonResponseDto<Void>> updateBoard(@PathVariable Long board_id,
-                                                               @Valid @RequestBody BoardUpdateRequestDto boardUpdateRequestDto) {
+                                                               @Valid @RequestBody BoardUpdateRequestDto boardUpdateRequestDto,
+                                                               @AuthUser User user) {
 
-        boardService.updateBoard(board_id, boardUpdateRequestDto);
+        boardService.updateBoard(board_id, boardUpdateRequestDto, user);
 
         return new ResponseEntity<>(
                 new CommonResponseDto<>(
@@ -98,9 +99,8 @@ public class BoardController {
 
     @Operation(summary = "Board 삭제")
     @DeleteMapping("/boards/{board_id}")
-    public ResponseEntity<CommonResponseDto<Void>> deleteBoard(@PathVariable Long board_id) {
-
-        boardService.deleteBoard(board_id);
+    public ResponseEntity<CommonResponseDto<Void>> deleteBoard(@PathVariable Long board_id, @AuthUser User user) {
+        boardService.deleteBoard(board_id, user);
 
         return new ResponseEntity<>(
                 new CommonResponseDto<>(
