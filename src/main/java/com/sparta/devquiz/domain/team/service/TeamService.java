@@ -36,7 +36,10 @@ public class TeamService {
     public TeamCreateResponse createTeam(User user, TeamCreateRequest request) {
         User createdBy = userService.getUserById(user.getId());
 
-        //ToDo name 같은지 확인
+        if(teamRepository.existsByName(request.getName())){
+            throw new TeamCustomException(TeamExceptionCode.CONFLICT_TEAM_NAME_IN_USE);
+        }
+
         Team team = Team.builder()
                 .name(request.getName())
                 .isDeleted(false)
@@ -121,9 +124,7 @@ public class TeamService {
             throw new TeamCustomException(TeamExceptionCode.FORBIDDEN_TEAM_ADMIN);
         }
 
-        // ToDo: deleted 어쩌고 true 처리 하고 deletedAt 생성해주기
-
-        teamRepository.deleteById(teamId);
+        team.deleteTeam();
     }
 
     public void inviteTeamUser(User admin, Long teamId, TeamInviteUserRequest request) {

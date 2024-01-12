@@ -44,4 +44,9 @@ public class Team extends BaseTimeEntity {
         this.name = name;
     }
 
+    public void deleteTeam(){
+        this.isDeleted = false;
+        this.deletedAt = LocalDateTime.now();
+    }
+
 }
