@@ -46,7 +46,7 @@ public class CoinService {
 
         Long totalCoin = getTotalCoin(userId);
 
-        Long payment = useCoinRequest.getPayment();
+        Long payment = useCoinRequest.getCoinContent().getCoinSupplier().get();
 
         if (totalCoin < payment) {
             throw new CoinCustomException(CoinExceptionCode.BAD_REQUEST_NOT_ENOUGH_COIN);
@@ -54,8 +54,8 @@ public class CoinService {
 
         Long changeCoins = totalCoin - payment;
 
-        CoinContent coinContent = CoinContent.USE;
-        Coin coin = Coin.useCoins(user, payment, coinContent);
+        CoinContent coinContent = useCoinRequest.getCoinContent();
+        Coin coin = Coin.useCoins(user, coinContent);
         coinRepository.save(coin);
 
         return new UseCoinResponse(changeCoins);

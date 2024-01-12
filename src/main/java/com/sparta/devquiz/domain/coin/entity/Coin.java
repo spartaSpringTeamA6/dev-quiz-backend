@@ -39,10 +39,10 @@ public class Coin extends BaseTimeEntity {
                 .build();
     }
 
-    public static Coin useCoins(User user, Long payment, CoinContent coinContent) {
+    public static Coin useCoins(User user,CoinContent coinContent) {
         return Coin.builder()
                 .user(user)
-                .coins(-payment)
+                .coins(-coinContent.getCoinSupplier().get())
                 .status(coinContent.getStatus())
                 .content(coinContent.getContent())
                 .build();
