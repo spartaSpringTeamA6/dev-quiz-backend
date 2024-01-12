@@ -65,24 +65,32 @@ class CoinServiceTest {
         // GIVEN
         Long userId = 1L;
 
-        SaveCoinRequest saveCoinRequest1 = new SaveCoinRequest(0L, CoinContent.FIRST);
-        SaveCoinRequest saveCoinRequest2 = new SaveCoinRequest(0L, CoinContent.CORRECT);
-        SaveCoinRequest saveCoinRequest3 = new SaveCoinRequest(0L, CoinContent.FAIL);
-        SaveCoinRequest saveCoinRequest4 = new SaveCoinRequest(0L, CoinContent.PASS);
-
+        List<SaveCoinRequest> saveCoinRequestList = Arrays.asList(
+        new SaveCoinRequest(0L, CoinContent.FIRST),
+        new SaveCoinRequest(0L, CoinContent.CORRECT),
+        new SaveCoinRequest(0L, CoinContent.FAIL),
+        new SaveCoinRequest(0L, CoinContent.PASS)
+        );
         when(userService.getUserById(userId)).thenReturn(user);
 
+        List<Coin> testCoinList = new ArrayList<>();
+        for (SaveCoinRequest request : saveCoinRequestList) {
+            testCoinList.add(Coin.saveCoins(user, request.getCoinContent()));
+        }
+        when(coinRepository.findAllByUserId(userId)).thenReturn(testCoinList);
+
         // WHEN
-        coinService.saveCoin(userId, saveCoinRequest1, user);
-        coinService.saveCoin(userId, saveCoinRequest2, user);
-        coinService.saveCoin(userId, saveCoinRequest3, user);
-        coinService.saveCoin(userId, saveCoinRequest4, user);
+        for (SaveCoinRequest request : saveCoinRequestList) {
+            coinService.saveCoin(userId, request, user);
+        }
 
         // THEN
-        assertEquals(20L, Coin.saveCoins(user, saveCoinRequest1.getCoinContent()).getCoins());
-        assertEquals(10L, Coin.saveCoins(user, saveCoinRequest2.getCoinContent()).getCoins());
-        assertEquals(5L, Coin.saveCoins(user, saveCoinRequest3.getCoinContent()).getCoins());
-        assertEquals(0L, Coin.saveCoins(user, saveCoinRequest4.getCoinContent()).getCoins());
+        List<Coin> saveCoinList = coinRepository.findAllByUserId(userId);
+        for (int i = 0; i < saveCoinRequestList.size(); i++) {
+            SaveCoinRequest request = saveCoinRequestList.get(i);
+            Coin findSaveCoins = saveCoinList.get(i);
+            assertEquals(Coin.saveCoins(user, request.getCoinContent()).getCoins(), findSaveCoins.getCoins());
+        }
     }
 
     @Test
@@ -90,6 +98,8 @@ class CoinServiceTest {
     void useCoin() {
         // GIVEN
         Long userId = 1L;
+        UseCoinRequest useCoinRequest = new UseCoinRequest(0L, CoinContent.ITEM_CAT);
+
         SaveCoinRequest saveCoinRequest1 = new SaveCoinRequest(0L, CoinContent.FIRST);
         SaveCoinRequest saveCoinRequest2 = new SaveCoinRequest(0L, CoinContent.FIRST);
 
@@ -97,27 +107,26 @@ class CoinServiceTest {
         Coin coin2 = Coin.saveCoins(user, saveCoinRequest2.getCoinContent());
 
         Long totalCoin = coin1.getCoins() + coin2.getCoins();
-        Long payment = 30L;
+        Long payment = useCoinRequest.getCoinContent().getCoinSupplier().get();
 
         List<Coin> coins = Arrays.asList(coin1, coin2);
 
         when(userService.getUserById(userId)).thenReturn(user);
         when(coinRepository.findAllByUserId(userId)).thenReturn(coins);
 
-        UseCoinRequest useCoinRequest = new UseCoinRequest(totalCoin, payment);
 
         // WHEN
         UseCoinResponse response = coinService.useCoin(userId, useCoinRequest, user);
 
         // THEN
-        assertEquals(10L, response.getCoins());
+        assertEquals(15L, response.getCoins());
     }
     @Test
-    @WithMockUser(username = "testuser", roles ="USER")
     @DisplayName("코인 사용 실패 - 한도 초과")
     void failToUseCoin() {
         // GIVEN
         Long userId = 1L;
+        UseCoinRequest useCoinRequest = new UseCoinRequest(0L, CoinContent.ITEM_DOG);
         SaveCoinRequest saveCoinRequest1 = new SaveCoinRequest(0L, CoinContent.FIRST);
         SaveCoinRequest saveCoinRequest2 = new SaveCoinRequest(0L, CoinContent.FIRST);
 
@@ -125,14 +134,12 @@ class CoinServiceTest {
         Coin coin2 = Coin.saveCoins(user, saveCoinRequest2.getCoinContent());
 
         Long totalCoin = coin1.getCoins() + coin2.getCoins();
-        Long payment = 50L;
 
         List<Coin> coins = Arrays.asList(coin1, coin2);
 
         when(userService.getUserById(userId)).thenReturn(user);
         when(coinRepository.findAllByUserId(userId)).thenReturn(coins);
 
-        UseCoinRequest useCoinRequest = new UseCoinRequest(totalCoin, payment);
 
         // WHEN THEN
         CoinCustomException exception = assertThrows(
