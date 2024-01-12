@@ -11,8 +11,8 @@ public enum BoardExceptionCode {
     // BAD REQUEST 400
 
     // NOT FOUND 404
-    NOT_FOUND_BOARD(HttpStatus.NOT_FOUND, "BOARD-001", "해당 보드를 찾을 수 없습니다.");
-
+    NOT_FOUND_BOARD(HttpStatus.NOT_FOUND, "BOARD-001", "해당 보드를 찾을 수 없습니다."),
+    NOT_FOUND_QUIZ(HttpStatus.NOT_FOUND, "BOARD-002", "해당 퀴즈를 찾을 수 없습니다.");
     // FORBIDDEN 403
 
     // CONFLICT 409

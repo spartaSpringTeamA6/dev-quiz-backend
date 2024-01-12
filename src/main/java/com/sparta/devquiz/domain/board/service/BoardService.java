@@ -1,10 +1,12 @@
 package com.sparta.devquiz.domain.board.service;
 
-import com.sparta.devquiz.domain.board.dto.ResponseDto.BoardListGetResponseDto;
 import com.sparta.devquiz.domain.board.dto.RequestDto.BoardRequestDto;
-import com.sparta.devquiz.domain.board.dto.ResponseDto.BoardSingleGetResponseDto;
 import com.sparta.devquiz.domain.board.dto.RequestDto.BoardUpdateRequestDto;
+import com.sparta.devquiz.domain.board.dto.ResponseDto.BoardListGetResponseDto;
+import com.sparta.devquiz.domain.board.dto.ResponseDto.BoardSingleGetResponseDto;
 import com.sparta.devquiz.domain.board.entity.Board;
+import com.sparta.devquiz.domain.board.exception.BoardCustomException;
+import com.sparta.devquiz.domain.board.exception.BoardExceptionCode;
 import com.sparta.devquiz.domain.board.repository.BoardRepository;
 import com.sparta.devquiz.domain.quiz.entity.Quiz;
 import com.sparta.devquiz.domain.user.entity.User;
@@ -26,9 +28,8 @@ public class BoardService {
 
     @Transactional
     public Board createBoard(Long quizId, BoardRequestDto boardRequestDto, User user) {
-
         Quiz quiz = quizRepository.findById(quizId)
-                .orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, "404", "Quiz not found"));
+                .orElseThrow(() -> new BoardCustomException(BoardExceptionCode.NOT_FOUND_QUIZ));
 
         Board board = Board.builder()
                 .user(user)
@@ -43,7 +44,7 @@ public class BoardService {
 
     public BoardSingleGetResponseDto getSingleBoard(Long boardId) {
         Board board = boardRepository.findById(boardId)
-                .orElseThrow(() -> new CustomException(HttpStatus.NO_CONTENT, "404", "Board not found"));
+                .orElseThrow(() -> new BoardCustomException(BoardExceptionCode.NOT_FOUND_BOARD));
 
         return new BoardSingleGetResponseDto(board.getId(), board.getTitle(), board.getContent());
     }
@@ -62,7 +63,7 @@ public class BoardService {
     @Transactional
     public void updateBoard(Long boardId, BoardUpdateRequestDto boardUpdateRequestDto) {
         Board board = boardRepository.findById(boardId)
-                .orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, "404", "Board not found"));
+                .orElseThrow(() -> new BoardCustomException(BoardExceptionCode.NOT_FOUND_BOARD));
 
         board.updateTitleAndContent(boardUpdateRequestDto.getTitle(), boardUpdateRequestDto.getContent());
     }
@@ -71,7 +72,7 @@ public class BoardService {
     public void deleteBoard(Long boardId) {
 
         Board board = boardRepository.findById(boardId)
-                .orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, "404", "Board not found"));
+                .orElseThrow(() -> new BoardCustomException(BoardExceptionCode.NOT_FOUND_BOARD));
 
         board.setDeleted(true);
         boardRepository.save(board);
