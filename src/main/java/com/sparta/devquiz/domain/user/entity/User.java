@@ -51,7 +51,7 @@ public class User extends BaseTimeEntity {
     private UserRole role;
 
     @Column(nullable = false)
-    private long totalCoin;
+    private int totalCoin;
 
     @Column
     private LocalDateTime deletedAt;
