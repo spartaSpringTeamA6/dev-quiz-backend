@@ -53,6 +53,9 @@ public class User extends BaseTimeEntity {
     @Column(nullable = false)
     private int totalCoin;
 
+    @Column(nullable = false)
+    private int weekScore;
+
     @Column
     private LocalDateTime deletedAt;
 
