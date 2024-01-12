@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SaveCoinRequest {
 
-    private final Long coins;
+    private final long coins;
     private final CoinContent coinContent;
-
 }
