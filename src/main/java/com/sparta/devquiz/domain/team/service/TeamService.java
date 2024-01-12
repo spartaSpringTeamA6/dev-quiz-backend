@@ -58,6 +58,7 @@ public class TeamService {
         return TeamGetResponse.of(team,admin,userList);
     }
 
+    @Transactional
     public void updateTeamName(User user, Long teamId, TeamUpdateNameRequest request) {
         Team team = getTeamAndCheckAuth(user,teamId);
 
@@ -69,6 +70,7 @@ public class TeamService {
         teamRepository.save(team);
     }
 
+    @Transactional
     public void updateTeamAdmin(User admin, Long teamId, TeamUpdateAdminRequest request) {
 
         if(admin.getUsername().equals(request.getUsername())){
@@ -89,6 +91,7 @@ public class TeamService {
         teamUserService.updateTeamUserRole(team, newAdmin, TeamUserRole.ADMIN);
     }
 
+    @Transactional
     public void deleteTeamUser(User admin, Long teamId, TeamDeleteUserRequest request) {
         Team team = getTeamAndCheckAuth(admin,teamId);
 
@@ -104,11 +107,18 @@ public class TeamService {
         teamUserService.deleteTeamUser(team,deleteUser);
     }
 
+    @Transactional
     public void withdrawTeam(User user, Long teamId, TeamWithdrawRequest request) {
         Team team = getTeamAndCheckAuth(user,teamId);
 
         if(teamUserService.isExistedAdmin(team,user)){
-            throw new TeamCustomException(TeamExceptionCode.BAD_REQUEST_INVALID_REQUEST_DELETE_ADMIN);
+            if(team.getTeamUserList().size()==1){
+                deleteTeam(user,teamId);
+                return;
+            }else {
+                throw new TeamCustomException(
+                        TeamExceptionCode.BAD_REQUEST_INVALID_REQUEST_DELETE_ADMIN);
+            }
         }
         if(!teamUserService.isExistedUser(team,user)){
             throw new TeamCustomException(TeamExceptionCode.FORBIDDEN_TEAM_USER);
@@ -117,6 +127,7 @@ public class TeamService {
         teamUserService.deleteTeamUser(team,user);
     }
 
+    @Transactional
     public void deleteTeam(User admin, Long teamId) {
         Team team = getTeamAndCheckAuth(admin,teamId);
 
@@ -124,9 +135,15 @@ public class TeamService {
             throw new TeamCustomException(TeamExceptionCode.FORBIDDEN_TEAM_ADMIN);
         }
 
+        List<TeamUser> teamUserList = team.getTeamUserList();
+        for(TeamUser teamUser:teamUserList){
+            teamUserService.deleteTeamUser(team,teamUser.getUser());
+        }
+
         team.deleteTeam();
     }
 
+    @Transactional
     public void inviteTeamUser(User admin, Long teamId, TeamInviteUserRequest request) {
         Team team = getTeamAndCheckAuth(admin,teamId);
 

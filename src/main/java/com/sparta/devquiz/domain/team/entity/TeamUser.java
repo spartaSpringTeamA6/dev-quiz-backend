@@ -51,13 +51,13 @@ public class TeamUser extends BaseTimeEntity {
 
     @Builder
     private TeamUser(Team team, User user, TeamUserRole userRole, boolean isAccepted){
-        this.teamUserId= TeamUserId.builder()
+        this.teamUserId = TeamUserId.builder()
                 .teamId(team.getId())
                 .userId(user.getId())
                 .build();
-        this.team=team;
-        this.user=user;
-        this.userRole=userRole;
+        this.team = team;
+        this.user = user;
+        this.userRole = userRole;
         this.isAccepted = isAccepted;
     }
 

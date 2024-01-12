@@ -45,7 +45,7 @@ public class Team extends BaseTimeEntity {
     }
 
     public void deleteTeam(){
-        this.isDeleted = false;
+        this.isDeleted = true;
         this.deletedAt = LocalDateTime.now();
     }
 

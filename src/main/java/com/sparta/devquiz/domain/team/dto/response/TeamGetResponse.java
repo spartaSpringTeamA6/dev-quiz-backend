@@ -20,6 +20,10 @@ import lombok.NoArgsConstructor;
 public class TeamGetResponse {
 
     @Column
+    @Schema(description = "팀 id", defaultValue = "1")
+    private Long id;
+
+    @Column
     @Schema(description = "팀 이름", defaultValue = "개발.zip")
     private String name;
 
@@ -33,6 +37,7 @@ public class TeamGetResponse {
 
     public static TeamGetResponse of(Team team, TeamUser admin, List<TeamUser> userList) {
         return TeamGetResponse.builder()
+                .id(team.getId())
                 .name(team.getName())
                 .admin(admin.getUser().getUsername())
                 .userList(userList.stream()
