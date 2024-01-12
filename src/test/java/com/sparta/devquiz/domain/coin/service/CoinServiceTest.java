@@ -48,9 +48,6 @@ class CoinServiceTest {
 
     @BeforeEach
     public void setUp() {
-        userRepository.deleteAll();
-        coinRepository.deleteAll();
-
         user = new User(1L,"test", OauthType.GOOGLE, "123123","testuser",
                 UserRole.USER, 0L, null, false, null, new ArrayList<>(), null);
 
