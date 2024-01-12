@@ -3,6 +3,7 @@ package com.sparta.devquiz.domain.team.service;
 import com.sparta.devquiz.domain.team.dto.request.TeamCreateRequest;
 import com.sparta.devquiz.domain.team.dto.request.TeamDeleteRequest;
 import com.sparta.devquiz.domain.team.dto.request.TeamDeleteUserRequest;
+import com.sparta.devquiz.domain.team.dto.request.TeamGetMyRankingRequest;
 import com.sparta.devquiz.domain.team.dto.request.TeamGetRequest;
 import com.sparta.devquiz.domain.team.dto.request.TeamInviteUserRequest;
 import com.sparta.devquiz.domain.team.dto.request.TeamUpdateAdminRequest;
@@ -11,6 +12,7 @@ import com.sparta.devquiz.domain.team.dto.request.TeamWithdrawRequest;
 import com.sparta.devquiz.domain.team.dto.response.TeamCreateResponse;
 import com.sparta.devquiz.domain.team.dto.response.TeamDeleteResponse;
 import com.sparta.devquiz.domain.team.dto.response.TeamDeleteUserResponse;
+import com.sparta.devquiz.domain.team.dto.response.TeamGetMyRankingResponse;
 import com.sparta.devquiz.domain.team.dto.response.TeamGetResponse;
 import com.sparta.devquiz.domain.team.dto.response.TeamInviteUserResponse;
 import com.sparta.devquiz.domain.team.dto.response.TeamUpdateAdminResponse;
@@ -116,6 +118,9 @@ public class TeamService {
     public TeamWithdrawResponse withdrawTeam(User user, Long teamId, TeamWithdrawRequest request) {
         Team team = getTeamAndCheckAuth(user,teamId);
 
+        if(teamUserService.isExistedAdmin(team,user)){
+            throw new TeamCustomException(TeamExceptionCode.BAD_REQUEST_INVALID_REQUEST_DELETE_ADMIN);
+        }
         if(!teamUserService.isExistedUser(team,user)){
             throw new TeamCustomException(TeamExceptionCode.FORBIDDEN_TEAM_USER);
         }
@@ -155,6 +160,13 @@ public class TeamService {
         return new TeamInviteUserResponse();
     }
 
+//    public TeamGetMyRankingResponse getMyRankingInTeam(User user, Long teamId, Long userId, TeamGetMyRankingRequest request) {
+//        if(!user.getId().equals(userId)){
+//
+//        }
+//        Team team = getTeamAndCheckAuth()
+//        return new TeamGetMyRankingResponse();
+//    }
 
     public Team getTeamAndCheckAuth(User user, Long teamId){
         Team team = getTeamById(teamId);

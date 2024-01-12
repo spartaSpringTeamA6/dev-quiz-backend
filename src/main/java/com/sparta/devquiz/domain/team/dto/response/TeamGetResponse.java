@@ -34,9 +34,9 @@ public class TeamGetResponse {
     public static TeamGetResponse of(Team team, TeamUser admin, List<TeamUser> userList) {
         return TeamGetResponse.builder()
                 .name(team.getName())
-                .admin(admin.getUser().getNickname())
+                .admin(admin.getUser().getUsername())
                 .userList(userList.stream()
-                        .map(i -> i.getUser().getNickname())
+                        .map(i -> i.getUser().getUsername())
                         .collect(Collectors.toList()))
                 .build();
     }
