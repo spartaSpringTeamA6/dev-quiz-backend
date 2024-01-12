@@ -2,6 +2,7 @@ package com.sparta.devquiz.domain.team.controller;
 
 import com.sparta.devquiz.domain.team.dto.request.TeamCreateRequest;
 import com.sparta.devquiz.domain.team.dto.response.TeamCreateResponse;
+import com.sparta.devquiz.domain.team.entity.Team;
 import com.sparta.devquiz.domain.team.response.TeamResponseCode;
 import com.sparta.devquiz.domain.team.service.TeamService;
 import com.sparta.devquiz.global.response.CommonResponseDto;
@@ -33,7 +34,7 @@ public class TeamController {
         TeamCreateResponse response = teamService.createTeam(request);
 
         return ResponseEntity.status(TeamResponseCode.CREATED_TEAM.getHttpStatus())
-                .body(CommonResponseDto.of(TeamResponseCode.CREATED_TEAM, response));
+                .body(CommonResponseDto.of(TeamResponseCode.CREATED_TEAM));
 
     }
 
