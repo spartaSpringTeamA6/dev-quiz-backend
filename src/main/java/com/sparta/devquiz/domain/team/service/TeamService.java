@@ -17,6 +17,7 @@ import com.sparta.devquiz.domain.team.exception.TeamExceptionCode;
 import com.sparta.devquiz.domain.team.repository.TeamRepository;
 import com.sparta.devquiz.domain.user.entity.User;
 import com.sparta.devquiz.domain.user.service.UserService;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -35,13 +36,13 @@ public class TeamService {
     public TeamCreateResponse createTeam(User user, TeamCreateRequest request) {
         User createdBy = userService.getUserById(user.getId());
 
+        //ToDo name 같은지 확인
         Team team = Team.builder()
                 .name(request.getName())
                 .isDeleted(false)
                 .build();
         teamRepository.save(team);
-
-        teamUserService.saveTeamUser(team,createdBy, TeamUserRole.ADMIN);
+        teamUserService.createTeamAdmin(team, createdBy);
 
         return TeamCreateResponse.of(team);
     }
@@ -120,6 +121,8 @@ public class TeamService {
             throw new TeamCustomException(TeamExceptionCode.FORBIDDEN_TEAM_ADMIN);
         }
 
+        // ToDo: deleted 어쩌고 true 처리 하고 deletedAt 생성해주기
+
         teamRepository.deleteById(teamId);
     }
 
@@ -135,7 +138,7 @@ public class TeamService {
             if(teamUserService.isExistedUser(team,inviteUser)){
                 throw new TeamCustomException(TeamExceptionCode.CONFLICT_INVITE_USERNAME_IN_TEAM);
             }
-            teamUserService.saveTeamUser(team,inviteUser,TeamUserRole.USER);
+            teamUserService.inviteTeamUser(team,inviteUser);
         }
     }
 

@@ -2,6 +2,7 @@ package com.sparta.devquiz.domain.team.service;
 
 import com.sparta.devquiz.domain.team.entity.Team;
 import com.sparta.devquiz.domain.team.entity.TeamUser;
+import com.sparta.devquiz.domain.team.entity.TeamUserId;
 import com.sparta.devquiz.domain.team.enums.TeamUserRole;
 import com.sparta.devquiz.domain.team.exception.TeamCustomException;
 import com.sparta.devquiz.domain.team.exception.TeamExceptionCode;
@@ -19,9 +20,25 @@ public class TeamUserService {
 
     private final TeamUserRepository teamUserRepository;
 
-    public void saveTeamUser(Team team, User user, TeamUserRole teamUserRole){
-        TeamUser teamUser = TeamUser.builder().team(team).user(user)
-                .userRole(teamUserRole).build();
+    public void createTeamAdmin(Team team, User user){
+        TeamUser teamUser = TeamUser.builder()
+                .user(user)
+                .team(team)
+                .userRole(TeamUserRole.ADMIN)
+                .isAccepted(true)
+                .build();
+
+        teamUserRepository.save(teamUser);
+    }
+
+    public void inviteTeamUser(Team team, User user){
+        TeamUser teamUser = TeamUser.builder()
+                .team(team)
+                .user(user)
+                .userRole(TeamUserRole.USER)
+                .isAccepted(false)
+                .build();
+
         teamUserRepository.save(teamUser);
     }
 
