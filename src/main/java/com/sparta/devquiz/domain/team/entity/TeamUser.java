@@ -30,12 +30,12 @@ public class TeamUser extends BaseTimeEntity {
     private TeamUserId teamUserId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="user_id")
+    @JoinColumn(name = "user_id")
     @MapsId("userId")
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="team_id")
+    @JoinColumn(name = "team_id")
     @MapsId("teamId")
     private Team team;
 
