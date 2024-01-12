@@ -1,12 +1,13 @@
 package com.sparta.devquiz.domain.coin.response;
 
+import com.sparta.devquiz.global.response.ResponseCode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 @Getter
 @AllArgsConstructor
-public enum CoinResponseCode {
+public enum CoinResponseCode implements ResponseCode {
 
     // OK 200
     OK_GET_MY_COIN(HttpStatus.OK, "GET MY COIN"),
@@ -19,5 +20,13 @@ public enum CoinResponseCode {
 
     private final HttpStatus httpStatus;
     private final String message;
+
+    public HttpStatus getHttpStatus(CoinResponseCode responseCode) {
+        return responseCode.getHttpStatus();
+    }
+
+    public String getMessage(CoinResponseCode responseCode) {
+        return responseCode.getMessage();
+    }
 
 }

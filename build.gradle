@@ -49,6 +49,12 @@ dependencies {
     // Spring Doc
     implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.3.0'
 
+    // Mockito
+    testImplementation 'org.mockito:mockito-core:4.8.0'
+
+    // H2 - TEST ONLY
+    runtimeOnly 'com.h2database:h2'
+
 }
 
 tasks.named('test') {

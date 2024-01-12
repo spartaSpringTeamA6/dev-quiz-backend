@@ -27,6 +27,19 @@ spring:
     pathmatch:
       matching-strategy: ant_path_matcher
 
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_SECRET}
+            scope:
+              - profile
+              - email
+          github:
+            client-id: ${GITHUB_CLIENT_ID}
+            client-secret: ${GITHUB_SECRET}
 jwt:
   secret:
     key: ${JWT_KEY}
@@ -38,3 +51,4 @@ springdoc:
     tags-sorter: alpha
 #    operations-sorter: method
 #    doc-expansion: none
+

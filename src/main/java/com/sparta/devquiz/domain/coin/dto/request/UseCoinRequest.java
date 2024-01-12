@@ -1,5 +1,6 @@
 package com.sparta.devquiz.domain.coin.dto.request;
 
+import com.sparta.devquiz.domain.coin.enums.CoinContent;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -7,8 +8,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UseCoinRequest {
 
-    private final Long coin;
-
-    private final Long payment;
+    private final int coins;
+    private final CoinContent coinContent;
 
 }

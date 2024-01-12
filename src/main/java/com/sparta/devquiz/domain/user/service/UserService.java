@@ -13,6 +13,16 @@ public class UserService {
 
   private final UserRepository userRepository;
 
+
+
+  public void validateUser(User authUser, Long userId) {
+    getUserById(userId);
+
+    if (authUser.getId() != userId) {
+      throw new UserCustomException(UserExceptionCode.BAD_REQUEST_USER_ID);
+    }
+  }
+
   public User getUserById(Long userId) {
     return userRepository.findByIdAndIsDeletedFalse(userId).orElseThrow(
         () -> new UserCustomException(UserExceptionCode.NOT_FOUND_USER)
