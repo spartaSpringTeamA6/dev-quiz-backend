@@ -5,6 +5,7 @@ import com.sparta.devquiz.domain.quiz.entity.UserQuiz;
 import com.sparta.devquiz.domain.user.enums.OauthType;
 import com.sparta.devquiz.domain.user.enums.UserRole;
 import com.sparta.devquiz.global.entity.BaseTimeEntity;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -13,6 +14,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +29,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "users")
 public class User extends BaseTimeEntity {
 
     @Id
@@ -56,13 +59,13 @@ public class User extends BaseTimeEntity {
     @Column(nullable = false)
     private int weekScore;
 
-    @Column
-    private LocalDateTime deletedAt;
-
     @Column(nullable = false)
     private boolean isDeleted;
 
-    @OneToMany(mappedBy = "user")
+    @Column
+    private LocalDateTime deletedAt;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Skill> skillList = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
@@ -70,4 +73,11 @@ public class User extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "user")
     private List<UserQuiz> userQuizList = new ArrayList<>();
+
+    public void updateUsernameAndSkill(String username, List<Skill> skillList) {
+        this.username = username;
+        this.skillList.clear();
+        this.skillList.addAll(skillList);
+    }
+
 }
