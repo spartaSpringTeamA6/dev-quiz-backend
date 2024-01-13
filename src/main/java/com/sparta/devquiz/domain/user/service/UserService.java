@@ -47,7 +47,14 @@ public class UserService {
     findUser.updateUsernameAndSkill(newUsername, skills);
   }
 
+  @Transactional
+  public void deleteMyProfile(User user, Long userId) {
+    User findUser = validateUser(user, userId);
+    findUser.deleteUser();
+  }
+
   public User validateUser(User authUser, Long userId) {
+    //OSIV 끄고 테스트 필요 user와 findUser
     if (authUser.getId() != userId) {
       throw new UserCustomException(UserExceptionCode.BAD_REQUEST_USER_ID);
     }

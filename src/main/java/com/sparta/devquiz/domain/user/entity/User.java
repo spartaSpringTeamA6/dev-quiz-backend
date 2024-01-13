@@ -79,5 +79,9 @@ public class User extends BaseTimeEntity {
         this.skillList.clear();
         this.skillList.addAll(skillList);
     }
+    public void deleteUser() {
+        this.isDeleted = true;
+        this.deletedAt = LocalDateTime.now();
+    }
 
 }

@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -48,5 +49,14 @@ public class UserController {
     userService.updateMyProfile(user, userId, request);
     return ResponseEntity.status(UserResponseCode.UPDATE_MY_INFO.getHttpStatus())
         .body(CommonResponseDto.of(UserResponseCode.UPDATE_MY_INFO));
+  }
+
+  @SecurityRequirement(name = "Bearer Authentication")
+  @Operation(summary = "회원탈퇴")
+  @DeleteMapping
+  public ResponseEntity<CommonResponseDto> deleteMyProfile(@AuthUser User user, @PathVariable Long userId) {
+    userService.deleteMyProfile(user, userId);
+    return ResponseEntity.status(UserResponseCode.DELETE_USER.getHttpStatus())
+        .body(CommonResponseDto.of(UserResponseCode.DELETE_USER));
   }
 }
