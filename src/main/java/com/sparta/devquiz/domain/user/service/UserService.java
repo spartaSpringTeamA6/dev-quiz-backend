@@ -58,7 +58,7 @@ public class UserService {
   public void deleteMyProfile(User user, Long userId) {
     User findUser = validateUser(user, userId);
     findUser.deleteUser();
-    findUser.getTeamUserList().stream()
+    findUser.getTeamUserList()
         .forEach(teamUser -> teamUserService.deleteTeamUser(teamUser.getTeam(), teamUser.getUser()));
   }
 
