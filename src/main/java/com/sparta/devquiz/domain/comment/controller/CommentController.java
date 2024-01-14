@@ -1,12 +1,10 @@
 package com.sparta.devquiz.domain.comment.controller;
 
-import com.sparta.devquiz.domain.board.repository.BoardRepository;
 import com.sparta.devquiz.domain.comment.dto.requestDto.CommentCreateRequestDto;
 import com.sparta.devquiz.domain.comment.dto.requestDto.CommentUpdateRequestDto;
 import com.sparta.devquiz.domain.comment.dto.responseDto.CommentCreateResponseDto;
 import com.sparta.devquiz.domain.comment.dto.responseDto.CommentListGetResponseDto;
 import com.sparta.devquiz.domain.comment.entity.Comment;
-import com.sparta.devquiz.domain.comment.repository.CommentRepository;
 import com.sparta.devquiz.domain.comment.response.CommentResponseCode;
 import com.sparta.devquiz.domain.comment.service.CommentService;
 import com.sparta.devquiz.domain.user.entity.User;
@@ -26,8 +24,6 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class CommentController {
 
-    private final CommentRepository commentRepository;
-    private final BoardRepository boardRepository;
     private final CommentService commentService;
 
     @Operation(summary = "Comment 작성")
@@ -65,12 +61,28 @@ public class CommentController {
         );
     }
 
-    @Operation
+    @Operation(summary = "Comment 수정")
     @PatchMapping("/comments/{comment_id}")
     public ResponseEntity<CommonResponseDto<Void>> updateComment(@PathVariable Long comment_id,
                                                                  @Valid @RequestBody CommentUpdateRequestDto commentUpdateRequestDto,
                                                                  @AuthUser User user) {
         commentService.updateComment(comment_id, commentUpdateRequestDto, user);
+
+        return new ResponseEntity<>(
+                new CommonResponseDto<>(
+                        CommentResponseCode.NO_CONTENT_UPDATE_COMMENT.getHttpStatus(),
+                        CommentResponseCode.NO_CONTENT_UPDATE_COMMENT.getMessage(),
+                        null
+                ),
+                HttpStatus.NO_CONTENT
+        );
+    }
+
+    @Operation(summary = "Comment 삭제")
+    @PatchMapping("/comments/{comment_id}")
+    public ResponseEntity<CommonResponseDto<Void>> deleteComment(@PathVariable Long comment_id,
+                                                                 @AuthUser User user) {
+        commentService.deleteComment(comment_id, user);
 
         return new ResponseEntity<>(
                 new CommonResponseDto<>(
