@@ -25,7 +25,7 @@ public class UserService {
 
   public User getUserById(Long userId) {
     return userRepository.findByIdAndIsDeletedFalse(userId).orElseThrow(
-            () -> new UserCustomException(UserExceptionCode.NOT_FOUND_USER)
+        () -> new UserCustomException(UserExceptionCode.NOT_FOUND_USER)
     );
   }
 

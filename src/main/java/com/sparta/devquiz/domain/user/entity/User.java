@@ -2,6 +2,7 @@ package com.sparta.devquiz.domain.user.entity;
 
 import com.sparta.devquiz.domain.coin.entity.Coin;
 import com.sparta.devquiz.domain.quiz.entity.UserQuiz;
+import com.sparta.devquiz.domain.team.entity.TeamUser;
 import com.sparta.devquiz.domain.user.enums.OauthType;
 import com.sparta.devquiz.domain.user.enums.UserRole;
 import com.sparta.devquiz.global.entity.BaseTimeEntity;
@@ -62,12 +63,19 @@ public class User extends BaseTimeEntity {
     @Column(nullable = false)
     private boolean isDeleted;
 
+    @Builder.Default
     @OneToMany(mappedBy = "user")
     private List<Skill> skillList = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "user")
     private List<Coin> coinList = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "user")
     private List<UserQuiz> userQuizList = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "user")
+    private List<TeamUser> teamUserList = new ArrayList<>();
 }
