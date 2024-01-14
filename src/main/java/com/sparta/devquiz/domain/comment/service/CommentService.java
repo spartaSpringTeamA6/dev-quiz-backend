@@ -100,5 +100,15 @@ public class CommentService {
         commentLikeRepository.save(commentLike);
     }
 
+    @Transactional
+    public void unlikeComment(Long commentId, User user) {
+        CommentLikeId commentLikeId = new CommentLikeId(user.getId(), commentId);
+        if (commentLikeRepository.existsById(commentLikeId)) {
+            commentLikeRepository.deleteById(commentLikeId);
+        } else {
+            throw new CommentCustomException(CommentExceptionCode.NOT_LIKED);
+        }
+    }
+
 
 }

@@ -110,5 +110,18 @@ public class CommentController {
         );
     }
 
+    @Operation(summary = "댓글 좋아요 취소")
+    @DeleteMapping("/comments/{comment_id}/unlike")
+    public ResponseEntity<CommonResponseDto<Void>> unlikeComment(@PathVariable("comment_id") Long commentId,
+                                                                 @AuthUser User user) {
+        commentService.unlikeComment(commentId, user);
+
+        return new ResponseEntity<>(
+                new CommonResponseDto<>(
+                        CommentResponseCode.NO_CONTENT_DELETE_LIKE.getHttpStatus(),
+                        CommentResponseCode.NO_CONTENT_DELETE_LIKE.getMessage(),
+                        null),
+                HttpStatus.OK);
+    }
 
 }
