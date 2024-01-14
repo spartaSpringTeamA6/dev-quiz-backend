@@ -94,5 +94,21 @@ public class CommentController {
         );
     }
 
+    @Operation(summary = "댓글 좋아요")
+    @PostMapping("/comments/{comment_id}/like")
+    public ResponseEntity<CommonResponseDto<Void>> likeComment(@PathVariable Long comment_id,
+                                                               @AuthUser User user) {
+        commentService.likeComment(comment_id, user);
+
+        return new ResponseEntity<>(
+                new CommonResponseDto<>(
+                        CommentResponseCode.CREATED_LIKE.getHttpStatus(),
+                        CommentResponseCode.CREATED_LIKE.getMessage(),
+                        null
+                ),
+                HttpStatus.OK
+        );
+    }
+
 
 }

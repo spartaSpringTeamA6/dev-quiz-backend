@@ -7,8 +7,11 @@ import com.sparta.devquiz.domain.comment.dto.requestDto.CommentUpdateRequestDto;
 import com.sparta.devquiz.domain.comment.dto.responseDto.CommentListGetResponseDto;
 import com.sparta.devquiz.domain.comment.dto.responseDto.CommentSingleGetResponseDto;
 import com.sparta.devquiz.domain.comment.entity.Comment;
+import com.sparta.devquiz.domain.comment.entity.CommentLike;
+import com.sparta.devquiz.domain.comment.entity.CommentLikeId;
 import com.sparta.devquiz.domain.comment.exception.CommentCustomException;
 import com.sparta.devquiz.domain.comment.exception.CommentExceptionCode;
+import com.sparta.devquiz.domain.comment.repository.CommentLikeRepository;
 import com.sparta.devquiz.domain.comment.repository.CommentRepository;
 import com.sparta.devquiz.domain.user.entity.User;
 import jakarta.transaction.Transactional;
@@ -24,6 +27,7 @@ public class CommentService {
 
     private final BoardRepository boardRepository;
     private final CommentRepository commentRepository;
+    private final CommentLikeRepository commentLikeRepository;
 
     @Transactional
     public Comment createComment(Long boardId, @Valid CommentCreateRequestDto commentCreateResponseDto, User user) {
@@ -74,6 +78,26 @@ public class CommentService {
 
         comment.setDeleted(true);
         commentRepository.save(comment);
+    }
+
+    @Transactional
+    public void likeComment(Long commentId, User user) {
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new CommentCustomException(CommentExceptionCode.NOT_FOUND_COMMENT));
+
+        CommentLikeId commentLikeId = new CommentLikeId(user.getId(), commentId);
+
+        if (commentLikeRepository.existsById(commentLikeId)) {
+            throw new CommentCustomException(CommentExceptionCode.ALREADY_LIKED);
+        }
+
+        CommentLike commentLike = CommentLike.builder()
+                .commentLikeId(commentLikeId)
+                .user(user)
+                .comment(comment)
+                .build();
+
+        commentLikeRepository.save(commentLike);
     }
 
 

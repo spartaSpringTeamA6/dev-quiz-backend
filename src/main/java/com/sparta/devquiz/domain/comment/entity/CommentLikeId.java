@@ -1,13 +1,18 @@
 package com.sparta.devquiz.domain.comment.entity;
 
 import jakarta.persistence.Embeddable;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 import java.io.Serializable;
 import java.util.Objects;
-import lombok.Getter;
 
 
 @Getter
 @Embeddable
+@AllArgsConstructor
+@NoArgsConstructor
 public class CommentLikeId implements Serializable {
 
     private Long userId;
@@ -30,4 +35,13 @@ public class CommentLikeId implements Serializable {
     public int hashCode() {
         return Objects.hash(getUserId(), getCommentId());
     }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public void setCommentId(Long commentId) {
+        this.commentId = commentId;
+    }
+
 }
