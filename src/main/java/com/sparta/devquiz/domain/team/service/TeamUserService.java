@@ -65,7 +65,7 @@ public class TeamUserService {
     }
 
     public TeamUser getTeamUserByTeamIdAndUserId(Team team, User user){
-        return teamUserRepository.findByTeamIdAndUserId(team.getId(), user.getId()).orElseThrow(
+        return teamUserRepository.findByTeamIdAndUserIdAndIsAcceptedTrue(team.getId(), user.getId()).orElseThrow(
                 () -> new TeamCustomException(TeamExceptionCode.NOT_FOUND_TEAM_USER)
         );
     }
