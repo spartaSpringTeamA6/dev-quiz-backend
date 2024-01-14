@@ -10,8 +10,6 @@ import lombok.NoArgsConstructor;
 
 @Builder
 @Getter
-@NoArgsConstructor
-@AllArgsConstructor
 @Schema(description = "팀 생성 응답 dto")
 public class TeamCreateResponse {
 

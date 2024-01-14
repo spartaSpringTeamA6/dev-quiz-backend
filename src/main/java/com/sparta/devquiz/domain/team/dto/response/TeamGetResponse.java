@@ -14,8 +14,6 @@ import lombok.NoArgsConstructor;
 
 @Builder
 @Getter
-@NoArgsConstructor
-@AllArgsConstructor
 @Schema(description = "팀 조회 응답 dto")
 public class TeamGetResponse {
 
