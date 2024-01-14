@@ -31,7 +31,7 @@ public class UserScoreResponse {
 
   public static List<UserScoreResponse> of(List<User> userList) {
     return userList.stream()
-        .map(i -> UserScoreResponse.of(i))
+        .map(UserScoreResponse::of)
         .collect(Collectors.toList());
   }
 }

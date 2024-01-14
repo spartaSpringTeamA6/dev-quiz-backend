@@ -40,7 +40,7 @@ public class UserService {
     }
 
     List<UserSkill> userSkills = request.getSkillList().stream()
-        .map(userSkill -> UserSkill.valueOf(userSkill))
+        .map(UserSkill::valueOf)
         .toList();
 
     List<Skill> skills = userSkills.stream()
@@ -58,6 +58,8 @@ public class UserService {
   public void deleteMyProfile(User user, Long userId) {
     User findUser = validateUser(user, userId);
     findUser.deleteUser();
+    findUser.getTeamUserList().stream()
+        .forEach(teamUser -> teamUserService.deleteTeamUser(teamUser.getTeam(), teamUser.getUser()));
   }
 
   public UserTeamsResponse getMyTeams(User user, Long userId) {
@@ -109,7 +111,7 @@ public class UserService {
 
   public User validateUser(User authUser, Long userId) {
     //OSIV 끄고 테스트 필요 user와 findUser
-    if (authUser.getId() != userId) {
+    if (!authUser.getId().equals(userId)) {
       throw new UserCustomException(UserExceptionCode.BAD_REQUEST_USER_ID);
     }
 

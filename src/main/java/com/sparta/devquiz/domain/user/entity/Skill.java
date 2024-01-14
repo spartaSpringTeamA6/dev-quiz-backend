@@ -22,7 +22,7 @@ public class Skill extends BaseTimeEntity {
     private User user;
 
     @Builder
-    public Skill(UserSkill userSkill, User user) {
+    private Skill(UserSkill userSkill, User user) {
         this.userSkill = userSkill;
         this.user = user;
     }

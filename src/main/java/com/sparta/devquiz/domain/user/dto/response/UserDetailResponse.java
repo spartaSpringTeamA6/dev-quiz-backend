@@ -56,7 +56,7 @@ public class UserDetailResponse {
 
   public static List<UserDetailResponse> of(List<User> userList) {
     return userList.stream()
-        .map(user -> UserDetailResponse.of(user))
+        .map(UserDetailResponse::of)
         .toList();
   }
 

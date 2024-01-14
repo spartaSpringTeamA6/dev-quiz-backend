@@ -101,5 +101,4 @@ public class User extends BaseTimeEntity {
         this.isDeleted = true;
         this.deletedAt = LocalDateTime.now();
     }
-
 }
