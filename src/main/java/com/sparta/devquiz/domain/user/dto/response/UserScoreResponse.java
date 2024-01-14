@@ -22,7 +22,8 @@ public class UserScoreResponse {
     private int weekScore;
 
   public static UserScoreResponse of(User user) {
-    return UserScoreResponse.builder()
+    return UserScoreResponse
+        .builder()
         .username(user.getUsername())
         .weekScore(user.getWeekScore())
         .build();

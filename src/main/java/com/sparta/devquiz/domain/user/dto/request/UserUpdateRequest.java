@@ -23,7 +23,7 @@ public class UserUpdateRequest {
   @Size(max = 30, message = "유저네임을 30자 이하로 입력하세요.")
   private String username;
 
-  @Schema(description = "스킬", defaultValue = "JAVA")
+  @Schema(description = "스킬")
   @UserSkillEnum(enumClass = UserSkill.class, ignoreCase = true)
   private List<String> skillList;
 }

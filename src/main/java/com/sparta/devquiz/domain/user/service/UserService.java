@@ -1,7 +1,11 @@
 package com.sparta.devquiz.domain.user.service;
 
+import com.sparta.devquiz.domain.team.entity.TeamUser;
+import com.sparta.devquiz.domain.team.service.TeamUserService;
 import com.sparta.devquiz.domain.user.dto.request.UserUpdateRequest;
 import com.sparta.devquiz.domain.user.dto.response.UserDetailResponse;
+import com.sparta.devquiz.domain.user.dto.response.UserInvitationsResponse;
+import com.sparta.devquiz.domain.user.dto.response.UserTeamsResponse;
 import com.sparta.devquiz.domain.user.entity.Skill;
 import com.sparta.devquiz.domain.user.entity.User;
 import com.sparta.devquiz.domain.user.enums.UserSkill;
@@ -15,9 +19,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class UserService {
 
   private final UserRepository userRepository;
+  private final TeamUserService teamUserService;
 
   public UserDetailResponse getMyProfile(User user, Long userId) {
     User findUser = validateUser(user, userId);
@@ -29,7 +35,7 @@ public class UserService {
     User findUser = validateUser(user, userId);
 
     String newUsername = request.getUsername();
-    if (isExistedUsername(newUsername)) {
+    if (!findUser.getUsername().equals(newUsername) && isExistedUsername(newUsername)) {
       throw new UserCustomException(UserExceptionCode.CONFLICT_USERNAME);
     }
 
@@ -38,10 +44,11 @@ public class UserService {
         .toList();
 
     List<Skill> skills = userSkills.stream()
-        .map(userSkill -> Skill.builder()
-        .userSkill(userSkill)
-        .user(user)
-        .build())
+        .map(userSkill -> Skill
+            .builder()
+            .userSkill(userSkill)
+            .user(user)
+            .build())
         .toList();
 
     findUser.updateUsernameAndSkill(newUsername, skills);
@@ -52,6 +59,53 @@ public class UserService {
     User findUser = validateUser(user, userId);
     findUser.deleteUser();
   }
+
+  public UserTeamsResponse getMyTeams(User user, Long userId) {
+    User findUser = validateUser(user, userId);
+    List<TeamUser> findTeamUserList = teamUserService.getTeamUserByUser(findUser);
+    return UserTeamsResponse.of(findUser, findTeamUserList);
+  }
+
+  public UserInvitationsResponse getMyInvitations(User user, Long userId) {
+    User findUser = validateUser(user, userId);
+    List<TeamUser> findTeamUserList = teamUserService.getTeamUserByUserAndWait(findUser);
+    return UserInvitationsResponse.of(findUser, findTeamUserList);
+  }
+
+
+  @Transactional
+  public void acceptInvitation(User user, Long userId, Long teamId) {
+    User findUser = validateUser(user, userId);
+    TeamUser findTeamUser = teamUserService.getTeamUserByTeamAndUserAndWait(teamId, findUser.getId());
+    findTeamUser.acceptInvitation();
+  }
+
+  @Transactional
+  public void rejectInvitation(User user, Long userId, Long teamId) {
+    User findUser = validateUser(user, userId);
+    teamUserService.rejectInvitation(teamId, findUser.getId());
+  }
+
+
+
+//  public UserBoardsResponse getMyBoards(User user, Long userId) {
+//    User findUser = validateUser(user, userId);
+//    return UserBoardsResponse.of(findUser);
+//  }
+
+//  public UserCommentsResponse getMyComments(User user, Long userId) {
+//    User findUser = validateUser(user, userId);
+//    return UserCommentsResponse.of(findUser);
+//  }
+
+
+
+
+
+
+
+
+
 
   public User validateUser(User authUser, Long userId) {
     //OSIV 끄고 테스트 필요 user와 findUser

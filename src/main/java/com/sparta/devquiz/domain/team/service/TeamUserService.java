@@ -2,7 +2,6 @@ package com.sparta.devquiz.domain.team.service;
 
 import com.sparta.devquiz.domain.team.entity.Team;
 import com.sparta.devquiz.domain.team.entity.TeamUser;
-import com.sparta.devquiz.domain.team.entity.TeamUserId;
 import com.sparta.devquiz.domain.team.enums.TeamUserRole;
 import com.sparta.devquiz.domain.team.exception.TeamCustomException;
 import com.sparta.devquiz.domain.team.exception.TeamExceptionCode;
@@ -65,7 +64,7 @@ public class TeamUserService {
     }
 
     public TeamUser getTeamUserByTeamIdAndUserId(Team team, User user){
-        return teamUserRepository.findByTeamIdAndUserId(team.getId(), user.getId()).orElseThrow(
+        return teamUserRepository.findByTeamIdAndUserIdAndAndIsAcceptedTrue(team.getId(), user.getId()).orElseThrow(
                 () -> new TeamCustomException(TeamExceptionCode.NOT_FOUND_TEAM_USER)
         );
     }
@@ -79,4 +78,21 @@ public class TeamUserService {
                 TeamUserRole.ADMIN);
     }
 
+    public List<TeamUser> getTeamUserByUser(User user) {
+        return teamUserRepository.findAllByUserAndIsAcceptedTrue(user);
+    }
+
+    public List<TeamUser> getTeamUserByUserAndWait(User user) {
+        return teamUserRepository.findAllByUserAndIsAcceptedFalse(user);
+    }
+
+    public TeamUser getTeamUserByTeamAndUserAndWait(Long teamId, Long userId) {
+        return teamUserRepository.findByTeamIdAndUserIdAndIsAcceptedFalse(teamId, userId).orElseThrow(
+            () -> new TeamCustomException(TeamExceptionCode.NOT_FOUND_TEAM_USER_WAIT)
+        );
+    }
+    public void rejectInvitation(Long teamId, Long userId) {
+        TeamUser findTeamUser = getTeamUserByTeamAndUserAndWait(teamId, userId);
+        teamUserRepository.delete(findTeamUser);
+    }
 }

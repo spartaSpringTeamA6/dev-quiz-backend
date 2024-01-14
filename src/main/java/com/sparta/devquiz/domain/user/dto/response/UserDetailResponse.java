@@ -1,6 +1,5 @@
 package com.sparta.devquiz.domain.user.dto.response;
 
-import com.sparta.devquiz.domain.user.entity.Skill;
 import com.sparta.devquiz.domain.user.entity.User;
 import com.sparta.devquiz.domain.user.enums.OauthType;
 import com.sparta.devquiz.domain.user.enums.UserRole;
@@ -36,10 +35,11 @@ public class UserDetailResponse {
   private int weekScore;
 
   @Schema(description = "스킬", defaultValue = "자바")
-  private List<Skill> skillList;
+  private List<SkillResponse> skillList;
 
   public static UserDetailResponse of(User user) {
-    return UserDetailResponse.builder()
+    return UserDetailResponse
+        .builder()
         .userId(user.getId())
         .oauthId(user.getOauthId())
         .oauthType(user.getOauthType())
@@ -47,7 +47,10 @@ public class UserDetailResponse {
         .role(user.getRole())
         .totalCoin(user.getTotalCoin())
         .weekScore(user.getWeekScore())
-        .skillList(user.getSkillList())
+        .skillList(
+            user.getSkillList().stream()
+                .map(SkillResponse::of)
+                .toList())
         .build();
   }
 
