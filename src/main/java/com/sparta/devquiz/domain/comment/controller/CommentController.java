@@ -2,6 +2,7 @@ package com.sparta.devquiz.domain.comment.controller;
 
 import com.sparta.devquiz.domain.board.repository.BoardRepository;
 import com.sparta.devquiz.domain.comment.dto.requestDto.CommentCreateRequestDto;
+import com.sparta.devquiz.domain.comment.dto.requestDto.CommentUpdateRequestDto;
 import com.sparta.devquiz.domain.comment.dto.responseDto.CommentCreateResponseDto;
 import com.sparta.devquiz.domain.comment.dto.responseDto.CommentListGetResponseDto;
 import com.sparta.devquiz.domain.comment.entity.Comment;
@@ -61,6 +62,23 @@ public class CommentController {
                         commentListGetResponseDto
                 ),
                 HttpStatus.OK
+        );
+    }
+
+    @Operation
+    @PatchMapping("/comments/{comment_id}")
+    public ResponseEntity<CommonResponseDto<Void>> updateComment(@PathVariable Long comment_id,
+                                                                 @Valid @RequestBody CommentUpdateRequestDto commentUpdateRequestDto,
+                                                                 @AuthUser User user) {
+        commentService.updateComment(comment_id, commentUpdateRequestDto, user);
+
+        return new ResponseEntity<>(
+                new CommonResponseDto<>(
+                        CommentResponseCode.NO_CONTENT_DELETE_COMMENT.getHttpStatus(),
+                        CommentResponseCode.NO_CONTENT_DELETE_COMMENT.getMessage(),
+                        null
+                ),
+                HttpStatus.NO_CONTENT
         );
     }
 

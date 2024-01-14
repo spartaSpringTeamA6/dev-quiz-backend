@@ -3,6 +3,7 @@ package com.sparta.devquiz.domain.comment.service;
 import com.sparta.devquiz.domain.board.entity.Board;
 import com.sparta.devquiz.domain.board.repository.BoardRepository;
 import com.sparta.devquiz.domain.comment.dto.requestDto.CommentCreateRequestDto;
+import com.sparta.devquiz.domain.comment.dto.requestDto.CommentUpdateRequestDto;
 import com.sparta.devquiz.domain.comment.dto.responseDto.CommentListGetResponseDto;
 import com.sparta.devquiz.domain.comment.dto.responseDto.CommentSingleGetResponseDto;
 import com.sparta.devquiz.domain.comment.entity.Comment;
@@ -49,5 +50,20 @@ public class CommentService {
 
         return new CommentListGetResponseDto(commentListDto);
     }
+
+    @Transactional
+    public void updateComment(Long comment_id, CommentUpdateRequestDto commentUpdateRequestDto, User user) {
+        Comment comment = commentRepository.findById(comment_id)
+                .orElseThrow(() -> new CommentCustomException(CommentExceptionCode.NOT_FOUND_COMMENT));
+
+        if (!comment.getUser().equals(user)) {
+            throw new CommentCustomException(CommentExceptionCode.UNAUTHORIZED_USER);
+        }
+
+        comment.updateContent(commentUpdateRequestDto.getContent());
+    }
+
+
+
 
 }
