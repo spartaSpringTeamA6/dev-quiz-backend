@@ -3,15 +3,19 @@ package com.sparta.devquiz.domain.comment.service;
 import com.sparta.devquiz.domain.board.entity.Board;
 import com.sparta.devquiz.domain.board.repository.BoardRepository;
 import com.sparta.devquiz.domain.comment.dto.requestDto.CommentCreateRequestDto;
+import com.sparta.devquiz.domain.comment.dto.responseDto.CommentListGetResponseDto;
+import com.sparta.devquiz.domain.comment.dto.responseDto.CommentSingleGetResponseDto;
 import com.sparta.devquiz.domain.comment.entity.Comment;
 import com.sparta.devquiz.domain.comment.exception.CommentCustomException;
 import com.sparta.devquiz.domain.comment.exception.CommentExceptionCode;
 import com.sparta.devquiz.domain.comment.repository.CommentRepository;
+import com.sparta.devquiz.domain.user.entity.User;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import com.sparta.devquiz.domain.user.entity.User;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +37,17 @@ public class CommentService {
                 .build();
 
         return commentRepository.save(comment);
+    }
+
+    public CommentListGetResponseDto getCommentList(Long board_id) {
+
+        List<Comment> comments = commentRepository.findAllCommentsByBoardId(board_id);
+
+        List<CommentSingleGetResponseDto> commentListDto = comments.stream()
+                .map(comment -> new CommentSingleGetResponseDto(comment.getContent()))
+                .toList();
+
+        return new CommentListGetResponseDto(commentListDto);
     }
 
 }

@@ -3,6 +3,7 @@ package com.sparta.devquiz.domain.comment.controller;
 import com.sparta.devquiz.domain.board.repository.BoardRepository;
 import com.sparta.devquiz.domain.comment.dto.requestDto.CommentCreateRequestDto;
 import com.sparta.devquiz.domain.comment.dto.responseDto.CommentCreateResponseDto;
+import com.sparta.devquiz.domain.comment.dto.responseDto.CommentListGetResponseDto;
 import com.sparta.devquiz.domain.comment.entity.Comment;
 import com.sparta.devquiz.domain.comment.repository.CommentRepository;
 import com.sparta.devquiz.domain.comment.response.CommentResponseCode;
@@ -48,6 +49,20 @@ public class CommentController {
         );
     }
 
+    @Operation(summary = "Board에 속한 모든 Comment 조회")
+    @GetMapping("/boards/{board_id}/comments")
+    public ResponseEntity<CommonResponseDto<CommentListGetResponseDto>> getBoardList(@PathVariable Long board_id) {
+        CommentListGetResponseDto commentListGetResponseDto = commentService.getCommentList(board_id);
+
+        return new ResponseEntity<>(
+                new CommonResponseDto<>(
+                        CommentResponseCode.OK_GET_ALL_COMMENT.getHttpStatus(),
+                        CommentResponseCode.OK_GET_ALL_COMMENT.getMessage(),
+                        commentListGetResponseDto
+                ),
+                HttpStatus.OK
+        );
+    }
 
 
 }
