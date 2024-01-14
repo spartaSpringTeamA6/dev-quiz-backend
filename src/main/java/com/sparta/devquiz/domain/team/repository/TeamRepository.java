@@ -9,4 +9,6 @@ import org.springframework.stereotype.Repository;
 public interface TeamRepository extends JpaRepository<Team, Long> {
 
     Optional<Team> findByIdAndIsDeletedFalse(Long teamId);
+
+    boolean existsByName(String Name);
 }

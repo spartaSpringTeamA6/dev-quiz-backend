@@ -49,7 +49,7 @@ class CoinServiceTest {
     @BeforeEach
     public void setUp() {
         user = new User(1L,"test", OauthType.GOOGLE, "123123","testuser",
-                UserRole.USER, 0L, null, false, null, new ArrayList<>(), null);
+                UserRole.USER, 0, null, false, null, new ArrayList<>(), null);
 
         userRepository.save(user);
         authUser = user;
