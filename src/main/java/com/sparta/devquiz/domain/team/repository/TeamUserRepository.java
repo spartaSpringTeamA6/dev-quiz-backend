@@ -3,6 +3,7 @@ package com.sparta.devquiz.domain.team.repository;
 import com.sparta.devquiz.domain.team.entity.TeamUser;
 import com.sparta.devquiz.domain.team.entity.TeamUserId;
 import com.sparta.devquiz.domain.team.enums.TeamUserRole;
+import com.sparta.devquiz.domain.user.entity.User;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,4 +19,10 @@ public interface TeamUserRepository extends JpaRepository<TeamUser, TeamUserId> 
     Optional<TeamUser> findByTeamIdAndIsAcceptedTrueAndUserRole(Long teamId, TeamUserRole userRole);
 
     List<TeamUser> findAllByTeamIdAndIsAcceptedTrueAndUserRole(Long teamId, TeamUserRole userRole);
+
+    List<TeamUser> findAllByUserIdAndIsAcceptedTrue(Long userId);
+
+    List<TeamUser> findAllByUserIdAndIsAcceptedFalse(Long userId);
+
+    Optional<TeamUser> findByTeamIdAndUserIdAndIsAcceptedFalse(Long teamId, Long userId);
 }

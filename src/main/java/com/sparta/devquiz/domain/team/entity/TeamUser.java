@@ -64,4 +64,8 @@ public class TeamUser extends BaseTimeEntity {
     public void updateTeamUserRole(TeamUserRole teamUserRole){
         this.userRole = teamUserRole;
     }
+
+    public void acceptInvitation() {
+        this.isAccepted = true;
+    }
 }

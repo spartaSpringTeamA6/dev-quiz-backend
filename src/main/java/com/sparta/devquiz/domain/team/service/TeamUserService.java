@@ -79,4 +79,22 @@ public class TeamUserService {
                 TeamUserRole.ADMIN);
     }
 
+    public List<TeamUser> getTeamUserByUser(User user) {
+        return teamUserRepository.findAllByUserIdAndIsAcceptedTrue(user.getId());
+    }
+
+    public List<TeamUser> getTeamUserByUserAndWait(User user) {
+        return teamUserRepository.findAllByUserIdAndIsAcceptedFalse(user.getId());
+    }
+
+    public TeamUser getTeamUserByTeamAndUserAndWait(Long teamId, Long userId) {
+        return teamUserRepository.findByTeamIdAndUserIdAndIsAcceptedFalse(teamId, userId).orElseThrow(
+                () -> new TeamCustomException(TeamExceptionCode.NOT_FOUND_TEAM_USER_WAIT)
+        );
+    }
+    public void rejectInvitation(Long teamId, Long userId) {
+        TeamUser findTeamUser = getTeamUserByTeamAndUserAndWait(teamId, userId);
+        teamUserRepository.delete(findTeamUser);
+    }
+
 }
