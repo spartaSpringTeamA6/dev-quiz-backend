@@ -1,10 +1,10 @@
 package com.sparta.devquiz.domain.board.controller;
 
-import com.sparta.devquiz.domain.board.dto.RequestDto.BoardRequestDto;
-import com.sparta.devquiz.domain.board.dto.RequestDto.BoardUpdateRequestDto;
-import com.sparta.devquiz.domain.board.dto.ResponseDto.BoardCreateResponseDto;
-import com.sparta.devquiz.domain.board.dto.ResponseDto.BoardListGetResponseDto;
-import com.sparta.devquiz.domain.board.dto.ResponseDto.BoardSingleGetResponseDto;
+import com.sparta.devquiz.domain.board.dto.requestDto.BoardRequestDto;
+import com.sparta.devquiz.domain.board.dto.requestDto.BoardUpdateRequestDto;
+import com.sparta.devquiz.domain.board.dto.responseDto.BoardCreateResponseDto;
+import com.sparta.devquiz.domain.board.dto.responseDto.BoardListGetResponseDto;
+import com.sparta.devquiz.domain.board.dto.responseDto.BoardSingleGetResponseDto;
 import com.sparta.devquiz.domain.board.entity.Board;
 import com.sparta.devquiz.domain.board.response.BoardResponseCode;
 import com.sparta.devquiz.domain.board.service.BoardService;

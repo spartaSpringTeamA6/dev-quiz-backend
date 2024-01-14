@@ -1,4 +1,4 @@
-package com.sparta.devquiz.domain.board.dto.ResponseDto;
+package com.sparta.devquiz.domain.board.dto.responseDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
