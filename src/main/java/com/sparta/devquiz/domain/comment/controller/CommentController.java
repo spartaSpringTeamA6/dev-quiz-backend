@@ -79,7 +79,7 @@ public class CommentController {
     }
 
     @Operation(summary = "Comment 삭제")
-    @PatchMapping("/comments/{comment_id}")
+    @DeleteMapping("/comments/{comment_id}")
     public ResponseEntity<CommonResponseDto<Void>> deleteComment(@PathVariable Long comment_id,
                                                                  @AuthUser User user) {
         commentService.deleteComment(comment_id, user);
@@ -93,6 +93,7 @@ public class CommentController {
                 HttpStatus.NO_CONTENT
         );
     }
+
 
     @Operation(summary = "댓글 좋아요")
     @PostMapping("/comments/{comment_id}/like")
