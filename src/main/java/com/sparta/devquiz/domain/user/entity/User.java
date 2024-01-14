@@ -65,12 +65,15 @@ public class User extends BaseTimeEntity {
     @Column
     private LocalDateTime deletedAt;
 
+    @Builder.Default
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Skill> skillList = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "user")
     private List<Coin> coinList = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "user")
     private List<UserQuiz> userQuizList = new ArrayList<>();
 

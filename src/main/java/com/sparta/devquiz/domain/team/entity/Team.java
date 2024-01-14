@@ -6,7 +6,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,9 +31,22 @@ public class Team extends BaseTimeEntity {
     private String name;
 
     @Column(nullable = false)
-    private Boolean isDeleted;
+    private boolean isDeleted;
 
-    @Column(nullable = true)
+    @Column
     private LocalDateTime deletedAt;
+
+    @Builder.Default
+    @OneToMany(mappedBy = "team")
+    private List<TeamUser> teamUserList = new ArrayList<>();
+
+    public void updateName(String name){
+        this.name = name;
+    }
+
+    public void deleteTeam(){
+        this.isDeleted = true;
+        this.deletedAt = LocalDateTime.now();
+    }
 
 }
