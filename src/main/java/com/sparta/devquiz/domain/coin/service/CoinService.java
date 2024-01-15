@@ -3,7 +3,6 @@ package com.sparta.devquiz.domain.coin.service;
 import com.sparta.devquiz.domain.coin.dto.request.SaveCoinRequest;
 import com.sparta.devquiz.domain.coin.dto.request.UseCoinRequest;
 import com.sparta.devquiz.domain.coin.dto.response.GetCoinInfoResponse;
-import com.sparta.devquiz.domain.coin.dto.response.SaveCoinResponse;
 import com.sparta.devquiz.domain.coin.dto.response.UseCoinResponse;
 import com.sparta.devquiz.domain.coin.entity.Coin;
 import com.sparta.devquiz.domain.coin.enums.CoinContent;
@@ -24,7 +23,7 @@ public class CoinService {
     private final CoinRepository coinRepository;
     private final UserService userService;
 
-    public SaveCoinResponse saveCoin(Long userId, SaveCoinRequest saveCoinRequest, User authUser) {
+    public void saveCoin(Long userId, SaveCoinRequest saveCoinRequest, User authUser) {
         userService.validateUser(authUser, userId);
 
         CoinContent coinContent = saveCoinRequest.getCoinContent();
@@ -35,8 +34,6 @@ public class CoinService {
         Coin coin = Coin.saveCoins(authUser, coinContent);
         authUser.getCoinList().add(coin);   // 사용시 유저 코인리스트 실시간 반영.  사용하지 않으면 유저가 직접 DB에서 불러와서 업데이트
         coinRepository.save(coin);
-
-        return new SaveCoinResponse();
     }
 
     public UseCoinResponse useCoin(Long userId, UseCoinRequest useCoinRequest, User authUser) {
@@ -56,7 +53,7 @@ public class CoinService {
         Coin coin = Coin.useCoins(authUser, coinContent);
         coinRepository.save(coin);
 
-        return new UseCoinResponse(changeCoins);
+        return UseCoinResponse.of(changeCoins);
     }
 
     public GetCoinInfoResponse getCoinInfo(Long userId, User authUser) {
@@ -64,7 +61,7 @@ public class CoinService {
 
         int totalCoin = getTotalCoin(userId);
 
-        return new GetCoinInfoResponse(totalCoin);
+        return GetCoinInfoResponse.of(totalCoin);
     }
 
     private int getTotalCoin(Long userId) {

@@ -1,7 +1,6 @@
 package com.sparta.devquiz.domain.coin.repository;
 
 import com.sparta.devquiz.domain.coin.entity.Coin;
-import com.sparta.devquiz.domain.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

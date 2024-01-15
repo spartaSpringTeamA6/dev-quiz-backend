@@ -9,8 +9,6 @@ import com.sparta.devquiz.domain.coin.enums.CoinContent;
 import com.sparta.devquiz.domain.coin.exception.CoinCustomException;
 import com.sparta.devquiz.domain.coin.repository.CoinRepository;
 import com.sparta.devquiz.domain.user.entity.User;
-import com.sparta.devquiz.domain.user.enums.OauthType;
-import com.sparta.devquiz.domain.user.enums.UserRole;
 import com.sparta.devquiz.domain.user.repository.UserRepository;
 import com.sparta.devquiz.domain.user.service.UserService;
 import org.junit.jupiter.api.BeforeEach;

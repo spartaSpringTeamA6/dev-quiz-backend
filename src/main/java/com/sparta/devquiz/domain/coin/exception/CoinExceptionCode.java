@@ -2,9 +2,11 @@ package com.sparta.devquiz.domain.coin.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
 
 @Getter
+@NoArgsConstructor
 @AllArgsConstructor
 public enum CoinExceptionCode {
 
@@ -20,7 +22,7 @@ public enum CoinExceptionCode {
 
     // CONFLICT 409
 
-    private final HttpStatus httpStatus;
-    private final String errorCode;
-    private final String message;
+    private HttpStatus httpStatus;
+    private String errorCode;
+    private String message;
 }

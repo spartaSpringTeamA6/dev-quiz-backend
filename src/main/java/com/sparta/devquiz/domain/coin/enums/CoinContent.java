@@ -1,12 +1,14 @@
 package com.sparta.devquiz.domain.coin.enums;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 
 import java.util.function.Supplier;
 
 @Getter
-@RequiredArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 public enum CoinContent {
 
     // 문제
@@ -21,8 +23,8 @@ public enum CoinContent {
     ITEM_CAT("USE", "CAT", () -> 25),
     ITEM_DOG("USE", "DOG", () -> 45);
 
-    private final String status;
-    private final String content;
-    private final Supplier<Integer> coinSupplier;
+    private String status;
+    private String content;
+    private Supplier<Integer> coinSupplier;
 
 }
