@@ -20,9 +20,9 @@ public interface TeamUserRepository extends JpaRepository<TeamUser, TeamUserId> 
 
     List<TeamUser> findAllByTeamIdAndIsAcceptedTrueAndUserRole(Long teamId, TeamUserRole userRole);
 
-    List<TeamUser> findAllByUserIdAndIsAcceptedTrue(Long userId);
+    List<TeamUser> findAllByUserAndIsAcceptedTrue(User user);
 
-    List<TeamUser> findAllByUserIdAndIsAcceptedFalse(Long userId);
+    List<TeamUser> findAllByUserAndIsAcceptedFalse(User user);
 
     Optional<TeamUser> findByTeamIdAndUserIdAndIsAcceptedFalse(Long teamId, Long userId);
 }
