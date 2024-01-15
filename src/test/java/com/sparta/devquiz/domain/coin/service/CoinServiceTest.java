@@ -28,6 +28,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
 @ActiveProfiles("test")
@@ -48,8 +49,8 @@ class CoinServiceTest {
 
     @BeforeEach
     public void setUp() {
-        user = new User(1L,"test", OauthType.GOOGLE, "123123","testuser",
-                UserRole.USER, 0, null, false, null, new ArrayList<>(), null);
+        user = new User(1L,"test", null, "123123","testuser",
+                null, 0, 0,false, null, null, new ArrayList<>(), null, null, null, null);
 
         userRepository.save(user);
         authUser = user;
@@ -66,7 +67,7 @@ class CoinServiceTest {
         new SaveCoinRequest(0, CoinContent.FAIL),
         new SaveCoinRequest(0, CoinContent.PASS)
         );
-        when(userService.getUserById(userId)).thenReturn(user);
+        lenient().when(userService.getUserById(userId)).thenReturn(user);
 
         List<Coin> testCoinList = new ArrayList<>();
         for (SaveCoinRequest request : saveCoinRequestList) {
@@ -106,7 +107,7 @@ class CoinServiceTest {
 
         List<Coin> coins = Arrays.asList(coin1, coin2);
 
-        when(userService.getUserById(userId)).thenReturn(user);
+        lenient().when(userService.getUserById(userId)).thenReturn(user);
         when(coinRepository.findAllByUserId(userId)).thenReturn(coins);
 
 
@@ -132,7 +133,7 @@ class CoinServiceTest {
 
         List<Coin> coins = Arrays.asList(coin1, coin2);
 
-        when(userService.getUserById(userId)).thenReturn(user);
+        lenient().when(userService.getUserById(userId)).thenReturn(user);
         when(coinRepository.findAllByUserId(userId)).thenReturn(coins);
 
 
@@ -159,7 +160,7 @@ class CoinServiceTest {
 
         List<Coin> coins = Arrays.asList(coin1, coin2);
 
-        when(userService.getUserById(userId)).thenReturn(user);
+        lenient().when(userService.getUserById(userId)).thenReturn(user);
         when(coinRepository.findAllByUserId(userId)).thenReturn(coins);
 
         // WHEN
