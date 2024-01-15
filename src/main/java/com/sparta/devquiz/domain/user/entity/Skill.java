@@ -7,8 +7,6 @@ import lombok.*;
 
 @Entity
 @Getter
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Skill extends BaseTimeEntity {
 
@@ -17,10 +15,15 @@ public class Skill extends BaseTimeEntity {
     private Long id;
 
     @Enumerated(value = EnumType.STRING)
-    private UserSkill name;
+    private UserSkill userSkill;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Builder
+    private Skill(UserSkill userSkill, User user) {
+        this.userSkill = userSkill;
+        this.user = user;
+    }
 }

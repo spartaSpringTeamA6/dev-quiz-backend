@@ -2,7 +2,6 @@ package com.sparta.devquiz.domain.team.entity;
 
 import com.sparta.devquiz.domain.team.enums.TeamUserRole;
 import com.sparta.devquiz.domain.user.entity.User;
-import com.sparta.devquiz.domain.user.enums.UserRole;
 import com.sparta.devquiz.global.entity.BaseTimeEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
@@ -10,13 +9,11 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -63,5 +60,9 @@ public class TeamUser extends BaseTimeEntity {
 
     public void updateTeamUserRole(TeamUserRole teamUserRole){
         this.userRole = teamUserRole;
+    }
+
+    public void acceptInvitation() {
+        this.isAccepted = true;
     }
 }
