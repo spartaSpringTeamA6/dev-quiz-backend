@@ -1,19 +1,18 @@
 package com.sparta.devquiz.domain.board.service;
 
-import com.sparta.devquiz.domain.board.dto.RequestDto.BoardRequestDto;
-import com.sparta.devquiz.domain.board.dto.RequestDto.BoardUpdateRequestDto;
-import com.sparta.devquiz.domain.board.dto.ResponseDto.BoardListGetResponseDto;
-import com.sparta.devquiz.domain.board.dto.ResponseDto.BoardSingleGetResponseDto;
+import com.sparta.devquiz.domain.board.dto.requestDto.BoardRequestDto;
+import com.sparta.devquiz.domain.board.dto.requestDto.BoardUpdateRequestDto;
+import com.sparta.devquiz.domain.board.dto.responseDto.BoardListGetResponseDto;
+import com.sparta.devquiz.domain.board.dto.responseDto.BoardSingleGetResponseDto;
 import com.sparta.devquiz.domain.board.entity.Board;
 import com.sparta.devquiz.domain.board.exception.BoardCustomException;
 import com.sparta.devquiz.domain.board.exception.BoardExceptionCode;
 import com.sparta.devquiz.domain.board.repository.BoardRepository;
+import com.sparta.devquiz.domain.quiz.QuizRepository;
 import com.sparta.devquiz.domain.quiz.entity.Quiz;
 import com.sparta.devquiz.domain.user.entity.User;
-import com.sparta.devquiz.global.exception.CustomException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -61,18 +60,26 @@ public class BoardService {
     }
 
     @Transactional
-    public void updateBoard(Long boardId, BoardUpdateRequestDto boardUpdateRequestDto) {
+    public void updateBoard(Long boardId, BoardUpdateRequestDto boardUpdateRequestDto, User currentUser) {
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new BoardCustomException(BoardExceptionCode.NOT_FOUND_BOARD));
+
+        if (!board.getUser().equals(currentUser)) {
+            throw new BoardCustomException(BoardExceptionCode.UNAUTHORIZED_USER);
+        }
 
         board.updateTitleAndContent(boardUpdateRequestDto.getTitle(), boardUpdateRequestDto.getContent());
     }
 
-    @Transactional
-    public void deleteBoard(Long boardId) {
 
+    @Transactional
+    public void deleteBoard(Long boardId, User user) {
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new BoardCustomException(BoardExceptionCode.NOT_FOUND_BOARD));
+
+        if (!board.getUser().equals(user)) {
+            throw new BoardCustomException(BoardExceptionCode.UNAUTHORIZED_USER);
+        }
 
         board.setDeleted(true);
         boardRepository.save(board);
