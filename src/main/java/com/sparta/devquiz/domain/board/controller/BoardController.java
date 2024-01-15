@@ -5,6 +5,7 @@ import com.sparta.devquiz.domain.board.dto.requestDto.BoardUpdateRequestDto;
 import com.sparta.devquiz.domain.board.dto.responseDto.BoardCreateResponseDto;
 import com.sparta.devquiz.domain.board.dto.responseDto.BoardListGetResponseDto;
 import com.sparta.devquiz.domain.board.dto.responseDto.BoardSingleGetResponseDto;
+import com.sparta.devquiz.domain.board.entity.Board;
 import com.sparta.devquiz.domain.board.response.BoardResponseCode;
 import com.sparta.devquiz.domain.board.service.BoardService;
 import com.sparta.devquiz.domain.user.entity.User;
@@ -32,15 +33,16 @@ public class BoardController {
                                                          @Valid @RequestBody BoardRequestDto boardRequestDto,
                                                          @AuthUser User user) {
 
-        BoardCreateResponseDto board = boardService.createBoard(quiz_id, boardRequestDto, user);
-
         BoardCreateResponseDto boardCreateResponseDto = boardService.createBoard(quiz_id, boardRequestDto, user);
 
-        return ResponseEntity
-                .status(BoardResponseCode.CREATED_BOARD.getHttpStatus())
-                .body(CommonResponseDto.of(BoardResponseCode.CREATED_BOARD.getHttpStatus(),
+        return new ResponseEntity<>(
+                new CommonResponseDto<>(
+                        BoardResponseCode.CREATED_BOARD.getHttpStatus(),
                         BoardResponseCode.CREATED_BOARD.getMessage(),
-                        boardCreateResponseDto));
+                        boardCreateResponseDto
+                ),
+                HttpStatus.CREATED
+        );
     }
 
     @Operation(summary = "단일 Board 조회")
