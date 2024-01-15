@@ -52,6 +52,26 @@
 | API Code | Name | Method | URL | Auth |
 |---|---|---|---|---|
 
+### 2. Quiz API
+| API Code | Name | Method | URL | Auth |
+|---|---|---|---|---|
+
+### 3. Coin API
+| API Code | Name | Method | URL | Auth |
+|---|---|---|---|---|
+
+### 4. Board API
+| API Code | Name | Method | URL | Auth |
+|---|---|---|---|---|
+
+### 5. Comment API
+| API Code | Name | Method | URL | Auth |
+|---|---|---|---|---|
+
+### 6. Team API
+| API Code | Name | Method | URL | Auth |
+|---|---|---|---|---|
+
 ## 🐾 File Structure
 ``` markdown
 dev-quiz/
