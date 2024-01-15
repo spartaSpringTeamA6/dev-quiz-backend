@@ -3,7 +3,6 @@ package com.sparta.devquiz.domain.coin.controller;
 import com.sparta.devquiz.domain.coin.dto.request.SaveCoinRequest;
 import com.sparta.devquiz.domain.coin.dto.request.UseCoinRequest;
 import com.sparta.devquiz.domain.coin.dto.response.GetCoinInfoResponse;
-import com.sparta.devquiz.domain.coin.dto.response.SaveCoinResponse;
 import com.sparta.devquiz.domain.coin.dto.response.UseCoinResponse;
 import com.sparta.devquiz.domain.coin.response.CoinResponseCode;
 import com.sparta.devquiz.domain.coin.service.CoinService;
@@ -29,12 +28,12 @@ public class CoinController {
     @SecurityRequirement(name = "Bearer Authentication")
     @Operation(operationId = "COIN-001", summary = "코인 적립")
     @PostMapping("/save")
-    public ResponseEntity<CommonResponseDto<SaveCoinResponse>> saveCoin(@PathVariable Long userId, @RequestBody SaveCoinRequest saveCoinRequest,
+    public ResponseEntity<CommonResponseDto> saveCoin(@PathVariable Long userId, @RequestBody SaveCoinRequest saveCoinRequest,
                                                                          @AuthUser User authUser) {
-        SaveCoinResponse saveCoinResponse = coinService.saveCoin(userId, saveCoinRequest, authUser);
+        coinService.saveCoin(userId, saveCoinRequest, authUser);
 
         return ResponseEntity.status(CoinResponseCode.CREATED_SAVE_COIN.getHttpStatus())
-                .body(CommonResponseDto.of(CoinResponseCode.CREATED_SAVE_COIN, saveCoinResponse));
+                .body(CommonResponseDto.of(CoinResponseCode.CREATED_SAVE_COIN));
     }
 
     @SecurityRequirement(name = "Bearer Authentication")
@@ -45,8 +44,8 @@ public class CoinController {
 
         UseCoinResponse useCoinResponse = coinService.useCoin(userId, useCoinRequest, authUser);
 
-        return ResponseEntity.status(CoinResponseCode.NO_CONTENT_USE_COIN.getHttpStatus())
-                .body(CommonResponseDto.of(CoinResponseCode.NO_CONTENT_USE_COIN, useCoinResponse));
+        return ResponseEntity.status(CoinResponseCode.OK_USE_COIN.getHttpStatus())
+                .body(CommonResponseDto.of(CoinResponseCode.OK_USE_COIN, useCoinResponse));
     }
 
 
