@@ -2,6 +2,7 @@ package com.sparta.devquiz.domain.board.service;
 
 import com.sparta.devquiz.domain.board.dto.requestDto.BoardRequestDto;
 import com.sparta.devquiz.domain.board.dto.requestDto.BoardUpdateRequestDto;
+import com.sparta.devquiz.domain.board.dto.responseDto.BoardCreateResponseDto;
 import com.sparta.devquiz.domain.board.dto.responseDto.BoardListGetResponseDto;
 import com.sparta.devquiz.domain.board.dto.responseDto.BoardSingleGetResponseDto;
 import com.sparta.devquiz.domain.board.entity.Board;
@@ -26,7 +27,7 @@ public class BoardService {
     private final QuizRepository quizRepository;
 
     @Transactional
-    public Board createBoard(Long quizId, BoardRequestDto boardRequestDto, User user) {
+    public BoardCreateResponseDto createBoard(Long quizId, BoardRequestDto boardRequestDto, User user) {
         Quiz quiz = quizRepository.findById(quizId)
                 .orElseThrow(() -> new BoardCustomException(BoardExceptionCode.NOT_FOUND_QUIZ));
 
@@ -37,8 +38,9 @@ public class BoardService {
                 .content(boardRequestDto.getContent())
                 .isDeleted(false)
                 .build();
+        boardRepository.save(board);
 
-        return boardRepository.save(board);
+        return BoardCreateResponseDto.of(board);
     }
 
     public BoardSingleGetResponseDto getSingleBoard(Long boardId) {

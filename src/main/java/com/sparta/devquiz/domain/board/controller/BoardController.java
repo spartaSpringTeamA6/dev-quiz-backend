@@ -27,24 +27,21 @@ public class BoardController {
 
     private final BoardService boardService;
 
-    @Operation(summary = "Board 작성")
-    @PostMapping("/quizzes/{quiz_id}/boards")
-    public ResponseEntity<CommonResponseDto<BoardCreateResponseDto>> createBoard(@PathVariable Long quiz_id,
-                                                                                 @Valid @RequestBody BoardRequestDto boardRequestDto,
-                                                                                 @AuthUser User user) {
+    @Operation(summary = "Board 생성")
+    @GetMapping("/api/boards/{board_id}")
+    public ResponseEntity<CommonResponseDto> createBoard(@PathVariable Long quiz_id,
+                                                         @Valid @RequestBody BoardRequestDto boardRequestDto,
+                                                         @AuthUser User user) {
 
         Board board = boardService.createBoard(quiz_id, boardRequestDto, user);
 
         BoardCreateResponseDto boardCreateResponseDto = new BoardCreateResponseDto(board.getId(), board.getTitle(), board.getContent());
 
-        return new ResponseEntity<>(
-                new CommonResponseDto<>(
-                        BoardResponseCode.CREATED_BOARD.getHttpStatus(),
+        return ResponseEntity
+                .status(BoardResponseCode.CREATED_BOARD.getHttpStatus())
+                .body(CommonResponseDto.of(BoardResponseCode.CREATED_BOARD.getHttpStatus(),
                         BoardResponseCode.CREATED_BOARD.getMessage(),
-                        boardCreateResponseDto
-                ),
-                HttpStatus.CREATED
-        );
+                        boardCreateResponseDto));
     }
 
     @Operation(summary = "단일 Board 조회")
