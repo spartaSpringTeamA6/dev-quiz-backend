@@ -3,6 +3,7 @@ package com.sparta.devquiz.domain.board.service;
 import com.sparta.devquiz.domain.board.dto.requestDto.BoardRequestDto;
 import com.sparta.devquiz.domain.board.dto.requestDto.BoardUpdateRequestDto;
 import com.sparta.devquiz.domain.board.dto.responseDto.BoardCreateResponseDto;
+import com.sparta.devquiz.domain.board.dto.responseDto.BoardGetResponseDto;
 import com.sparta.devquiz.domain.board.dto.responseDto.BoardListGetResponseDto;
 import com.sparta.devquiz.domain.board.dto.responseDto.BoardSingleGetResponseDto;
 import com.sparta.devquiz.domain.board.entity.Board;
@@ -43,11 +44,11 @@ public class BoardService {
         return BoardCreateResponseDto.of(board);
     }
 
-    public BoardSingleGetResponseDto getSingleBoard(Long boardId) {
+    public BoardGetResponseDto getBoard(Long boardId) {
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new BoardCustomException(BoardExceptionCode.NOT_FOUND_BOARD));
 
-        return new BoardSingleGetResponseDto(board.getId(), board.getTitle(), board.getContent());
+        return BoardGetResponseDto.of(board);
     }
 
     public BoardListGetResponseDto getBoardList(Long quizId) {
@@ -86,4 +87,5 @@ public class BoardService {
         board.setDeleted(true);
         boardRepository.save(board);
     }
+
 }

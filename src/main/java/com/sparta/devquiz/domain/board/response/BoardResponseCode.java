@@ -1,12 +1,13 @@
 package com.sparta.devquiz.domain.board.response;
 
+import com.sparta.devquiz.global.response.ResponseCode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 @Getter
 @AllArgsConstructor
-public enum BoardResponseCode {
+public enum BoardResponseCode implements ResponseCode {
 
     // OK 200
     OK_GET_BOARDLIST_INFO(HttpStatus.OK.value(), "SUCCESS TO GET BOARDLIST"),

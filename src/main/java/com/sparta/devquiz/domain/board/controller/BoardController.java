@@ -3,6 +3,7 @@ package com.sparta.devquiz.domain.board.controller;
 import com.sparta.devquiz.domain.board.dto.requestDto.BoardRequestDto;
 import com.sparta.devquiz.domain.board.dto.requestDto.BoardUpdateRequestDto;
 import com.sparta.devquiz.domain.board.dto.responseDto.BoardCreateResponseDto;
+import com.sparta.devquiz.domain.board.dto.responseDto.BoardGetResponseDto;
 import com.sparta.devquiz.domain.board.dto.responseDto.BoardListGetResponseDto;
 import com.sparta.devquiz.domain.board.dto.responseDto.BoardSingleGetResponseDto;
 import com.sparta.devquiz.domain.board.entity.Board;
@@ -27,39 +28,30 @@ public class BoardController {
 
     private final BoardService boardService;
 
-    @Operation(summary = "Board 생성")
-    @PostMapping("/api/boards/{board_id}")
-    public ResponseEntity<CommonResponseDto> createBoard(@PathVariable Long quiz_id,
-                                                         @Valid @RequestBody BoardRequestDto boardRequestDto,
-                                                         @AuthUser User user) {
-
+    @Operation(operationId = "Board-001", summary = "Board 생성")
+    @PostMapping("/api/quizzes/{quiz_id}/boards")
+    public ResponseEntity<CommonResponseDto> createBoard(
+            @PathVariable Long quiz_id,
+            @Valid @RequestBody BoardRequestDto boardRequestDto,
+            @AuthUser User user
+    ) {
         BoardCreateResponseDto boardCreateResponseDto = boardService.createBoard(quiz_id, boardRequestDto, user);
 
-        return new ResponseEntity<>(
-                new CommonResponseDto<>(
-                        BoardResponseCode.CREATED_BOARD.getHttpStatus(),
-                        BoardResponseCode.CREATED_BOARD.getMessage(),
-                        boardCreateResponseDto
-                ),
-                HttpStatus.CREATED
-        );
+        return ResponseEntity
+                .status(BoardResponseCode.CREATED_BOARD.getHttpStatus())
+                        .body(CommonResponseDto.of(BoardResponseCode.CREATED_BOARD, boardCreateResponseDto));
     }
 
-    @Operation(summary = "단일 Board 조회")
+    @Operation(operationId = "Board-002", summary = "단일 Board 조회")
     @GetMapping("/api/boards/{board_id}")
-    public ResponseEntity<CommonResponseDto<BoardSingleGetResponseDto>> getSingleBoard(
-            @PathVariable Long board_id) {
+    public ResponseEntity<CommonResponseDto> getBoard(
+            @PathVariable Long board_id
+    ) {
+        BoardGetResponseDto boardGetResponseDto = boardService.getBoard(board_id);
 
-        BoardSingleGetResponseDto boardSingleGetResponseDto = boardService.getSingleBoard(board_id);
-
-        return new ResponseEntity<>(
-                new CommonResponseDto<>(
-                        BoardResponseCode.OK_GET_BOARD_INFO.getHttpStatus(),
-                        BoardResponseCode.OK_GET_BOARD_INFO.getMessage(),
-                        boardSingleGetResponseDto
-                ),
-                HttpStatus.OK
-        );
+        return ResponseEntity
+                .status(BoardResponseCode.OK_GET_BOARD_INFO.getHttpStatus())
+                .body(CommonResponseDto.of(BoardResponseCode.OK_GET_BOARD_INFO, boardGetResponseDto));
     }
 
     @Operation(summary = "퀴즈에 속한 모든 Board 조회")
