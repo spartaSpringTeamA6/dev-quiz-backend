@@ -4,7 +4,6 @@ import com.sparta.devquiz.domain.user.entity.User;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -32,6 +31,6 @@ public class UserScoreResponse {
   public static List<UserScoreResponse> of(List<User> userList) {
     return userList.stream()
         .map(UserScoreResponse::of)
-        .collect(Collectors.toList());
+        .toList();
   }
 }

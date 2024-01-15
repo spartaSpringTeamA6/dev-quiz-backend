@@ -74,12 +74,10 @@ public class UserService {
     return UserInvitationsResponse.of(findUser, findTeamUserList);
   }
 
-
   @Transactional
   public void acceptInvitation(User user, Long userId, Long teamId) {
     User findUser = validateUser(user, userId);
-    TeamUser findTeamUser = teamUserService.getTeamUserByTeamAndUserAndWait(teamId, findUser.getId());
-    findTeamUser.acceptInvitation();
+    teamUserService.acceptInvitation(teamId, findUser.getId());
   }
 
   @Transactional
@@ -87,27 +85,6 @@ public class UserService {
     User findUser = validateUser(user, userId);
     teamUserService.rejectInvitation(teamId, findUser.getId());
   }
-
-
-
-//  public UserBoardsResponse getMyBoards(User user, Long userId) {
-//    User findUser = validateUser(user, userId);
-//    return UserBoardsResponse.of(findUser);
-//  }
-
-//  public UserCommentsResponse getMyComments(User user, Long userId) {
-//    User findUser = validateUser(user, userId);
-//    return UserCommentsResponse.of(findUser);
-//  }
-
-
-
-
-
-
-
-
-
 
   public User validateUser(User authUser, Long userId) {
     //OSIV 끄고 테스트 필요 user와 findUser

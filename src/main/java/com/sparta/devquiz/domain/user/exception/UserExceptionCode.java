@@ -17,10 +17,7 @@ public enum UserExceptionCode {
     // FORBIDDEN 403
 
     // CONFLICT 409
-    CONFLICT_USERNAME(HttpStatus.CONFLICT, "USER-003", "중복된 유저네임입니다..")
-
-
-    ;
+    CONFLICT_USERNAME(HttpStatus.CONFLICT, "USER-003", "중복된 유저네임입니다..");
 
     private final HttpStatus httpStatus;
     private final String errorCode;

@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface TeamUserRepository extends JpaRepository<TeamUser, TeamUserId> {
 
-    Optional<TeamUser> findByTeamIdAndUserIdAndAndIsAcceptedTrue(Long teamId, Long userId);
+    Optional<TeamUser> findByTeamIdAndUserIdAndIsAcceptedTrue(Long teamId, Long userId);
 
     boolean existsByTeamIdAndUserIdAndIsAcceptedTrue(Long teamId, Long userId);
 

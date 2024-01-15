@@ -64,7 +64,7 @@ public class TeamUserService {
     }
 
     public TeamUser getTeamUserByTeamIdAndUserId(Team team, User user){
-        return teamUserRepository.findByTeamIdAndUserIdAndAndIsAcceptedTrue(team.getId(), user.getId()).orElseThrow(
+        return teamUserRepository.findByTeamIdAndUserIdAndIsAcceptedTrue(team.getId(), user.getId()).orElseThrow(
                 () -> new TeamCustomException(TeamExceptionCode.NOT_FOUND_TEAM_USER)
         );
     }
@@ -91,6 +91,12 @@ public class TeamUserService {
             () -> new TeamCustomException(TeamExceptionCode.NOT_FOUND_TEAM_USER_WAIT)
         );
     }
+
+    public void acceptInvitation(Long teamId, Long userId) {
+        TeamUser findTeamUser = getTeamUserByTeamAndUserAndWait(teamId, userId);
+        findTeamUser.acceptInvitation();
+    }
+
     public void rejectInvitation(Long teamId, Long userId) {
         TeamUser findTeamUser = getTeamUserByTeamAndUserAndWait(teamId, userId);
         teamUserRepository.delete(findTeamUser);
