@@ -5,11 +5,9 @@ import jakarta.persistence.Column;
 import lombok.Getter;
 
 @Getter
-@Schema(description = "팀 생성 요청 dto")
-public class TeamCreateRequest {
-
+@Schema(description = "팀 이름 변경 요청 dto")
+public class TeamUpdateNameRequest {
     @Column
     @Schema(description = "팀 이름", defaultValue = "개발.zip")
     private String name;
-
 }

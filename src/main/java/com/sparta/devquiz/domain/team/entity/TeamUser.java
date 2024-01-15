@@ -14,20 +14,17 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class UserTeam extends BaseTimeEntity {
+public class TeamUser extends BaseTimeEntity {
 
     @EmbeddedId
-    private UserTeamId userTeamId;
+    private TeamUserId teamUserId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -43,12 +40,29 @@ public class UserTeam extends BaseTimeEntity {
     @Enumerated(value = EnumType.STRING)
     private TeamUserRole userRole;
 
-    @Column
-    private Boolean isAccepted;
+    @Column(nullable = false)
+    private boolean isAccepted;
 
     @Column
     private LocalDateTime acceptedAt;
 
-    @Column
-    private LocalDateTime rejectedAt;
+    @Builder
+    private TeamUser(Team team, User user, TeamUserRole userRole, boolean isAccepted){
+        this.teamUserId = TeamUserId.builder()
+                .teamId(team.getId())
+                .userId(user.getId())
+                .build();
+        this.team = team;
+        this.user = user;
+        this.userRole = userRole;
+        this.isAccepted = isAccepted;
+    }
+
+    public void updateTeamUserRole(TeamUserRole teamUserRole){
+        this.userRole = teamUserRole;
+    }
+
+    public void acceptInvitation() {
+        this.isAccepted = true;
+    }
 }

@@ -28,7 +28,7 @@ public class TeamInfoDetailResponse {
     private UserInfoResponse admin;
 
     @Column
-    @Schema(description = "팀 관리자", defaultValue = "개발.zip")
+    @Schema(description = "팀 유저 리스트", defaultValue = "개발.zip")
     private List<UserInfoResponse> userList = new ArrayList<>();
 
     public static TeamInfoDetailResponse of(Team team, User admin, List<User> userList) {
