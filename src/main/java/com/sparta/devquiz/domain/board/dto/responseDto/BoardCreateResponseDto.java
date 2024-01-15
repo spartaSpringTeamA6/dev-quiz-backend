@@ -30,4 +30,5 @@ public class BoardCreateResponseDto {
                 .content(board.getContent())
                 .build();
     }
+
 }

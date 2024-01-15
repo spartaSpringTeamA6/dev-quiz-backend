@@ -28,9 +28,9 @@ public class BoardService {
 
     @Transactional
     public BoardCreateResponseDto createBoard(Long quizId, BoardRequestDto boardRequestDto, User user) {
+
         Quiz quiz = quizRepository.findById(quizId)
                 .orElseThrow(() -> new BoardCustomException(BoardExceptionCode.NOT_FOUND_QUIZ));
-
         Board board = Board.builder()
                 .user(user)
                 .quiz(quiz)
