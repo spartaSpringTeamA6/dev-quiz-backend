@@ -42,14 +42,14 @@ public class TeamUserService {
     }
 
     public TeamUser getTeamAdmin(Team team){
-        return teamUserRepository.findByTeamIdAndIsAcceptedTrueAndUserRole(team.getId(), TeamUserRole.ADMIN)
+        return teamUserRepository.findByTeamAndIsAcceptedTrueAndUserRole(team, TeamUserRole.ADMIN)
                 .orElseThrow(
                         ()-> new TeamCustomException(TeamExceptionCode.NOT_FOUND_TEAM_ADMIN)
                 );
     }
 
     public List<TeamUser> getTeamUser(Team team){
-        return teamUserRepository.findAllByTeamIdAndIsAcceptedTrueAndUserRole(team.getId(), TeamUserRole.USER);
+        return teamUserRepository.findAllByTeamAndIsAcceptedTrueAndUserRole(team, TeamUserRole.USER);
     }
 
     public void updateTeamUserRole(Team team, User user, TeamUserRole teamUserRole){
@@ -63,18 +63,28 @@ public class TeamUserService {
         teamUserRepository.delete(teamUser);
     }
 
+    public void acceptInvitation(Long teamId, Long userId) {
+        TeamUser findTeamUser = getTeamUserByTeamAndUserAndWait(teamId, userId);
+        findTeamUser.acceptInvitation();
+    }
+
+    public void rejectInvitation(Long teamId, Long userId) {
+        TeamUser findTeamUser = getTeamUserByTeamAndUserAndWait(teamId, userId);
+        teamUserRepository.delete(findTeamUser);
+    }
+
     public TeamUser getTeamUserByTeamIdAndUserId(Team team, User user){
-        return teamUserRepository.findByTeamIdAndUserIdAndIsAcceptedTrue(team.getId(), user.getId()).orElseThrow(
+        return teamUserRepository.findByTeamAndUser(team, user).orElseThrow(
                 () -> new TeamCustomException(TeamExceptionCode.NOT_FOUND_TEAM_USER)
         );
     }
 
     public Boolean isExistedUser(Team team, User user){
-        return teamUserRepository.existsByTeamIdAndUserIdAndIsAcceptedTrue(team.getId(), user.getId());
+        return teamUserRepository.existsByTeamAndUserAndIsAcceptedTrue(team, user);
     }
 
     public Boolean isExistedAdmin(Team team, User user){
-        return teamUserRepository.existsByTeamIdAndUserIdAndIsAcceptedTrueAndUserRole(team.getId(), user.getId(),
+        return teamUserRepository.existsByTeamAndUserAndIsAcceptedTrueAndUserRole(team, user,
                 TeamUserRole.ADMIN);
     }
 
@@ -92,13 +102,4 @@ public class TeamUserService {
         );
     }
 
-    public void acceptInvitation(Long teamId, Long userId) {
-        TeamUser findTeamUser = getTeamUserByTeamAndUserAndWait(teamId, userId);
-        findTeamUser.acceptInvitation();
-    }
-
-    public void rejectInvitation(Long teamId, Long userId) {
-        TeamUser findTeamUser = getTeamUserByTeamAndUserAndWait(teamId, userId);
-        teamUserRepository.delete(findTeamUser);
-    }
 }

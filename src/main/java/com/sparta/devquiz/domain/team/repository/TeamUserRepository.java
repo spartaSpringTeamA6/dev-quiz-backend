@@ -1,5 +1,6 @@
 package com.sparta.devquiz.domain.team.repository;
 
+import com.sparta.devquiz.domain.team.entity.Team;
 import com.sparta.devquiz.domain.team.entity.TeamUser;
 import com.sparta.devquiz.domain.team.entity.TeamUserId;
 import com.sparta.devquiz.domain.team.enums.TeamUserRole;
@@ -10,15 +11,15 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface TeamUserRepository extends JpaRepository<TeamUser, TeamUserId> {
 
-    Optional<TeamUser> findByTeamIdAndUserIdAndIsAcceptedTrue(Long teamId, Long userId);
+    Optional<TeamUser> findByTeamAndUser(Team team, User user);
 
-    boolean existsByTeamIdAndUserIdAndIsAcceptedTrue(Long teamId, Long userId);
+    boolean existsByTeamAndUserAndIsAcceptedTrue(Team team, User user);
 
-    boolean existsByTeamIdAndUserIdAndIsAcceptedTrueAndUserRole( Long teamId, Long userId, TeamUserRole userRole);
+    boolean existsByTeamAndUserAndIsAcceptedTrueAndUserRole(Team team, User user, TeamUserRole userRole);
 
-    Optional<TeamUser> findByTeamIdAndIsAcceptedTrueAndUserRole(Long teamId, TeamUserRole userRole);
+    Optional<TeamUser> findByTeamAndIsAcceptedTrueAndUserRole(Team team, TeamUserRole userRole);
 
-    List<TeamUser> findAllByTeamIdAndIsAcceptedTrueAndUserRole(Long teamId, TeamUserRole userRole);
+    List<TeamUser> findAllByTeamAndIsAcceptedTrueAndUserRole(Team team, TeamUserRole userRole);
 
     List<TeamUser> findAllByUserAndIsAcceptedTrue(User user);
 

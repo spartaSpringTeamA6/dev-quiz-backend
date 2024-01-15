@@ -49,7 +49,7 @@ public class TeamService {
     }
 
     public TeamGetResponse getTeam(User user, Long teamId) {
-        Team team = getTeamAndCheckAuth(user,teamId);
+        Team team = getTeamAndCheckAuthUser(user,teamId);
         TeamUser admin= teamUserService.getTeamAdmin(team);
         List<TeamUser> userList = teamUserService.getTeamUser(team);
 
@@ -58,7 +58,7 @@ public class TeamService {
 
     @Transactional
     public void updateTeamName(User user, Long teamId, TeamUpdateNameRequest request) {
-        Team team = getTeamAndCheckAuth(user,teamId);
+        Team team = getTeamAndCheckAuthUser(user,teamId);
 
         if(teamRepository.existsByName(request.getName())){
             throw new TeamCustomException(TeamExceptionCode.CONFLICT_TEAM_NAME_IN_USE);
@@ -70,15 +70,11 @@ public class TeamService {
 
     @Transactional
     public void updateTeamAdmin(User admin, Long teamId, TeamUpdateAdminRequest request) {
-
         if(admin.getUsername().equals(request.getUsername())){
             throw new TeamCustomException(TeamExceptionCode.BAD_REQUEST_INVALID_REQUEST_USERNAME);
         }
 
-        Team team = getTeamAndCheckAuth(admin,teamId);
-        if(!teamUserService.isExistedAdmin(team,admin)){
-            throw new TeamCustomException(TeamExceptionCode.FORBIDDEN_TEAM_ADMIN);
-        }
+        Team team = getTeamAndCheckAuthAdmin(admin,teamId);
 
         User newAdmin = userService.getUserByUsername(request.getUsername());
         if(!teamUserService.isExistedUser(team,newAdmin)){
@@ -91,11 +87,7 @@ public class TeamService {
 
     @Transactional
     public void deleteTeamUser(User admin, Long teamId, TeamDeleteUserRequest request) {
-        Team team = getTeamAndCheckAuth(admin,teamId);
-
-        if(!teamUserService.isExistedAdmin(team,admin)){
-            throw new TeamCustomException(TeamExceptionCode.FORBIDDEN_TEAM_ADMIN);
-        }
+        Team team = getTeamAndCheckAuthAdmin(admin,teamId);
 
         User deleteUser = userService.getUserByUsername(request.getUsername());
         if(!teamUserService.isExistedUser(team,deleteUser)){
@@ -107,7 +99,7 @@ public class TeamService {
 
     @Transactional
     public void withdrawTeam(User user, Long teamId, TeamWithdrawRequest request) {
-        Team team = getTeamAndCheckAuth(user,teamId);
+        Team team = getTeamAndCheckAuthUser(user,teamId);
 
         if(teamUserService.isExistedAdmin(team,user)){
             if(team.getTeamUserList().size()!=1){
@@ -116,20 +108,13 @@ public class TeamService {
             }
             deleteTeam(user,teamId);
         }
-        if(!teamUserService.isExistedUser(team,user)){
-            throw new TeamCustomException(TeamExceptionCode.FORBIDDEN_TEAM_USER);
-        }
 
         teamUserService.deleteTeamUser(team,user);
     }
 
     @Transactional
     public void deleteTeam(User admin, Long teamId) {
-        Team team = getTeamAndCheckAuth(admin,teamId);
-
-        if(!teamUserService.isExistedAdmin(team,admin)){
-            throw new TeamCustomException(TeamExceptionCode.FORBIDDEN_TEAM_ADMIN);
-        }
+        Team team = getTeamAndCheckAuthAdmin(admin,teamId);
 
         List<TeamUser> teamUserList = team.getTeamUserList();
         for(TeamUser teamUser:teamUserList){
@@ -141,11 +126,7 @@ public class TeamService {
 
     @Transactional
     public void inviteTeamUser(User admin, Long teamId, TeamInviteUserRequest request) {
-        Team team = getTeamAndCheckAuth(admin,teamId);
-
-        if(!teamUserService.isExistedAdmin(team,admin)){
-            throw new TeamCustomException(TeamExceptionCode.FORBIDDEN_TEAM_ADMIN);
-        }
+        Team team = getTeamAndCheckAuthAdmin(admin,teamId);
 
         for(String username: request.getUser()){
             User inviteUser = userService.getUserByUsername(username);
@@ -164,7 +145,7 @@ public class TeamService {
 //        return TeamGetUserRankingResponse.;
 //    }
 
-    public Team getTeamAndCheckAuth(User user, Long teamId){
+    public Team getTeamAndCheckAuthUser(User user, Long teamId){
         Team team = getTeamById(teamId);
         User loginUser = userService.getUserById(user.getId());
 
@@ -175,10 +156,23 @@ public class TeamService {
         return team;
     }
 
+    public Team getTeamAndCheckAuthAdmin(User user, Long teamId){
+        Team team = getTeamById(teamId);
+        User admin = userService.getUserById(user.getId());
+
+        if(!teamUserService.isExistedAdmin(team,admin)){
+            throw new TeamCustomException(TeamExceptionCode.FORBIDDEN_TEAM_ADMIN);
+        }
+
+        return team;
+    }
+
     public Team getTeamById(Long id) {
         return teamRepository.findByIdAndIsDeletedFalse(id).orElseThrow(
                 () -> new TeamCustomException(TeamExceptionCode.NOT_FOUND_TEAM)
         );
     }
+
+
 
 }

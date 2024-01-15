@@ -147,7 +147,7 @@ public class TeamController {
     }
 
 //    @SecurityRequirement(name = "Bearer Authentication")
-//    @Operation(operationId = "TEAM-009",summary = "팀 내 유저 랭킹, 나의 랭킹 조회")
+//    @Operation(operationId = "TEAM-009",summary = "팀 내 유저 랭킹 및 나의 랭킹 조회")
 //    @PostMapping("/{team_id}/users/{user_id}/ranking")
 //    public ResponseEntity<CommonResponseDto> getUserRankingInTeam(
 //            @AuthUser User user,
