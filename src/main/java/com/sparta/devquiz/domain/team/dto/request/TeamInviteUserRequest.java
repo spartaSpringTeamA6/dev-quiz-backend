@@ -12,4 +12,5 @@ public class TeamInviteUserRequest {
 
     @Column
     List<String> user = new LinkedList<>();
+
 }

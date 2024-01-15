@@ -8,7 +8,6 @@ import lombok.Getter;
 @Schema(description = "팀 생성 요청 dto")
 public class TeamCreateRequest {
 
-    @Column
     @Schema(description = "팀 이름", defaultValue = "개발.zip")
     private String name;
 

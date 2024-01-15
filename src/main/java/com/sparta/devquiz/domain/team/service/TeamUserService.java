@@ -42,14 +42,14 @@ public class TeamUserService {
     }
 
     public TeamUser getTeamAdmin(Team team){
-        return teamUserRepository.findByTeamAndIsAcceptedTrueAndUserRole(team, TeamUserRole.ADMIN)
+        return teamUserRepository.findByTeamIdAndIsAcceptedTrueAndUserRole(team.getId(), TeamUserRole.ADMIN)
                 .orElseThrow(
                         ()-> new TeamCustomException(TeamExceptionCode.NOT_FOUND_TEAM_ADMIN)
                 );
     }
 
     public List<TeamUser> getTeamUser(Team team){
-        return teamUserRepository.findAllByTeamAndIsAcceptedTrueAndUserRole(team, TeamUserRole.USER);
+        return teamUserRepository.findAllByTeamIdAndIsAcceptedTrueAndUserRole(team.getId(), TeamUserRole.USER);
     }
 
     public void updateTeamUserRole(Team team, User user, TeamUserRole teamUserRole){
@@ -74,26 +74,26 @@ public class TeamUserService {
     }
 
     public TeamUser getTeamUserByTeamIdAndUserId(Team team, User user){
-        return teamUserRepository.findByTeamAndUser(team, user).orElseThrow(
+        return teamUserRepository.findByTeamIdAndUserId(team.getId(), user.getId()).orElseThrow(
                 () -> new TeamCustomException(TeamExceptionCode.NOT_FOUND_TEAM_USER)
         );
     }
 
     public Boolean isExistedUser(Team team, User user){
-        return teamUserRepository.existsByTeamAndUserAndIsAcceptedTrue(team, user);
+        return teamUserRepository.existsByTeamIdAndUserIdAndIsAcceptedTrue(team.getId(), user.getId());
     }
 
     public Boolean isExistedAdmin(Team team, User user){
-        return teamUserRepository.existsByTeamAndUserAndIsAcceptedTrueAndUserRole(team, user,
+        return teamUserRepository.existsByTeamIdAndUserIdAndIsAcceptedTrueAndUserRole(team.getId(), user.getId(),
                 TeamUserRole.ADMIN);
     }
 
     public List<TeamUser> getTeamUserByUser(User user) {
-        return teamUserRepository.findAllByUserAndIsAcceptedTrue(user);
+        return teamUserRepository.findAllByUserIdAndIsAcceptedTrue(user.getId());
     }
 
     public List<TeamUser> getTeamUserByUserAndWait(User user) {
-        return teamUserRepository.findAllByUserAndIsAcceptedFalse(user);
+        return teamUserRepository.findAllByUserIdAndIsAcceptedFalse(user.getId());
     }
 
     public TeamUser getTeamUserByTeamAndUserAndWait(Long teamId, Long userId) {

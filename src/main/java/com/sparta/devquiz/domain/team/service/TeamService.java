@@ -5,7 +5,6 @@ import com.sparta.devquiz.domain.team.dto.request.TeamDeleteUserRequest;
 import com.sparta.devquiz.domain.team.dto.request.TeamInviteUserRequest;
 import com.sparta.devquiz.domain.team.dto.request.TeamUpdateAdminRequest;
 import com.sparta.devquiz.domain.team.dto.request.TeamUpdateNameRequest;
-import com.sparta.devquiz.domain.team.dto.request.TeamWithdrawRequest;
 import com.sparta.devquiz.domain.team.dto.response.TeamCreateResponse;
 import com.sparta.devquiz.domain.team.dto.response.TeamGetResponse;
 import com.sparta.devquiz.domain.team.entity.Team;
@@ -98,7 +97,7 @@ public class TeamService {
     }
 
     @Transactional
-    public void withdrawTeam(User user, Long teamId, TeamWithdrawRequest request) {
+    public void withdrawTeam(User user, Long teamId) {
         Team team = getTeamAndCheckAuthUser(user,teamId);
 
         if(teamUserService.isExistedAdmin(team,user)){
@@ -172,7 +171,5 @@ public class TeamService {
                 () -> new TeamCustomException(TeamExceptionCode.NOT_FOUND_TEAM)
         );
     }
-
-
 
 }

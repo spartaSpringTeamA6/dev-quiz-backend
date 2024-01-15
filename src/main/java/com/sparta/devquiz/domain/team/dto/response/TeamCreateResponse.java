@@ -13,7 +13,6 @@ import lombok.NoArgsConstructor;
 @Schema(description = "팀 생성 응답 dto")
 public class TeamCreateResponse {
 
-    @Column
     @Schema(description = "팀 이름", defaultValue = "개발.zip")
     private String name;
 
