@@ -1,4 +1,4 @@
-# 🐶 개퀴즈 - DevQuiz
+# 🐶 개퀴즈 - DevQuiz
 ### 개발자의, 개발자에 의한, 개발자를 위한, Computer Science Quiz!
 
 ## 🐾 Demo Video
