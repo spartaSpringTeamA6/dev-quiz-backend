@@ -69,18 +69,15 @@ public class CommentController {
 
     @Operation(operationId = "Comment-004", summary = "Comment 삭제")
     @DeleteMapping("/comments/{comment_id}")
-    public ResponseEntity<CommonResponseDto<Void>> deleteComment(@PathVariable("comment_id") Long commentId,
-                                                                 @AuthUser User user) {
+    public ResponseEntity<CommonResponseDto> deleteComment(
+            @PathVariable("comment_id") Long commentId,
+            @AuthUser User user
+    ) {
         commentService.deleteComment(commentId, user);
 
-        return new ResponseEntity<>(
-                new CommonResponseDto<>(
-                        CommentResponseCode.NO_CONTENT_DELETE_COMMENT.getHttpStatus(),
-                        CommentResponseCode.NO_CONTENT_DELETE_COMMENT.getMessage(),
-                        null
-                ),
-                HttpStatus.NO_CONTENT
-        );
+        return ResponseEntity
+                .status(CommentResponseCode.OK_DELETE_COMMENT.getHttpStatus())
+                .body(CommonResponseDto.of(CommentResponseCode.OK_DELETE_COMMENT));
     }
 
 
@@ -108,8 +105,8 @@ public class CommentController {
 
         return new ResponseEntity<>(
                 new CommonResponseDto<>(
-                        CommentResponseCode.NO_CONTENT_DELETE_LIKE.getHttpStatus(),
-                        CommentResponseCode.NO_CONTENT_DELETE_LIKE.getMessage(),
+                        CommentResponseCode.OK_DELETE_LIKE.getHttpStatus(),
+                        CommentResponseCode.OK_DELETE_LIKE.getMessage(),
                         null),
                 HttpStatus.OK);
     }
