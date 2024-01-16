@@ -26,7 +26,7 @@ public class CommentController {
 
     private final CommentService commentService;
 
-    @Operation(operationId = "Comment-001", summary = "Comment 작성")
+    @Operation(operationId = "COMMENT-001", summary = "댓글 작성")
     @PostMapping("/boards/{board_id}/comments")
     public ResponseEntity<CommonResponseDto> createComment(
             @PathVariable Long board_id,
@@ -40,7 +40,7 @@ public class CommentController {
                 .body(CommonResponseDto.of(CommentResponseCode.CREATED_COMMENT, response));
     }
 
-    @Operation(operationId = "Comment-002", summary = "Board에 속한 모든 Comment 조회")
+    @Operation(operationId = "COMMENT-002", summary = "보드에 속한 모든 댓글 조회")
     @GetMapping("/boards/{board_id}/comments")
     public ResponseEntity<CommonResponseDto> getCommentList(
             @PathVariable Long board_id
@@ -52,7 +52,7 @@ public class CommentController {
                 .body(CommonResponseDto.of(CommentResponseCode.OK_GET_ALL_COMMENT, response));
     }
 
-    @Operation(operationId = "Comment-003", summary = "Comment 수정")
+    @Operation(operationId = "COMMENT-003", summary = "댓글 수정")
     @PatchMapping("/comments/{comment_id}")
     public ResponseEntity<CommonResponseDto> updateComment(
             @PathVariable Long comment_id,
@@ -66,7 +66,7 @@ public class CommentController {
                 .body(CommonResponseDto.of(CommentResponseCode.OK_UPDATE_COMMENT));
     }
 
-    @Operation(operationId = "Comment-004", summary = "Comment 삭제")
+    @Operation(operationId = "COMMENT-004", summary = "댓글 삭제")
     @DeleteMapping("/comments/{comment_id}")
     public ResponseEntity<CommonResponseDto> deleteComment(
             @PathVariable Long comment_id,
@@ -80,7 +80,7 @@ public class CommentController {
     }
 
 
-    @Operation(operationId = "Comment-005", summary = "댓글 좋아요")
+    @Operation(operationId = "COMMENT-005", summary = "댓글 좋아요")
     @PostMapping("/comments/{comment_id}/like")
     public ResponseEntity<CommonResponseDto> likeComment(
             @PathVariable Long comment_id,
@@ -93,7 +93,7 @@ public class CommentController {
                 .body(CommonResponseDto.of(CommentResponseCode.CREATED_LIKE));
     }
 
-    @Operation(operationId = "Comment-006", summary = "댓글 좋아요 취소")
+    @Operation(operationId = "COMMENT-006", summary = "댓글 좋아요 취소")
     @DeleteMapping("/comments/{comment_id}/unlike")
     public ResponseEntity<CommonResponseDto> unlikeComment(
             @PathVariable Long comment_id,
