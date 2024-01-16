@@ -10,14 +10,14 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Schema(description = "코인 사용 응답 dto")
-public class UseCoinResponse {
+@Schema(description = "보유 코인 조회 응답 dto")
+public class CoinGetInfoResponse {
 
-    @Schema(description = "코인 사용 내역", defaultValue = "0")
+    @Schema(description = "보유 코인", defaultValue = "0")
     private int coins;
 
-    public static UseCoinResponse of(int coins) {
-        return UseCoinResponse.builder()
+    public static CoinGetInfoResponse of(int coins) {
+        return CoinGetInfoResponse.builder()
                 .coins(coins)
                 .build();
     }

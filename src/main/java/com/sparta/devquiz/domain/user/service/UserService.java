@@ -1,10 +1,11 @@
 package com.sparta.devquiz.domain.user.service;
 
+import com.sparta.devquiz.domain.mypage.service.UserTeamUserService;
 import com.sparta.devquiz.domain.team.entity.TeamUser;
-import com.sparta.devquiz.domain.team.service.TeamUserService;
 import com.sparta.devquiz.domain.user.dto.request.UserUpdateRequest;
 import com.sparta.devquiz.domain.user.dto.response.UserDetailResponse;
 import com.sparta.devquiz.domain.user.dto.response.UserInvitationsResponse;
+import com.sparta.devquiz.domain.user.dto.response.UserSkillResponse;
 import com.sparta.devquiz.domain.user.dto.response.UserTeamsResponse;
 import com.sparta.devquiz.domain.user.entity.Skill;
 import com.sparta.devquiz.domain.user.entity.User;
@@ -23,7 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
   private final UserRepository userRepository;
-  private final TeamUserService teamUserService;
+  private final UserTeamUserService userTeamUserService;
 
   public UserDetailResponse getMyProfile(User user, Long userId) {
     User findUser = validateUser(user, userId);
@@ -59,31 +60,38 @@ public class UserService {
     User findUser = validateUser(user, userId);
     findUser.deleteUser();
     findUser.getTeamUserList()
-        .forEach(teamUser -> teamUserService.deleteTeamUser(teamUser.getTeam(), teamUser.getUser()));
+        .forEach(teamUser ->
+            userTeamUserService.deleteTeamUser(teamUser.getTeam(), teamUser.getUser())
+        );
+  }
+
+  public UserSkillResponse getMySkills(User user, Long userId) {
+    User findUser = validateUser(user, userId);
+    return UserSkillResponse.of(findUser);
   }
 
   public UserTeamsResponse getMyTeams(User user, Long userId) {
     User findUser = validateUser(user, userId);
-    List<TeamUser> findTeamUserList = teamUserService.getTeamUserByUser(findUser);
+    List<TeamUser> findTeamUserList = userTeamUserService.getTeamUserByUser(findUser);
     return UserTeamsResponse.of(findUser, findTeamUserList);
   }
 
   public UserInvitationsResponse getMyInvitations(User user, Long userId) {
     User findUser = validateUser(user, userId);
-    List<TeamUser> findTeamUserList = teamUserService.getTeamUserByUserAndWait(findUser);
+    List<TeamUser> findTeamUserList = userTeamUserService.getTeamUserByUserAndWait(findUser);
     return UserInvitationsResponse.of(findUser, findTeamUserList);
   }
 
   @Transactional
   public void acceptInvitation(User user, Long userId, Long teamId) {
     User findUser = validateUser(user, userId);
-    teamUserService.acceptInvitation(teamId, findUser.getId());
+    userTeamUserService.acceptInvitation(teamId, findUser.getId());
   }
 
   @Transactional
   public void rejectInvitation(User user, Long userId, Long teamId) {
     User findUser = validateUser(user, userId);
-    teamUserService.rejectInvitation(teamId, findUser.getId());
+    userTeamUserService.rejectInvitation(teamId, findUser.getId());
   }
 
   public User validateUser(User authUser, Long userId) {
