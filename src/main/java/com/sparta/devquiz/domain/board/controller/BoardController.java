@@ -34,11 +34,11 @@ public class BoardController {
             @Valid @RequestBody BoardCreateRequest boardRequest,
             @AuthUser User user
     ) {
-        BoardCreateResponse boardCreateResponse = boardService.createBoard(quizId, boardRequest, user);
+        BoardCreateResponse response = boardService.createBoard(quizId, boardRequest, user);
 
         return ResponseEntity
                 .status(BoardResponseCode.CREATED_BOARD.getHttpStatus())
-                .body(CommonResponseDto.of(BoardResponseCode.CREATED_BOARD, boardCreateResponse));
+                .body(CommonResponseDto.of(BoardResponseCode.CREATED_BOARD, response));
     }
 
     @Operation(operationId = "Board-002", summary = "단일 Board 조회")
@@ -46,11 +46,11 @@ public class BoardController {
     public ResponseEntity<CommonResponseDto> getBoard(
             @PathVariable("board_id") Long boardId
     ) {
-        BoardDetailsResponse boardDetailsResponse = boardService.getBoard(boardId);
+        BoardDetailsResponse response = boardService.getBoard(boardId);
 
         return ResponseEntity
                 .status(BoardResponseCode.OK_GET_BOARD_INFO.getHttpStatus())
-                .body(CommonResponseDto.of(BoardResponseCode.OK_GET_BOARD_INFO, boardDetailsResponse));
+                .body(CommonResponseDto.of(BoardResponseCode.OK_GET_BOARD_INFO, response));
     }
 
     @Operation(operationId = "Board-003", summary = "Board 리스트 조회")

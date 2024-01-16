@@ -23,14 +23,15 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final QuizRepository quizRepository;
 
-    public BoardCreateResponse createBoard(Long quizId, BoardCreateRequest boardRequest, User user) {
+    public BoardCreateResponse createBoard(Long quizId, BoardCreateRequest request, User user) {
         Quiz quiz = quizRepository.findById(quizId)
                 .orElseThrow(() -> new BoardCustomException(BoardExceptionCode.NOT_FOUND_QUIZ));
+
         Board board = Board.builder()
                 .user(user)
                 .quiz(quiz)
-                .title(boardRequest.getTitle())
-                .content(boardRequest.getContent())
+                .title(request.getTitle())
+                .content(request.getContent())
                 .isDeleted(false)
                 .build();
         boardRepository.save(board);
@@ -52,7 +53,7 @@ public class BoardService {
     }
 
     @Transactional
-    public void updateBoard(Long boardId, BoardUpdateRequest boardUpdateRequest, User user) {
+    public void updateBoard(Long boardId, BoardUpdateRequest request, User user) {
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new BoardCustomException(BoardExceptionCode.NOT_FOUND_BOARD));
 
@@ -60,7 +61,7 @@ public class BoardService {
             throw new BoardCustomException(BoardExceptionCode.UNAUTHORIZED_USER);
         }
 
-        board.updateTitleAndContent(boardUpdateRequest.getTitle(), boardUpdateRequest.getContent());
+        board.updateTitleAndContent(request.getTitle(), request.getContent());
         boardRepository.save(board);
     }
 
