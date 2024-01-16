@@ -17,12 +17,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
+@Transactional(readOnly = true)
 public class CoinService {
 
     private final CoinRepository coinRepository;
     private final UserService userService;
 
+    @Transactional
     public void saveCoin(Long userId, CoinSaveRequest coinSaveRequest, User authUser) {
         userService.validateUser(authUser, userId);
 
@@ -36,6 +37,7 @@ public class CoinService {
         coinRepository.save(coin);
     }
 
+    @Transactional
     public CoinUseResponse useCoin(Long userId, CoinUseRequest coinUseRequest, User authUser) {
         userService.validateUser(authUser, userId);
 
