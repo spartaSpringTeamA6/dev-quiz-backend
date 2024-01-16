@@ -13,16 +13,15 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Tag(name = "COMMENT", description = "Comment API")
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
+@Tag(name = "4. Comment API", description = "Comment 관련 API 입니다.")
 public class CommentController {
 
     private final CommentService commentService;
@@ -34,11 +33,11 @@ public class CommentController {
             @Valid @RequestBody CommentCreateRequest commentCreateRequest,
             @AuthUser User user
     ) {
-        CommentCreateResponse commentCreateResponse = commentService.createComment(boardId, commentCreateRequest, user);
+        CommentCreateResponse response = commentService.createComment(boardId, commentCreateRequest, user);
 
         return ResponseEntity
                 .status(CommentResponseCode.CREATED_COMMENT.getHttpStatus())
-                .body(CommonResponseDto.of(CommentResponseCode.CREATED_COMMENT, commentCreateResponse));
+                .body(CommonResponseDto.of(CommentResponseCode.CREATED_COMMENT, response));
     }
 
     @Operation(operationId = "Comment-002", summary = "Board에 속한 모든 Comment 조회")
@@ -46,11 +45,11 @@ public class CommentController {
     public ResponseEntity<CommonResponseDto> getCommentList(
             @PathVariable("board_id") Long boardId
     ) {
-        List<CommentDetailsResponse> commentDetailsResponses = commentService.getCommentList(boardId);
+        List<CommentDetailsResponse> response = commentService.getCommentList(boardId);
 
         return ResponseEntity
                 .status(CommentResponseCode.OK_GET_ALL_COMMENT.getHttpStatus())
-                .body(CommonResponseDto.of(CommentResponseCode.OK_GET_ALL_COMMENT, commentDetailsResponses));
+                .body(CommonResponseDto.of(CommentResponseCode.OK_GET_ALL_COMMENT, response));
     }
 
     @Operation(operationId = "Comment-003", summary = "Comment 수정")
