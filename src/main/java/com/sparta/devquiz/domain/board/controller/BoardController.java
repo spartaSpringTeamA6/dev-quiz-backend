@@ -31,7 +31,7 @@ public class BoardController {
     private final BoardService boardService;
 
     @Operation(operationId = "Board-001", summary = "Board 생성")
-    @PostMapping("/api/quizzes/{quiz_id}/boards")
+    @PostMapping("/quizzes/{quiz_id}/boards")
     public ResponseEntity<CommonResponseDto> createBoard(
             @PathVariable Long quiz_id,
             @Valid @RequestBody BoardRequest boardRequestDto,
@@ -45,7 +45,7 @@ public class BoardController {
     }
 
     @Operation(operationId = "Board-002", summary = "단일 Board 조회")
-    @GetMapping("/api/boards/{board_id}")
+    @GetMapping("/boards/{board_id}")
     public ResponseEntity<CommonResponseDto> getBoard(
             @PathVariable Long board_id
     ) {
@@ -57,7 +57,7 @@ public class BoardController {
     }
 
     @Operation(operationId = "Board-003", summary = "Board 리스트 조회")
-    @GetMapping("/api/quizzes/{quiz_id}/boards")
+    @GetMapping("/quizzes/{quiz_id}/boards")
     public ResponseEntity<CommonResponseDto> getBoardList(
             @PathVariable Long quiz_id
     ){
@@ -70,20 +70,16 @@ public class BoardController {
 
     @Operation(summary = "Board 수정")
     @PatchMapping("/boards/{board_id}")
-    public ResponseEntity<CommonResponseDto<Void>> updateBoard(@PathVariable Long board_id,
-                                                               @Valid @RequestBody BoardUpdateRequest boardUpdateRequestDto,
-                                                               @AuthUser User user) {
-
+    public ResponseEntity<CommonResponseDto> updateBoard(
+            @PathVariable Long board_id,
+            @Valid @RequestBody BoardUpdateRequest boardUpdateRequestDto,
+            @AuthUser User user
+    ) {
         boardService.updateBoard(board_id, boardUpdateRequestDto, user);
 
-        return new ResponseEntity<>(
-                new CommonResponseDto<>(
-                        BoardResponseCode.NO_CONTENT_UPDATE_BOARD.getHttpStatus(),
-                        BoardResponseCode.NO_CONTENT_UPDATE_BOARD.getMessage(),
-                        null
-                ),
-                HttpStatus.NO_CONTENT
-        );
+        return ResponseEntity
+                .status(BoardResponseCode.NO_CONTENT_UPDATE_BOARD.getHttpStatus())
+                .body(CommonResponseDto.of(BoardResponseCode.NO_CONTENT_UPDATE_BOARD));
     }
 
     @Operation(summary = "Board 삭제")

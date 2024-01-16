@@ -65,6 +65,7 @@ public class BoardService {
         }
 
         board.updateTitleAndContent(boardUpdateRequestDto.getTitle(), boardUpdateRequestDto.getContent());
+        boardRepository.save(board);
     }
 
 
