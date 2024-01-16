@@ -1,12 +1,11 @@
-package com.sparta.devquiz.domain.comment.dto.responseDto;
+package com.sparta.devquiz.domain.comment.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
-@Setter
 @AllArgsConstructor
-public class CommentCreateResponseDto {
+public class CommentCreateResponse {
     private String contents;
 }

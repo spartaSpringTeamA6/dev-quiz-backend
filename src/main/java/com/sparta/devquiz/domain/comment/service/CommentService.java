@@ -2,10 +2,10 @@ package com.sparta.devquiz.domain.comment.service;
 
 import com.sparta.devquiz.domain.board.entity.Board;
 import com.sparta.devquiz.domain.board.repository.BoardRepository;
-import com.sparta.devquiz.domain.comment.dto.requestDto.CommentCreateRequestDto;
-import com.sparta.devquiz.domain.comment.dto.requestDto.CommentUpdateRequestDto;
-import com.sparta.devquiz.domain.comment.dto.responseDto.CommentListGetResponseDto;
-import com.sparta.devquiz.domain.comment.dto.responseDto.CommentSingleGetResponseDto;
+import com.sparta.devquiz.domain.comment.dto.request.CommentCreateRequest;
+import com.sparta.devquiz.domain.comment.dto.request.CommentUpdateRequest;
+import com.sparta.devquiz.domain.comment.dto.response.CommentListGetResponse;
+import com.sparta.devquiz.domain.comment.dto.response.CommentSingleGetResponse;
 import com.sparta.devquiz.domain.comment.entity.Comment;
 import com.sparta.devquiz.domain.comment.entity.CommentLike;
 import com.sparta.devquiz.domain.comment.entity.CommentLikeId;
@@ -30,7 +30,7 @@ public class CommentService {
     private final CommentLikeRepository commentLikeRepository;
 
     @Transactional
-    public Comment createComment(Long boardId, @Valid CommentCreateRequestDto commentCreateResponseDto, User user) {
+    public Comment createComment(Long boardId, @Valid CommentCreateRequest commentCreateResponseDto, User user) {
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new CommentCustomException(CommentExceptionCode.NOT_FOUND_BOARD));
 
@@ -44,19 +44,19 @@ public class CommentService {
         return commentRepository.save(comment);
     }
 
-    public CommentListGetResponseDto getCommentList(Long board_id) {
+    public CommentListGetResponse getCommentList(Long board_id) {
 
         List<Comment> comments = commentRepository.findAllCommentsByBoardId(board_id);
 
-        List<CommentSingleGetResponseDto> commentListDto = comments.stream()
-                .map(comment -> new CommentSingleGetResponseDto(comment.getContent()))
+        List<CommentSingleGetResponse> commentListDto = comments.stream()
+                .map(comment -> new CommentSingleGetResponse(comment.getContent()))
                 .toList();
 
-        return new CommentListGetResponseDto(commentListDto);
+        return new CommentListGetResponse(commentListDto);
     }
 
     @Transactional
-    public void updateComment(Long comment_id, CommentUpdateRequestDto commentUpdateRequestDto, User user) {
+    public void updateComment(Long comment_id, CommentUpdateRequest commentUpdateRequestDto, User user) {
         Comment comment = commentRepository.findById(comment_id)
                 .orElseThrow(() -> new CommentCustomException(CommentExceptionCode.NOT_FOUND_COMMENT));
 

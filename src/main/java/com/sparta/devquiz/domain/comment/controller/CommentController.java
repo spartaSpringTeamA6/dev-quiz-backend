@@ -1,9 +1,9 @@
 package com.sparta.devquiz.domain.comment.controller;
 
-import com.sparta.devquiz.domain.comment.dto.requestDto.CommentCreateRequestDto;
-import com.sparta.devquiz.domain.comment.dto.requestDto.CommentUpdateRequestDto;
-import com.sparta.devquiz.domain.comment.dto.responseDto.CommentCreateResponseDto;
-import com.sparta.devquiz.domain.comment.dto.responseDto.CommentListGetResponseDto;
+import com.sparta.devquiz.domain.comment.dto.request.CommentCreateRequest;
+import com.sparta.devquiz.domain.comment.dto.request.CommentUpdateRequest;
+import com.sparta.devquiz.domain.comment.dto.response.CommentCreateResponse;
+import com.sparta.devquiz.domain.comment.dto.response.CommentListGetResponse;
 import com.sparta.devquiz.domain.comment.entity.Comment;
 import com.sparta.devquiz.domain.comment.response.CommentResponseCode;
 import com.sparta.devquiz.domain.comment.service.CommentService;
@@ -27,14 +27,14 @@ public class CommentController {
     private final CommentService commentService;
 
     @Operation(summary = "Comment 작성")
-    @PostMapping("boards/{board_id}/comments")
-    public ResponseEntity<CommonResponseDto<CommentCreateResponseDto>> createComment(@PathVariable Long board_id,
-                                                                                     @Valid @RequestBody CommentCreateRequestDto commentCreateRequestDto,
-                                                                                     @AuthUser User user) {
+    @PostMapping("/boards/{board_id}/comments")
+    public ResponseEntity<CommonResponseDto<CommentCreateResponse>> createComment(@PathVariable Long boardId,
+                                                                                  @Valid @RequestBody CommentCreateRequest commentCreateRequestDto,
+                                                                                  @AuthUser User user) {
 
-        Comment comment = commentService.createComment(board_id, commentCreateRequestDto, user);
+        Comment comment = commentService.createComment(boardId, commentCreateRequestDto, user);
 
-        CommentCreateResponseDto  commentCreateResponseDto = new CommentCreateResponseDto(comment.getContent());
+        CommentCreateResponse commentCreateResponseDto = new CommentCreateResponse(comment.getContent());
 
         return new ResponseEntity<>(
                 new CommonResponseDto<>(
@@ -48,8 +48,8 @@ public class CommentController {
 
     @Operation(summary = "Board에 속한 모든 Comment 조회")
     @GetMapping("/boards/{board_id}/comments")
-    public ResponseEntity<CommonResponseDto<CommentListGetResponseDto>> getBoardList(@PathVariable Long board_id) {
-        CommentListGetResponseDto commentListGetResponseDto = commentService.getCommentList(board_id);
+    public ResponseEntity<CommonResponseDto<CommentListGetResponse>> getBoardList(@PathVariable Long boardId) {
+        CommentListGetResponse commentListGetResponseDto = commentService.getCommentList(boardId);
 
         return new ResponseEntity<>(
                 new CommonResponseDto<>(
@@ -63,10 +63,10 @@ public class CommentController {
 
     @Operation(summary = "Comment 수정")
     @PatchMapping("/comments/{comment_id}")
-    public ResponseEntity<CommonResponseDto<Void>> updateComment(@PathVariable Long comment_id,
-                                                                 @Valid @RequestBody CommentUpdateRequestDto commentUpdateRequestDto,
+    public ResponseEntity<CommonResponseDto<Void>> updateComment(@PathVariable Long commentId,
+                                                                 @Valid @RequestBody CommentUpdateRequest commentUpdateRequestDto,
                                                                  @AuthUser User user) {
-        commentService.updateComment(comment_id, commentUpdateRequestDto, user);
+        commentService.updateComment(commentId, commentUpdateRequestDto, user);
 
         return new ResponseEntity<>(
                 new CommonResponseDto<>(
@@ -80,9 +80,9 @@ public class CommentController {
 
     @Operation(summary = "Comment 삭제")
     @DeleteMapping("/comments/{comment_id}")
-    public ResponseEntity<CommonResponseDto<Void>> deleteComment(@PathVariable Long comment_id,
+    public ResponseEntity<CommonResponseDto<Void>> deleteComment(@PathVariable Long commentId,
                                                                  @AuthUser User user) {
-        commentService.deleteComment(comment_id, user);
+        commentService.deleteComment(commentId, user);
 
         return new ResponseEntity<>(
                 new CommonResponseDto<>(
@@ -97,9 +97,9 @@ public class CommentController {
 
     @Operation(summary = "댓글 좋아요")
     @PostMapping("/comments/{comment_id}/like")
-    public ResponseEntity<CommonResponseDto<Void>> likeComment(@PathVariable Long comment_id,
+    public ResponseEntity<CommonResponseDto<Void>> likeComment(@PathVariable Long commentId,
                                                                @AuthUser User user) {
-        commentService.likeComment(comment_id, user);
+        commentService.likeComment(commentId, user);
 
         return new ResponseEntity<>(
                 new CommonResponseDto<>(
