@@ -1,4 +1,4 @@
-package com.sparta.devquiz.domain.board.dto.responseDto;
+package com.sparta.devquiz.domain.board.dto.response;
 
 import com.sparta.devquiz.domain.board.entity.Board;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -10,7 +10,7 @@ import java.util.List;
 @Builder
 @Getter
 @Schema(description = "보드 정보 응답 Dto")
-public class BoardResponse {
+public class BoardDetailsResponse {
 
     @Schema(description = "Board id", defaultValue = "1")
     private Long boardId;
@@ -21,8 +21,8 @@ public class BoardResponse {
     @Schema(description = "Board content", defaultValue = "DevQuizContent")
     private String content;
 
-    public static BoardResponse of(Board board) {
-        return BoardResponse
+    public static BoardDetailsResponse of(Board board) {
+        return BoardDetailsResponse
                 .builder()
                 .boardId(board.getId())
                 .title(board.getTitle())
@@ -30,10 +30,10 @@ public class BoardResponse {
                 .build();
     }
 
-    public static List<BoardResponse> of(List<Board> boardList) {
+    public static List<BoardDetailsResponse> of(List<Board> boardList) {
         return boardList
                 .stream()
-                .map(BoardResponse::of)
+                .map(BoardDetailsResponse::of)
                 .toList();
     }
 }

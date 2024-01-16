@@ -1,11 +1,11 @@
 package com.sparta.devquiz.domain.board.controller;
 
-import com.sparta.devquiz.domain.board.dto.requestDto.BoardRequestDto;
-import com.sparta.devquiz.domain.board.dto.requestDto.BoardUpdateRequestDto;
-import com.sparta.devquiz.domain.board.dto.responseDto.BoardCreateResponseDto;
-import com.sparta.devquiz.domain.board.dto.responseDto.BoardGetResponseDto;
-import com.sparta.devquiz.domain.board.dto.responseDto.BoardListGetResponseDto;
-import com.sparta.devquiz.domain.board.dto.responseDto.BoardSingleGetResponseDto;
+import com.sparta.devquiz.domain.board.dto.request.BoardRequest;
+import com.sparta.devquiz.domain.board.dto.request.BoardUpdateRequest;
+import com.sparta.devquiz.domain.board.dto.response.BoardCreateResponse;
+import com.sparta.devquiz.domain.board.dto.response.BoardDetailsResponse;
+import com.sparta.devquiz.domain.board.dto.response.BoardGetResponse;
+import com.sparta.devquiz.domain.board.dto.response.BoardListGetResponse;
 import com.sparta.devquiz.domain.board.entity.Board;
 import com.sparta.devquiz.domain.board.response.BoardResponseCode;
 import com.sparta.devquiz.domain.board.service.BoardService;
@@ -32,10 +32,10 @@ public class BoardController {
     @PostMapping("/api/quizzes/{quiz_id}/boards")
     public ResponseEntity<CommonResponseDto> createBoard(
             @PathVariable Long quiz_id,
-            @Valid @RequestBody BoardRequestDto boardRequestDto,
+            @Valid @RequestBody BoardRequest boardRequestDto,
             @AuthUser User user
     ) {
-        BoardCreateResponseDto boardCreateResponseDto = boardService.createBoard(quiz_id, boardRequestDto, user);
+        BoardCreateResponse boardCreateResponseDto = boardService.createBoard(quiz_id, boardRequestDto, user);
 
         return ResponseEntity
                 .status(BoardResponseCode.CREATED_BOARD.getHttpStatus())
@@ -47,32 +47,29 @@ public class BoardController {
     public ResponseEntity<CommonResponseDto> getBoard(
             @PathVariable Long board_id
     ) {
-        BoardGetResponseDto boardGetResponseDto = boardService.getBoard(board_id);
+        BoardDetailsResponse boardDetailsResponse = boardService.getBoard(board_id);
 
         return ResponseEntity
                 .status(BoardResponseCode.OK_GET_BOARD_INFO.getHttpStatus())
-                .body(CommonResponseDto.of(BoardResponseCode.OK_GET_BOARD_INFO, boardGetResponseDto));
+                .body(CommonResponseDto.of(BoardResponseCode.OK_GET_BOARD_INFO, boardDetailsResponse));
     }
 
-    @Operation(summary = "퀴즈에 속한 모든 Board 조회")
-    @GetMapping("/quizzes/{quiz_id}/boards")
-    public ResponseEntity<CommonResponseDto<BoardListGetResponseDto>> getBoardList(@PathVariable Long quiz_id) {
-        BoardListGetResponseDto boardListGetResponseDto = boardService.getBoardList(quiz_id);
+    @Operation(operationId = "Board-003", summary = "Board 리스트 조회")
+    @GetMapping("/api/quizzes/{quiz_id}/boards")
+    public ResponseEntity<CommonResponseDto> getBoardList(
+            @PathVariable Long quiz_id
+    ){
+        BoardListGetResponse boardListGetResponseDto = boardService.getBoardList(quiz_id);
 
-        return new ResponseEntity<>(
-                new CommonResponseDto<>(
-                        BoardResponseCode.OK_GET_BOARDLIST_INFO.getHttpStatus(),
-                        BoardResponseCode.OK_GET_BOARDLIST_INFO.getMessage(),
-                        boardListGetResponseDto
-                ),
-                HttpStatus.OK
-        );
+        return ResponseEntity
+                .status(BoardResponseCode.OK_GET_BOARDLIST_INFO.getHttpStatus())
+                .body(CommonResponseDto.of(BoardResponseCode.OK_GET_BOARD_INFO, boardListGetResponseDto));
     }
 
     @Operation(summary = "Board 수정")
     @PatchMapping("/boards/{board_id}")
     public ResponseEntity<CommonResponseDto<Void>> updateBoard(@PathVariable Long board_id,
-                                                               @Valid @RequestBody BoardUpdateRequestDto boardUpdateRequestDto,
+                                                               @Valid @RequestBody BoardUpdateRequest boardUpdateRequestDto,
                                                                @AuthUser User user) {
 
         boardService.updateBoard(board_id, boardUpdateRequestDto, user);
