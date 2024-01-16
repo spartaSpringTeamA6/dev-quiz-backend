@@ -20,6 +20,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Tag(name = "BOARD", description = "Board API")
 @RestController
 @RequestMapping("/api")
@@ -59,11 +61,11 @@ public class BoardController {
     public ResponseEntity<CommonResponseDto> getBoardList(
             @PathVariable Long quiz_id
     ){
-        BoardListGetResponse boardListGetResponseDto = boardService.getBoardList(quiz_id);
+        List<BoardDetailsResponse> boardDetailsResponse = boardService.getBoardList(quiz_id);
 
         return ResponseEntity
                 .status(BoardResponseCode.OK_GET_BOARDLIST_INFO.getHttpStatus())
-                .body(CommonResponseDto.of(BoardResponseCode.OK_GET_BOARD_INFO, boardListGetResponseDto));
+                .body(CommonResponseDto.of(BoardResponseCode.OK_GET_BOARD_INFO, boardDetailsResponse));
     }
 
     @Operation(summary = "Board 수정")

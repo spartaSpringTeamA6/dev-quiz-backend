@@ -9,6 +9,7 @@ import com.sparta.devquiz.domain.board.exception.BoardExceptionCode;
 import com.sparta.devquiz.domain.board.repository.BoardRepository;
 import com.sparta.devquiz.domain.quiz.QuizRepository;
 import com.sparta.devquiz.domain.quiz.entity.Quiz;
+import com.sparta.devquiz.domain.user.dto.response.UserDetailResponse;
 import com.sparta.devquiz.domain.user.entity.User;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -48,16 +49,10 @@ public class BoardService {
         return BoardDetailsResponse.of(board);
     }
 
-    public BoardListGetResponse getBoardList(Long quizId) {
+    public List<BoardDetailsResponse> getBoardList(Long quizId) {
+        List<Board> boards = boardRepository.findAllByQuizId(quizId);
 
-        List<Board> boards = boardRepository.findAllBoardByQuizId(quizId);
-
-        List<BoardSingleGetResponse> boardSingleGetResponseDtoList = boards.stream()
-                .map(board -> new BoardSingleGetResponse(board.getId(), board.getTitle(), board.getContent()))
-                .collect(Collectors.toList());
-
-        return  BoardListGetResponse.of
-//        return new BoardListGetResponseDto(boardSingleGetResponseDtoList);
+        return BoardDetailsResponse.of(boards);
     }
 
     @Transactional
