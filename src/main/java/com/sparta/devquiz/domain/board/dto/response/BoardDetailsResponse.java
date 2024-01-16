@@ -2,6 +2,7 @@ package com.sparta.devquiz.domain.board.dto.response;
 
 import com.sparta.devquiz.domain.board.entity.Board;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.Column;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -12,13 +13,16 @@ import java.util.List;
 @Schema(description = "보드 정보 응답 Dto")
 public class BoardDetailsResponse {
 
-    @Schema(description = "Board id", defaultValue = "1")
+    @Column
+    @Schema(description = "보드 ID", defaultValue = "1")
     private Long boardId;
 
-    @Schema(description = "Board title", defaultValue = "DevQuiz")
+    @Column
+    @Schema(description = "보드 이름", defaultValue = "날아라 슈퍼보드")
     private String title;
 
-    @Schema(description = "Board content", defaultValue = "DevQuizContent")
+    @Column
+    @Schema(description = "보드 설명", defaultValue = "치키치키차카차카")
     private String content;
 
     public static BoardDetailsResponse of(Board board) {
