@@ -17,7 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/users/{user_id}/coins")
+@RequestMapping("/api/users/{userId}/coins")
 @RequiredArgsConstructor
 @Tag(name = "3. Coin API", description = "Coin 관련 API 입니다.")
 public class CoinController {
