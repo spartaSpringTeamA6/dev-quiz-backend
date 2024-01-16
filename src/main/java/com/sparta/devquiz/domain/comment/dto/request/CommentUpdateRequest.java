@@ -5,7 +5,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 
 @Getter
-
+@Schema(description = "코멘트 수정 요청 Dto")
 public class CommentUpdateRequest {
 
     @Size(max = 255)

@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 
 @Getter
+@Schema(description = "코멘트 생성 요청 Dto")
 public class CommentCreateRequest {
 
     @Size(max = 255)
