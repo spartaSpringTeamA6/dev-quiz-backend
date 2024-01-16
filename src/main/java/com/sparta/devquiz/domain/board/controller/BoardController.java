@@ -27,7 +27,7 @@ public class BoardController {
 
     private final BoardService boardService;
 
-    @Operation(operationId = "Board-001", summary = "Board 생성")
+    @Operation(operationId = "BOARD-001", summary = "보드 생성")
     @PostMapping("/quizzes/{quiz_id}/boards")
     public ResponseEntity<CommonResponseDto> createBoard(
             @PathVariable Long quiz_id,
@@ -41,7 +41,7 @@ public class BoardController {
                 .body(CommonResponseDto.of(BoardResponseCode.CREATED_BOARD, response));
     }
 
-    @Operation(operationId = "Board-002", summary = "단일 Board 조회")
+    @Operation(operationId = "BOARD-002", summary = "단일 보드 조회")
     @GetMapping("/boards/{board_id}")
     public ResponseEntity<CommonResponseDto> getBoard(
             @PathVariable Long board_id
@@ -53,7 +53,7 @@ public class BoardController {
                 .body(CommonResponseDto.of(BoardResponseCode.OK_GET_BOARD_INFO, response));
     }
 
-    @Operation(operationId = "Board-003", summary = "Board 리스트 조회")
+    @Operation(operationId = "BOARD-003", summary = "보드 리스트 조회")
     @GetMapping("/quizzes/{quiz_id}/boards")
     public ResponseEntity<CommonResponseDto> getBoardList(
             @PathVariable Long quiz_id
@@ -65,7 +65,7 @@ public class BoardController {
                 .body(CommonResponseDto.of(BoardResponseCode.OK_GET_BOARD_INFO, boardDetailsResponse));
     }
 
-    @Operation(operationId = "Board-004", summary = "Board 수정")
+    @Operation(operationId = "BOARD-004", summary = "보드 수정")
     @PatchMapping("/boards/{board_id}")
     public ResponseEntity<CommonResponseDto> updateBoard(
             @PathVariable Long board_id,
@@ -79,7 +79,7 @@ public class BoardController {
                 .body(CommonResponseDto.of(BoardResponseCode.OK_UPDATE_BOARD));
     }
 
-    @Operation(operationId = "Board-005",summary = "Board 삭제")
+    @Operation(operationId = "BOARD-005",summary = "보드 삭제")
     @DeleteMapping("/boards/{board_id}")
     public ResponseEntity<CommonResponseDto> deleteBoard(
             @PathVariable Long board_id,
