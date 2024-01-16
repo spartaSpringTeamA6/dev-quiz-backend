@@ -29,8 +29,8 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final CommentLikeRepository commentLikeRepository;
 
-    public CommentCreateResponse createComment(Long boardId, @Valid CommentCreateRequest commentCreateResponseDto, User user) {
-                Board board = boardRepository.findById(boardId)
+    public CommentCreateResponse createComment(Long boardId,CommentCreateRequest commentCreateResponseDto, User user) {
+        Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new CommentCustomException(CommentExceptionCode.NOT_FOUND_BOARD));
         Comment comment = Comment.builder()
                 .user(user)
@@ -43,28 +43,29 @@ public class CommentService {
         return CommentCreateResponse.of(comment);
     }
 
-    public List<CommentDetailsResponse> getCommentList(Long board_id) {
-        List<Comment> comments = commentRepository.findAllByBoardId(board_id);
+    public List<CommentDetailsResponse> getCommentList(Long boardId) {
+        List<Comment> comments = commentRepository.findAllByBoardId(boardId);
 
         return CommentDetailsResponse.of(comments);
     }
 
 
     @Transactional
-    public void updateComment(Long comment_id, CommentUpdateRequest commentUpdateRequestDto, User user) {
-        Comment comment = commentRepository.findById(comment_id)
+    public void updateComment(Long commentId, CommentUpdateRequest commentUpdateRequest, User user) {
+        Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new CommentCustomException(CommentExceptionCode.NOT_FOUND_COMMENT));
 
         if (!comment.getUser().equals(user)) {
             throw new CommentCustomException(CommentExceptionCode.UNAUTHORIZED_USER);
         }
 
-        comment.updateContent(commentUpdateRequestDto.getContent());
+        comment.updateContent(commentUpdateRequest.getContent());
+        commentRepository.save(comment);
     }
 
     @Transactional
-    public void deleteComment(Long comment_id, User user) {
-        Comment comment = commentRepository.findById(comment_id)
+    public void deleteComment(Long commentId, User user) {
+        Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new CommentCustomException(CommentExceptionCode.NOT_FOUND_COMMENT));
 
         if (!comment.getUser().equals(user)) {
