@@ -11,19 +11,19 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface TeamUserRepository extends JpaRepository<TeamUser, TeamUserId> {
 
-    Optional<TeamUser> findByTeamIdAndUserId(Long teamId, Long userId);
+    Optional<TeamUser> findByTeamAndUser(Team team, User user);
 
-    boolean existsByTeamIdAndUserIdAndIsAcceptedTrue(Long teamId, Long userId);
+    boolean existsByTeamAndUserAndIsAcceptedTrue(Team team, User user);
 
-    boolean existsByTeamIdAndUserIdAndIsAcceptedTrueAndUserRole(Long teamId, Long userId, TeamUserRole userRole);
+    boolean existsByTeamAndUserAndIsAcceptedTrueAndUserRole(Team team, User user, TeamUserRole userRole);
 
-    Optional<TeamUser> findByTeamIdAndIsAcceptedTrueAndUserRole(Long teamId, TeamUserRole userRole);
+    Optional<TeamUser> findByTeamAndIsAcceptedTrueAndUserRole(Team team, TeamUserRole userRole);
 
-    List<TeamUser> findAllByTeamIdAndIsAcceptedTrueAndUserRole(Long teamId, TeamUserRole userRole);
+    List<TeamUser> findAllByTeamAndIsAcceptedTrueAndUserRole(Team team, TeamUserRole userRole);
 
-    List<TeamUser> findAllByUserIdAndIsAcceptedTrue(Long userId);
+    List<TeamUser> findAllByUserAndIsAcceptedTrue(User user);
 
-    List<TeamUser> findAllByUserIdAndIsAcceptedFalse(Long userId);
+    List<TeamUser> findAllByUserAndIsAcceptedFalse(User user);
 
-    Optional<TeamUser> findByTeamIdAndUserIdAndIsAcceptedFalse(Long teamId, Long userId);
+    Optional<TeamUser> findByTeamAndUserAndIsAcceptedFalse(Team team, User user);
 }

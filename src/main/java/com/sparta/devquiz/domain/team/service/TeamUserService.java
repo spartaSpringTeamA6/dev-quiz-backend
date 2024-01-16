@@ -7,6 +7,7 @@ import com.sparta.devquiz.domain.team.exception.TeamCustomException;
 import com.sparta.devquiz.domain.team.exception.TeamExceptionCode;
 import com.sparta.devquiz.domain.team.repository.TeamUserRepository;
 import com.sparta.devquiz.domain.user.entity.User;
+import com.sparta.devquiz.domain.user.service.UserService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class TeamUserService {
 
     private final TeamUserRepository teamUserRepository;
+    private final TeamService teamService;
+    private final UserService userService;
 
     public void createTeamAdmin(Team team, User user){
         TeamUser teamUser = TeamUser.builder()
@@ -42,14 +45,14 @@ public class TeamUserService {
     }
 
     public TeamUser getTeamAdmin(Team team){
-        return teamUserRepository.findByTeamIdAndIsAcceptedTrueAndUserRole(team.getId(), TeamUserRole.ADMIN)
+        return teamUserRepository.findByTeamAndIsAcceptedTrueAndUserRole(team, TeamUserRole.ADMIN)
                 .orElseThrow(
                         ()-> new TeamCustomException(TeamExceptionCode.NOT_FOUND_TEAM_ADMIN)
                 );
     }
 
     public List<TeamUser> getTeamUser(Team team){
-        return teamUserRepository.findAllByTeamIdAndIsAcceptedTrueAndUserRole(team.getId(), TeamUserRole.USER);
+        return teamUserRepository.findAllByTeamAndIsAcceptedTrueAndUserRole(team, TeamUserRole.USER);
     }
 
     public void updateTeamUserRole(Team team, User user, TeamUserRole teamUserRole){
@@ -74,30 +77,33 @@ public class TeamUserService {
     }
 
     public TeamUser getTeamUserByTeamIdAndUserId(Team team, User user){
-        return teamUserRepository.findByTeamIdAndUserId(team.getId(), user.getId()).orElseThrow(
+        return teamUserRepository.findByTeamAndUser(team, user).orElseThrow(
                 () -> new TeamCustomException(TeamExceptionCode.NOT_FOUND_TEAM_USER)
         );
     }
 
     public Boolean isExistedUser(Team team, User user){
-        return teamUserRepository.existsByTeamIdAndUserIdAndIsAcceptedTrue(team.getId(), user.getId());
+        return teamUserRepository.existsByTeamAndUserAndIsAcceptedTrue(team, user);
     }
 
     public Boolean isExistedAdmin(Team team, User user){
-        return teamUserRepository.existsByTeamIdAndUserIdAndIsAcceptedTrueAndUserRole(team.getId(), user.getId(),
+        return teamUserRepository.existsByTeamAndUserAndIsAcceptedTrueAndUserRole(team, user,
                 TeamUserRole.ADMIN);
     }
 
     public List<TeamUser> getTeamUserByUser(User user) {
-        return teamUserRepository.findAllByUserIdAndIsAcceptedTrue(user.getId());
+        return teamUserRepository.findAllByUserAndIsAcceptedTrue(user);
     }
 
     public List<TeamUser> getTeamUserByUserAndWait(User user) {
-        return teamUserRepository.findAllByUserIdAndIsAcceptedFalse(user.getId());
+        return teamUserRepository.findAllByUserAndIsAcceptedFalse(user);
     }
 
     public TeamUser getTeamUserByTeamAndUserAndWait(Long teamId, Long userId) {
-        return teamUserRepository.findByTeamIdAndUserIdAndIsAcceptedFalse(teamId, userId).orElseThrow(
+        Team team = teamService.getTeamById(teamId);
+        User user = userService.getUserById(userId);
+
+        return teamUserRepository.findByTeamAndUserAndIsAcceptedFalse(team, user).orElseThrow(
             () -> new TeamCustomException(TeamExceptionCode.NOT_FOUND_TEAM_USER_WAIT)
         );
     }
