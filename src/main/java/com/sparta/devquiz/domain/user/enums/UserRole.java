@@ -1,13 +1,12 @@
 package com.sparta.devquiz.domain.user.enums;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 @Getter
 public enum UserRole {
 
-    USER(Authority.USER),
-    ADMIN(Authority.ADMIN);
+    ROLE_USER(Authority.USER),
+    ROLE_ADMIN(Authority.ADMIN);
 
     private final String authority;
 
