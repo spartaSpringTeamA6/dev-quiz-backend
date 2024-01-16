@@ -29,4 +29,5 @@ public class JwtExceptionHandlerFilter extends OncePerRequestFilter {
       response.getWriter().write(new ObjectMapper().writeValueAsString(result));
     }
   }
+
 }
