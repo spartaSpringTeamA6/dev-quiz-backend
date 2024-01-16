@@ -31,6 +31,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         }
         filterChain.doFilter(request, response);
     }
+
     public void setAuthentication(String oauthId) {
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         Authentication authentication = createAuthentication(oauthId);
@@ -42,4 +43,5 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         UserDetails userDetails = userDetailsService.loadUserByUsername(oauthId);
         return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     }
+
 }
