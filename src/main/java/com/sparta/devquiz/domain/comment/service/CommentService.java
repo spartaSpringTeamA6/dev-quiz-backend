@@ -14,8 +14,7 @@ import com.sparta.devquiz.domain.comment.exception.CommentExceptionCode;
 import com.sparta.devquiz.domain.comment.repository.CommentLikeRepository;
 import com.sparta.devquiz.domain.comment.repository.CommentRepository;
 import com.sparta.devquiz.domain.user.entity.User;
-import jakarta.transaction.Transactional;
-import jakarta.validation.Valid;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,12 +22,14 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class CommentService {
 
     private final BoardRepository boardRepository;
     private final CommentRepository commentRepository;
     private final CommentLikeRepository commentLikeRepository;
 
+    @Transactional
     public CommentCreateResponse createComment(Long boardId,CommentCreateRequest commentCreateResponseDto, User user) {
         Board board = getBoardById(boardId);
 
