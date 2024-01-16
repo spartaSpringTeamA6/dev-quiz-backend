@@ -23,14 +23,14 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final QuizRepository quizRepository;
 
-    public BoardCreateResponse createBoard(Long quizId, BoardCreateRequest boardRequestDto, User user) {
+    public BoardCreateResponse createBoard(Long quizId, BoardCreateRequest boardRequest, User user) {
         Quiz quiz = quizRepository.findById(quizId)
                 .orElseThrow(() -> new BoardCustomException(BoardExceptionCode.NOT_FOUND_QUIZ));
         Board board = Board.builder()
                 .user(user)
                 .quiz(quiz)
-                .title(boardRequestDto.getTitle())
-                .content(boardRequestDto.getContent())
+                .title(boardRequest.getTitle())
+                .content(boardRequest.getContent())
                 .isDeleted(false)
                 .build();
         boardRepository.save(board);
@@ -52,15 +52,15 @@ public class BoardService {
     }
 
     @Transactional
-    public void updateBoard(Long boardId, BoardUpdateRequest boardUpdateRequestDto, User currentUser) {
+    public void updateBoard(Long boardId, BoardUpdateRequest boardUpdateRequest, User user) {
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new BoardCustomException(BoardExceptionCode.NOT_FOUND_BOARD));
 
-        if (!board.getUser().equals(currentUser)) {
+        if (!board.getUser().equals(user)) {
             throw new BoardCustomException(BoardExceptionCode.UNAUTHORIZED_USER);
         }
 
-        board.updateTitleAndContent(boardUpdateRequestDto.getTitle(), boardUpdateRequestDto.getContent());
+        board.updateTitleAndContent(boardUpdateRequest.getTitle(), boardUpdateRequest.getContent());
         boardRepository.save(board);
     }
 
