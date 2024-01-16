@@ -23,7 +23,6 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final QuizRepository quizRepository;
 
-    @Transactional
     public BoardCreateResponse createBoard(Long quizId, BoardRequest boardRequestDto, User user) {
 
         Quiz quiz = quizRepository.findById(quizId)
