@@ -12,7 +12,7 @@ public class RedisService {
 
     private final RedisTemplate<String, String> redisTemplate;
 
-    public void setValuesWithTimeout(String key, String value, long timeout) {
+    public void setValues(String key, String value, long timeout) {
         redisTemplate.opsForValue().set(key, value, timeout, TimeUnit.MILLISECONDS);
     }
 
@@ -22,5 +22,9 @@ public class RedisService {
 
     public void deleteValues(String key) {
         redisTemplate.delete(key);
+    }
+
+    public boolean hasValues(String key) {
+        return redisTemplate.hasKey(key);
     }
 }
