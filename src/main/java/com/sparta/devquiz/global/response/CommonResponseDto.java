@@ -1,6 +1,8 @@
 package com.sparta.devquiz.global.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.sparta.devquiz.global.exception.CustomException;
+import com.sparta.devquiz.global.exception.GlobalExceptionCode;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -38,6 +40,20 @@ public class CommonResponseDto<T> {
     }
 
     public static <T> CommonResponseDto<T> of(ResponseCode responseCode) {
+        return new CommonResponseDto<T>(
+                responseCode.getHttpStatus().value(),
+                responseCode.getMessage()
+        );
+    }
+
+    public static <T> CommonResponseDto<T> of(GlobalExceptionCode responseCode) {
+        return new CommonResponseDto<T>(
+                responseCode.getHttpStatus().value(),
+                responseCode.getMessage()
+        );
+    }
+
+    public static <T> CommonResponseDto<T> of(CustomException responseCode) {
         return new CommonResponseDto<T>(
                 responseCode.getHttpStatus().value(),
                 responseCode.getMessage()
