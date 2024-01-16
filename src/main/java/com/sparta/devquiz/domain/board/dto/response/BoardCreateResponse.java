@@ -8,8 +8,8 @@ import lombok.Getter;
 
 @Builder
 @Getter
-@Schema(description = "보드 조회 응답 Dto")
-public class BoardGetResponse {
+@Schema(description = "보드 생성 응답 Dto")
+public class BoardCreateResponse {
 
     @Column
     @Schema(description = "보드 ID", defaultValue = "1")
@@ -23,8 +23,8 @@ public class BoardGetResponse {
     @Schema(description = "보드 설명", defaultValue = "치키치키차카차카")
     private String content;
 
-    public static BoardGetResponse of(Board board) {
-        return BoardGetResponse.builder()
+    public static BoardCreateResponse of(Board board) {
+        return BoardCreateResponse.builder()
                 .boardId(board.getId())
                 .title(board.getTitle())
                 .content(board.getContent())

@@ -1,11 +1,11 @@
-package com.sparta.devquiz.domain.board.dto.requestDto;
+package com.sparta.devquiz.domain.board.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 
 @Getter
-public class BoardRequestDto {
+public class BoardRequest {
 
     @Size(max = 50, message = "제목은 최대 50자까지 작성 가능합니다.")
     @Schema(description = "제목")
