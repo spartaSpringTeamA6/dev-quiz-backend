@@ -24,8 +24,7 @@ public class BoardService {
     private final QuizRepository quizRepository;
 
     public BoardCreateResponse createBoard(Long quizId, BoardCreateRequest request, User user) {
-        Quiz quiz = quizRepository.findById(quizId)
-                .orElseThrow(() -> new BoardCustomException(BoardExceptionCode.NOT_FOUND_QUIZ));
+        Quiz quiz = getQuizById(quizId);
 
         Board board = Board.builder()
                 .user(user)
@@ -40,8 +39,7 @@ public class BoardService {
     }
 
     public BoardDetailsResponse getBoard(Long boardId) {
-        Board board = boardRepository.findById(boardId)
-                .orElseThrow(() -> new BoardCustomException(BoardExceptionCode.NOT_FOUND_BOARD));
+        Board board = getBoardById(boardId);
 
         return BoardDetailsResponse.of(board);
     }
@@ -54,8 +52,7 @@ public class BoardService {
 
     @Transactional
     public void updateBoard(Long boardId, BoardUpdateRequest request, User user) {
-        Board board = boardRepository.findById(boardId)
-                .orElseThrow(() -> new BoardCustomException(BoardExceptionCode.NOT_FOUND_BOARD));
+        Board board = getBoardById(boardId);
 
         if (!board.getUser().equals(user)) {
             throw new BoardCustomException(BoardExceptionCode.UNAUTHORIZED_USER);
@@ -64,7 +61,6 @@ public class BoardService {
         board.updateTitleAndContent(request.getTitle(), request.getContent());
         boardRepository.save(board);
     }
-
 
     @Transactional
     public void deleteBoard(Long boardId, User user) {
@@ -77,6 +73,16 @@ public class BoardService {
 
         board.setDeleted(true);
         boardRepository.save(board);
+    }
+
+    private Board getBoardById(Long boardId) {
+        return boardRepository.findById(boardId)
+                .orElseThrow(() -> new BoardCustomException(BoardExceptionCode.NOT_FOUND_BOARD));
+    }
+
+    private Quiz getQuizById(Long quizId) {
+        return quizRepository.findById(quizId)
+                .orElseThrow(() -> new BoardCustomException(BoardExceptionCode.NOT_FOUND_QUIZ));
     }
 
 }
