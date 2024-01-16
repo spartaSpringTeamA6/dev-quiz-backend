@@ -9,14 +9,12 @@ import com.sparta.devquiz.domain.board.exception.BoardExceptionCode;
 import com.sparta.devquiz.domain.board.repository.BoardRepository;
 import com.sparta.devquiz.domain.quiz.QuizRepository;
 import com.sparta.devquiz.domain.quiz.entity.Quiz;
-import com.sparta.devquiz.domain.user.dto.response.UserDetailResponse;
 import com.sparta.devquiz.domain.user.entity.User;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
