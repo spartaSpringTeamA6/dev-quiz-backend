@@ -1,11 +1,9 @@
 package com.sparta.devquiz.domain.comment.controller;
 
-import com.sparta.devquiz.domain.board.response.BoardResponseCode;
 import com.sparta.devquiz.domain.comment.dto.request.CommentCreateRequest;
 import com.sparta.devquiz.domain.comment.dto.request.CommentUpdateRequest;
 import com.sparta.devquiz.domain.comment.dto.response.CommentCreateResponse;
-import com.sparta.devquiz.domain.comment.dto.response.CommentListGetResponse;
-import com.sparta.devquiz.domain.comment.entity.Comment;
+import com.sparta.devquiz.domain.comment.dto.response.CommentDetailsResponse;
 import com.sparta.devquiz.domain.comment.response.CommentResponseCode;
 import com.sparta.devquiz.domain.comment.service.CommentService;
 import com.sparta.devquiz.domain.user.entity.User;
@@ -19,6 +17,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Tag(name = "COMMENT", description = "Comment API")
 @RestController
 @RequestMapping("/api")
@@ -30,11 +30,11 @@ public class CommentController {
     @Operation(summary = "Comment 작성")
     @PostMapping("/boards/{board_id}/comments")
     public ResponseEntity<CommonResponseDto> createComment(
-            @PathVariable Long board_id,
+            @PathVariable("board_id") Long boardId,
             @Valid @RequestBody CommentCreateRequest commentCreateRequest,
             @AuthUser User user
     ) {
-        CommentCreateResponse commentCreateResponse = commentService.createComment(board_id, commentCreateRequest, user);
+        CommentCreateResponse commentCreateResponse = commentService.createComment(boardId, commentCreateRequest, user);
 
         return ResponseEntity
                 .status(CommentResponseCode.CREATED_COMMENT.getHttpStatus())
@@ -43,17 +43,19 @@ public class CommentController {
 
     @Operation(summary = "Board에 속한 모든 Comment 조회")
     @GetMapping("/boards/{board_id}/comments")
-    public ResponseEntity<CommonResponseDto> getBoardList(@PathVariable Long boardId) {
-        CommentListGetResponse commentListGetResponseDto = commentService.getCommentList(boardId);
+    public ResponseEntity<CommonResponseDto> getCommentList(
+            @PathVariable("board_id") Long boardId
+    ) {
+        List<CommentDetailsResponse> commentDetailsResponses = commentService.getCommentList(boardId);
 
         return ResponseEntity
                 .status(CommentResponseCode.OK_GET_ALL_COMMENT.getHttpStatus())
-                .body(CommonResponseDto.of(BoardResponseCode.OK_GET_ALL_COMMENT, commentCreateResponse));
+                .body(CommonResponseDto.of(CommentResponseCode.OK_GET_ALL_COMMENT, commentDetailsResponses));
     }
 
     @Operation(summary = "Comment 수정")
     @PatchMapping("/comments/{comment_id}")
-    public ResponseEntity<CommonResponseDto<Void>> updateComment(@PathVariable Long commentId,
+    public ResponseEntity<CommonResponseDto<Void>> updateComment(@PathVariable("comment_id") Long commentId,
                                                                  @Valid @RequestBody CommentUpdateRequest commentUpdateRequestDto,
                                                                  @AuthUser User user) {
         commentService.updateComment(commentId, commentUpdateRequestDto, user);
@@ -70,7 +72,7 @@ public class CommentController {
 
     @Operation(summary = "Comment 삭제")
     @DeleteMapping("/comments/{comment_id}")
-    public ResponseEntity<CommonResponseDto<Void>> deleteComment(@PathVariable Long commentId,
+    public ResponseEntity<CommonResponseDto<Void>> deleteComment(@PathVariable("comment_id") Long commentId,
                                                                  @AuthUser User user) {
         commentService.deleteComment(commentId, user);
 
@@ -87,7 +89,7 @@ public class CommentController {
 
     @Operation(summary = "댓글 좋아요")
     @PostMapping("/comments/{comment_id}/like")
-    public ResponseEntity<CommonResponseDto<Void>> likeComment(@PathVariable Long commentId,
+    public ResponseEntity<CommonResponseDto<Void>> likeComment(@PathVariable("comment_id") Long commentId,
                                                                @AuthUser User user) {
         commentService.likeComment(commentId, user);
 

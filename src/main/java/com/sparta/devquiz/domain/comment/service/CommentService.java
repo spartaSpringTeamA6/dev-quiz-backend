@@ -5,8 +5,7 @@ import com.sparta.devquiz.domain.board.repository.BoardRepository;
 import com.sparta.devquiz.domain.comment.dto.request.CommentCreateRequest;
 import com.sparta.devquiz.domain.comment.dto.request.CommentUpdateRequest;
 import com.sparta.devquiz.domain.comment.dto.response.CommentCreateResponse;
-import com.sparta.devquiz.domain.comment.dto.response.CommentListGetResponse;
-import com.sparta.devquiz.domain.comment.dto.response.CommentSingleGetResponse;
+import com.sparta.devquiz.domain.comment.dto.response.CommentDetailsResponse;
 import com.sparta.devquiz.domain.comment.entity.Comment;
 import com.sparta.devquiz.domain.comment.entity.CommentLike;
 import com.sparta.devquiz.domain.comment.entity.CommentLikeId;
@@ -14,7 +13,6 @@ import com.sparta.devquiz.domain.comment.exception.CommentCustomException;
 import com.sparta.devquiz.domain.comment.exception.CommentExceptionCode;
 import com.sparta.devquiz.domain.comment.repository.CommentLikeRepository;
 import com.sparta.devquiz.domain.comment.repository.CommentRepository;
-import com.sparta.devquiz.domain.comment.response.CommentResponseCode;
 import com.sparta.devquiz.domain.user.entity.User;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -45,16 +43,12 @@ public class CommentService {
         return CommentCreateResponse.of(comment);
     }
 
-    public CommentListGetResponse getCommentList(Long board_id) {
+    public List<CommentDetailsResponse> getCommentList(Long board_id) {
+        List<Comment> comments = commentRepository.findAllByBoardId(board_id);
 
-        List<Comment> comments = commentRepository.findAllCommentsByBoardId(board_id);
-
-        List<CommentSingleGetResponse> commentListDto = comments.stream()
-                .map(comment -> new CommentSingleGetResponse(comment.getContent()))
-                .toList();
-
-        return new CommentListGetResponse(commentListDto);
+        return CommentDetailsResponse.of(comments);
     }
+
 
     @Transactional
     public void updateComment(Long comment_id, CommentUpdateRequest commentUpdateRequestDto, User user) {
