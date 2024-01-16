@@ -64,7 +64,7 @@ public class BoardController {
                 .body(CommonResponseDto.of(BoardResponseCode.OK_GET_BOARD_INFO, boardDetailsResponse));
     }
 
-    @Operation(summary = "Board 수정")
+    @Operation(operationId = "Board-004", summary = "Board 수정")
     @PatchMapping("/boards/{board_id}")
     public ResponseEntity<CommonResponseDto> updateBoard(
             @PathVariable("board_id") Long boardId,
@@ -74,11 +74,11 @@ public class BoardController {
         boardService.updateBoard(boardId, boardUpdateRequest, user);
 
         return ResponseEntity
-                .status(BoardResponseCode.NO_CONTENT_UPDATE_BOARD.getHttpStatus())
-                .body(CommonResponseDto.of(BoardResponseCode.NO_CONTENT_UPDATE_BOARD));
+                .status(BoardResponseCode.OK_UPDATE_BOARD.getHttpStatus())
+                .body(CommonResponseDto.of(BoardResponseCode.OK_UPDATE_BOARD));
     }
 
-    @Operation(summary = "Board 삭제")
+    @Operation(operationId = "Board-005",summary = "Board 삭제")
     @DeleteMapping("/boards/{board_id}")
     public ResponseEntity<CommonResponseDto> deleteBoard(
             @PathVariable("board_id") Long boardId,
@@ -87,8 +87,8 @@ public class BoardController {
         boardService.deleteBoard(boardId, user);
 
         return ResponseEntity
-                .status(BoardResponseCode.NO_CONTENT_DELETE_BOARD.getHttpStatus())
-                .body(CommonResponseDto.of(BoardResponseCode.NO_CONTENT_DELETE_BOARD));
+                .status(BoardResponseCode.OK_DELETE_BOARD.getHttpStatus())
+                .body(CommonResponseDto.of(BoardResponseCode.OK_DELETE_BOARD));
     }
 
 }
