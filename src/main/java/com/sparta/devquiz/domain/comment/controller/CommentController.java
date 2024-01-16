@@ -27,7 +27,7 @@ public class CommentController {
 
     private final CommentService commentService;
 
-    @Operation(summary = "Comment 작성")
+    @Operation(operationId = "Comment-001", summary = "Comment 작성")
     @PostMapping("/boards/{board_id}/comments")
     public ResponseEntity<CommonResponseDto> createComment(
             @PathVariable("board_id") Long boardId,
@@ -41,7 +41,7 @@ public class CommentController {
                 .body(CommonResponseDto.of(CommentResponseCode.CREATED_COMMENT, commentCreateResponse));
     }
 
-    @Operation(summary = "Board에 속한 모든 Comment 조회")
+    @Operation(operationId = "Comment-002", summary = "Board에 속한 모든 Comment 조회")
     @GetMapping("/boards/{board_id}/comments")
     public ResponseEntity<CommonResponseDto> getCommentList(
             @PathVariable("board_id") Long boardId
@@ -53,24 +53,21 @@ public class CommentController {
                 .body(CommonResponseDto.of(CommentResponseCode.OK_GET_ALL_COMMENT, commentDetailsResponses));
     }
 
-    @Operation(summary = "Comment 수정")
+    @Operation(operationId = "Comment-003", summary = "Comment 수정")
     @PatchMapping("/comments/{comment_id}")
-    public ResponseEntity<CommonResponseDto<Void>> updateComment(@PathVariable("comment_id") Long commentId,
-                                                                 @Valid @RequestBody CommentUpdateRequest commentUpdateRequestDto,
-                                                                 @AuthUser User user) {
-        commentService.updateComment(commentId, commentUpdateRequestDto, user);
+    public ResponseEntity<CommonResponseDto> updateComment(
+            @PathVariable("comment_id") Long commentId,
+            @Valid @RequestBody CommentUpdateRequest commentUpdateRequest,
+            @AuthUser User user
+    ) {
+        commentService.updateComment(commentId, commentUpdateRequest, user);
 
-        return new ResponseEntity<>(
-                new CommonResponseDto<>(
-                        CommentResponseCode.NO_CONTENT_UPDATE_COMMENT.getHttpStatus(),
-                        CommentResponseCode.NO_CONTENT_UPDATE_COMMENT.getMessage(),
-                        null
-                ),
-                HttpStatus.NO_CONTENT
-        );
+        return ResponseEntity
+                .status(CommentResponseCode.NO_CONTENT_UPDATE_COMMENT.getHttpStatus())
+                .body(CommonResponseDto.of(CommentResponseCode.NO_CONTENT_UPDATE_COMMENT));
     }
 
-    @Operation(summary = "Comment 삭제")
+    @Operation(operationId = "Comment-004", summary = "Comment 삭제")
     @DeleteMapping("/comments/{comment_id}")
     public ResponseEntity<CommonResponseDto<Void>> deleteComment(@PathVariable("comment_id") Long commentId,
                                                                  @AuthUser User user) {
@@ -87,7 +84,7 @@ public class CommentController {
     }
 
 
-    @Operation(summary = "댓글 좋아요")
+    @Operation(operationId = "Comment-005", summary = "댓글 좋아요")
     @PostMapping("/comments/{comment_id}/like")
     public ResponseEntity<CommonResponseDto<Void>> likeComment(@PathVariable("comment_id") Long commentId,
                                                                @AuthUser User user) {
@@ -103,7 +100,7 @@ public class CommentController {
         );
     }
 
-    @Operation(summary = "댓글 좋아요 취소")
+    @Operation(operationId = "Comment-006", summary = "댓글 좋아요 취소")
     @DeleteMapping("/comments/{comment_id}/unlike")
     public ResponseEntity<CommonResponseDto<Void>> unlikeComment(@PathVariable("comment_id") Long commentId,
                                                                  @AuthUser User user) {
