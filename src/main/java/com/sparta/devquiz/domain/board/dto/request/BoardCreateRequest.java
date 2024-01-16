@@ -5,7 +5,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 
 @Getter
-public class BoardRequest {
+public class BoardCreateRequest {
 
     @Size(max = 50, message = "제목은 최대 50자까지 작성 가능합니다.")
     @Schema(description = "제목")
