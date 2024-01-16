@@ -18,10 +18,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Tag(name = "BOARD", description = "Board API")
+
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
+@Tag(name = "4. Board API", description = "Board 관련 API 입니다.")
 public class BoardController {
 
     private final BoardService boardService;
