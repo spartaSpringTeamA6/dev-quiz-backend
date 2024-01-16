@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Schema(description = "코인 저장 요청 dto")
-public class SaveCoinRequest {
+public class CoinSaveRequest {
 
     @Schema(description = "저장 코인")
     private int coins;
