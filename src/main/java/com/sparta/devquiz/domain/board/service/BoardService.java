@@ -10,7 +10,7 @@ import com.sparta.devquiz.domain.board.repository.BoardRepository;
 import com.sparta.devquiz.domain.quiz.QuizRepository;
 import com.sparta.devquiz.domain.quiz.entity.Quiz;
 import com.sparta.devquiz.domain.user.entity.User;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,11 +18,13 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class BoardService {
 
     private final BoardRepository boardRepository;
     private final QuizRepository quizRepository;
 
+    @Transactional
     public BoardCreateResponse createBoard(Long quizId, BoardCreateRequest request, User user) {
         Quiz quiz = getQuizById(quizId);
 
