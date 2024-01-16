@@ -81,17 +81,15 @@ public class BoardController {
 
     @Operation(summary = "Board 삭제")
     @DeleteMapping("/boards/{board_id}")
-    public ResponseEntity<CommonResponseDto<Void>> deleteBoard(@PathVariable Long board_id, @AuthUser User user) {
+    public ResponseEntity<CommonResponseDto> deleteBoard(
+            @PathVariable Long board_id,
+            @AuthUser User user
+    ) {
         boardService.deleteBoard(board_id, user);
 
-        return new ResponseEntity<>(
-                new CommonResponseDto<>(
-                        BoardResponseCode.NO_CONTENT_DELETE_BOARD.getHttpStatus(),
-                        BoardResponseCode.NO_CONTENT_DELETE_BOARD.getMessage(),
-                        null
-                ),
-                HttpStatus.NO_CONTENT
-        );
+        return ResponseEntity
+                .status(BoardResponseCode.NO_CONTENT_DELETE_BOARD.getHttpStatus())
+                .body(CommonResponseDto.of(BoardResponseCode.NO_CONTENT_DELETE_BOARD));
     }
 
 
