@@ -63,8 +63,8 @@ public class CommentController {
         commentService.updateComment(commentId, commentUpdateRequest, user);
 
         return ResponseEntity
-                .status(CommentResponseCode.NO_CONTENT_UPDATE_COMMENT.getHttpStatus())
-                .body(CommonResponseDto.of(CommentResponseCode.NO_CONTENT_UPDATE_COMMENT));
+                .status(CommentResponseCode.OK_UPDATE_COMMENT.getHttpStatus())
+                .body(CommonResponseDto.of(CommentResponseCode.OK_UPDATE_COMMENT));
     }
 
     @Operation(operationId = "Comment-004", summary = "Comment 삭제")
