@@ -30,8 +30,8 @@ public class CommentService {
     private final CommentLikeRepository commentLikeRepository;
 
     public CommentCreateResponse createComment(Long boardId,CommentCreateRequest commentCreateResponseDto, User user) {
-        Board board = boardRepository.findById(boardId)
-                .orElseThrow(() -> new CommentCustomException(CommentExceptionCode.NOT_FOUND_BOARD));
+        Board board = getBoardById(boardId);
+
         Comment comment = Comment.builder()
                 .user(user)
                 .board(board)
@@ -52,8 +52,7 @@ public class CommentService {
 
     @Transactional
     public void updateComment(Long commentId, CommentUpdateRequest commentUpdateRequest, User user) {
-        Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new CommentCustomException(CommentExceptionCode.NOT_FOUND_COMMENT));
+        Comment comment = getCommentById(commentId);
 
         if (!comment.getUser().equals(user)) {
             throw new CommentCustomException(CommentExceptionCode.UNAUTHORIZED_USER);
@@ -65,8 +64,7 @@ public class CommentService {
 
     @Transactional
     public void deleteComment(Long commentId, User user) {
-        Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new CommentCustomException(CommentExceptionCode.NOT_FOUND_COMMENT));
+        Comment comment = getCommentById(commentId);
 
         if (!comment.getUser().equals(user)) {
             throw new CommentCustomException(CommentExceptionCode.UNAUTHORIZED_USER);
@@ -78,8 +76,7 @@ public class CommentService {
 
     @Transactional
     public void likeComment(Long commentId, User user) {
-        Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new CommentCustomException(CommentExceptionCode.NOT_FOUND_COMMENT));
+        Comment comment = getCommentById(commentId);
 
         CommentLikeId commentLikeId = new CommentLikeId(user.getId(), commentId);
 
@@ -106,5 +103,16 @@ public class CommentService {
             throw new CommentCustomException(CommentExceptionCode.NOT_LIKED);
         }
     }
+
+    private Board getBoardById(Long boardId) {
+        return boardRepository.findById(boardId)
+                .orElseThrow(() -> new CommentCustomException(CommentExceptionCode.NOT_FOUND_BOARD));
+    }
+
+    private Comment getCommentById(Long commentId) {
+        return commentRepository.findById(commentId)
+                .orElseThrow(() -> new CommentCustomException(CommentExceptionCode.NOT_FOUND_COMMENT));
+    }
+
 
 }
