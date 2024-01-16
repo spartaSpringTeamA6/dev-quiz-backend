@@ -30,11 +30,11 @@ public class BoardController {
     @Operation(operationId = "Board-001", summary = "Board 생성")
     @PostMapping("/quizzes/{quiz_id}/boards")
     public ResponseEntity<CommonResponseDto> createBoard(
-            @PathVariable("quiz_id") Long quizId,
+            @PathVariable Long quiz_id,
             @Valid @RequestBody BoardCreateRequest boardRequest,
             @AuthUser User user
     ) {
-        BoardCreateResponse response = boardService.createBoard(quizId, boardRequest, user);
+        BoardCreateResponse response = boardService.createBoard(quiz_id, boardRequest, user);
 
         return ResponseEntity
                 .status(BoardResponseCode.CREATED_BOARD.getHttpStatus())
@@ -44,9 +44,9 @@ public class BoardController {
     @Operation(operationId = "Board-002", summary = "단일 Board 조회")
     @GetMapping("/boards/{board_id}")
     public ResponseEntity<CommonResponseDto> getBoard(
-            @PathVariable("board_id") Long boardId
+            @PathVariable Long board_id
     ) {
-        BoardDetailsResponse response = boardService.getBoard(boardId);
+        BoardDetailsResponse response = boardService.getBoard(board_id);
 
         return ResponseEntity
                 .status(BoardResponseCode.OK_GET_BOARD_INFO.getHttpStatus())
@@ -56,9 +56,9 @@ public class BoardController {
     @Operation(operationId = "Board-003", summary = "Board 리스트 조회")
     @GetMapping("/quizzes/{quiz_id}/boards")
     public ResponseEntity<CommonResponseDto> getBoardList(
-            @PathVariable("quiz_id") Long quizId
+            @PathVariable Long quiz_id
     ){
-        List<BoardDetailsResponse> boardDetailsResponse = boardService.getBoardList(quizId);
+        List<BoardDetailsResponse> boardDetailsResponse = boardService.getBoardList(quiz_id);
 
         return ResponseEntity
                 .status(BoardResponseCode.OK_GET_BOARDLIST_INFO.getHttpStatus())
@@ -68,11 +68,11 @@ public class BoardController {
     @Operation(operationId = "Board-004", summary = "Board 수정")
     @PatchMapping("/boards/{board_id}")
     public ResponseEntity<CommonResponseDto> updateBoard(
-            @PathVariable("board_id") Long boardId,
+            @PathVariable Long board_id,
             @Valid @RequestBody BoardUpdateRequest boardUpdateRequest,
             @AuthUser User user
     ) {
-        boardService.updateBoard(boardId, boardUpdateRequest, user);
+        boardService.updateBoard(board_id, boardUpdateRequest, user);
 
         return ResponseEntity
                 .status(BoardResponseCode.OK_UPDATE_BOARD.getHttpStatus())
@@ -82,10 +82,10 @@ public class BoardController {
     @Operation(operationId = "Board-005",summary = "Board 삭제")
     @DeleteMapping("/boards/{board_id}")
     public ResponseEntity<CommonResponseDto> deleteBoard(
-            @PathVariable("board_id") Long boardId,
+            @PathVariable Long board_id,
             @AuthUser User user
     ) {
-        boardService.deleteBoard(boardId, user);
+        boardService.deleteBoard(board_id, user);
 
         return ResponseEntity
                 .status(BoardResponseCode.OK_DELETE_BOARD.getHttpStatus())
