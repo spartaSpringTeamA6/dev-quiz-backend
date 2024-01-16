@@ -1,16 +1,14 @@
 package com.sparta.devquiz.domain.coin.service;
 
-import com.sparta.devquiz.domain.coin.dto.request.SaveCoinRequest;
-import com.sparta.devquiz.domain.coin.dto.request.UseCoinRequest;
-import com.sparta.devquiz.domain.coin.dto.response.GetCoinInfoResponse;
-import com.sparta.devquiz.domain.coin.dto.response.UseCoinResponse;
+import com.sparta.devquiz.domain.coin.dto.request.CoinSaveRequest;
+import com.sparta.devquiz.domain.coin.dto.request.CoinUseRequest;
+import com.sparta.devquiz.domain.coin.dto.response.CoinGetInfoResponse;
+import com.sparta.devquiz.domain.coin.dto.response.CoinUseResponse;
 import com.sparta.devquiz.domain.coin.entity.Coin;
 import com.sparta.devquiz.domain.coin.enums.CoinContent;
 import com.sparta.devquiz.domain.coin.exception.CoinCustomException;
 import com.sparta.devquiz.domain.coin.repository.CoinRepository;
 import com.sparta.devquiz.domain.user.entity.User;
-import com.sparta.devquiz.domain.user.enums.OauthType;
-import com.sparta.devquiz.domain.user.enums.UserRole;
 import com.sparta.devquiz.domain.user.repository.UserRepository;
 import com.sparta.devquiz.domain.user.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
@@ -61,29 +59,29 @@ class CoinServiceTest {
         // GIVEN
         Long userId = 1L;
 
-        List<SaveCoinRequest> saveCoinRequestList = Arrays.asList(
-        new SaveCoinRequest(0, CoinContent.FIRST),
-        new SaveCoinRequest(0, CoinContent.CORRECT),
-        new SaveCoinRequest(0, CoinContent.FAIL),
-        new SaveCoinRequest(0, CoinContent.PASS)
+        List<CoinSaveRequest> coinSaveRequestList = Arrays.asList(
+        new CoinSaveRequest(0, CoinContent.FIRST),
+        new CoinSaveRequest(0, CoinContent.CORRECT),
+        new CoinSaveRequest(0, CoinContent.FAIL),
+        new CoinSaveRequest(0, CoinContent.PASS)
         );
         lenient().when(userService.getUserById(userId)).thenReturn(user);
 
         List<Coin> testCoinList = new ArrayList<>();
-        for (SaveCoinRequest request : saveCoinRequestList) {
+        for (CoinSaveRequest request : coinSaveRequestList) {
             testCoinList.add(Coin.saveCoins(user, request.getCoinContent()));
         }
         when(coinRepository.findAllByUserId(userId)).thenReturn(testCoinList);
 
         // WHEN
-        for (SaveCoinRequest request : saveCoinRequestList) {
+        for (CoinSaveRequest request : coinSaveRequestList) {
             coinService.saveCoin(userId, request, user);
         }
 
         // THEN
         List<Coin> saveCoinList = coinRepository.findAllByUserId(userId);
-        for (int i = 0; i < saveCoinRequestList.size(); i++) {
-            SaveCoinRequest request = saveCoinRequestList.get(i);
+        for (int i = 0; i < coinSaveRequestList.size(); i++) {
+            CoinSaveRequest request = coinSaveRequestList.get(i);
             Coin findSaveCoins = saveCoinList.get(i);
             assertEquals(Coin.saveCoins(user, request.getCoinContent()).getCoins(), findSaveCoins.getCoins());
         }
@@ -94,16 +92,16 @@ class CoinServiceTest {
     void useCoin() {
         // GIVEN
         Long userId = 1L;
-        UseCoinRequest useCoinRequest = new UseCoinRequest(0, CoinContent.ITEM_CAT);
+        CoinUseRequest coinUseRequest = new CoinUseRequest(0, CoinContent.ITEM_CAT);
 
-        SaveCoinRequest saveCoinRequest1 = new SaveCoinRequest(0, CoinContent.FIRST);
-        SaveCoinRequest saveCoinRequest2 = new SaveCoinRequest(0, CoinContent.FIRST);
+        CoinSaveRequest coinSaveRequest1 = new CoinSaveRequest(0, CoinContent.FIRST);
+        CoinSaveRequest coinSaveRequest2 = new CoinSaveRequest(0, CoinContent.FIRST);
 
-        Coin coin1 = Coin.saveCoins(user, saveCoinRequest1.getCoinContent());
-        Coin coin2 = Coin.saveCoins(user, saveCoinRequest2.getCoinContent());
+        Coin coin1 = Coin.saveCoins(user, coinSaveRequest1.getCoinContent());
+        Coin coin2 = Coin.saveCoins(user, coinSaveRequest2.getCoinContent());
 
         int totalCoin = coin1.getCoins() + coin2.getCoins();
-        int payment = useCoinRequest.getCoinContent().getCoinSupplier().get();
+        int payment = coinUseRequest.getCoinContent().getCoinSupplier().get();
 
         List<Coin> coins = Arrays.asList(coin1, coin2);
 
@@ -112,7 +110,7 @@ class CoinServiceTest {
 
 
         // WHEN
-        UseCoinResponse response = coinService.useCoin(userId, useCoinRequest, user);
+        CoinUseResponse response = coinService.useCoin(userId, coinUseRequest, user);
 
         // THEN
         assertEquals(15, response.getCoins());
@@ -122,12 +120,12 @@ class CoinServiceTest {
     void failToUseCoin() {
         // GIVEN
         Long userId = 1L;
-        UseCoinRequest useCoinRequest = new UseCoinRequest(0, CoinContent.ITEM_DOG);
-        SaveCoinRequest saveCoinRequest1 = new SaveCoinRequest(0, CoinContent.FIRST);
-        SaveCoinRequest saveCoinRequest2 = new SaveCoinRequest(0, CoinContent.FIRST);
+        CoinUseRequest coinUseRequest = new CoinUseRequest(0, CoinContent.ITEM_DOG);
+        CoinSaveRequest coinSaveRequest1 = new CoinSaveRequest(0, CoinContent.FIRST);
+        CoinSaveRequest coinSaveRequest2 = new CoinSaveRequest(0, CoinContent.FIRST);
 
-        Coin coin1 = Coin.saveCoins(user, saveCoinRequest1.getCoinContent());
-        Coin coin2 = Coin.saveCoins(user, saveCoinRequest2.getCoinContent());
+        Coin coin1 = Coin.saveCoins(user, coinSaveRequest1.getCoinContent());
+        Coin coin2 = Coin.saveCoins(user, coinSaveRequest2.getCoinContent());
 
         int totalCoin = coin1.getCoins() + coin2.getCoins();
 
@@ -140,7 +138,7 @@ class CoinServiceTest {
         // WHEN THEN
         CoinCustomException exception = assertThrows(
                 CoinCustomException.class,
-                () -> coinService.useCoin(userId, useCoinRequest, authUser)
+                () -> coinService.useCoin(userId, coinUseRequest, authUser)
         );
         assertEquals("COIN-002", exception.getErrorCode());
         assertEquals("포인트가 부족합니다.", exception.getMessage());
@@ -152,11 +150,11 @@ class CoinServiceTest {
         // GIVEN
         Long userId = 1L;
 
-        SaveCoinRequest saveCoinRequest1 = new SaveCoinRequest(0, CoinContent.FIRST);
-        SaveCoinRequest saveCoinRequest2 = new SaveCoinRequest(0, CoinContent.FIRST);
+        CoinSaveRequest coinSaveRequest1 = new CoinSaveRequest(0, CoinContent.FIRST);
+        CoinSaveRequest coinSaveRequest2 = new CoinSaveRequest(0, CoinContent.FIRST);
 
-        Coin coin1 = Coin.saveCoins(user, saveCoinRequest1.getCoinContent());
-        Coin coin2 = Coin.saveCoins(user, saveCoinRequest2.getCoinContent());
+        Coin coin1 = Coin.saveCoins(user, coinSaveRequest1.getCoinContent());
+        Coin coin2 = Coin.saveCoins(user, coinSaveRequest2.getCoinContent());
 
         List<Coin> coins = Arrays.asList(coin1, coin2);
 
@@ -164,7 +162,7 @@ class CoinServiceTest {
         when(coinRepository.findAllByUserId(userId)).thenReturn(coins);
 
         // WHEN
-        GetCoinInfoResponse response = coinService.getCoinInfo(userId, user);
+        CoinGetInfoResponse response = coinService.getCoinInfo(userId, user);
 
         // THEN
         assertEquals(40, response.getCoins());
