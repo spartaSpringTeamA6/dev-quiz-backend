@@ -2,9 +2,11 @@ package com.sparta.devquiz.domain.coin.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
 
 @Getter
+@NoArgsConstructor
 @AllArgsConstructor
 public enum CoinExceptionCode {
 
@@ -16,11 +18,11 @@ public enum CoinExceptionCode {
 
 
     // NOT FOUND 404
-    NOT_FOUND_COIN_USER(HttpStatus.NOT_FOUND,"COIN-004","유저를 찾을 수 없습니다."),
+    NOT_FOUND_COIN_USER(HttpStatus.NOT_FOUND,"COIN-004","유저를 찾을 수 없습니다.");
 
     // CONFLICT 409
-    ;
-    private final HttpStatus httpStatus;
-    private final String errorCode;
-    private final String message;
+
+    private HttpStatus httpStatus;
+    private String errorCode;
+    private String message;
 }

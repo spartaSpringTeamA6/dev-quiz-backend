@@ -40,10 +40,6 @@ spring:
           github:
             client-id: ${GITHUB_CLIENT_ID}
             client-secret: ${GITHUB_SECRET}
-
-logging:
-  level:
-    org.springframework.security: DEBUG
 jwt:
   secret:
     key: ${JWT_KEY}
@@ -51,6 +47,7 @@ jwt:
 springdoc:
   swagger-ui:
     path: /swagger-ui.html
+    display-operation-id: true
     tags-sorter: alpha
 #    operations-sorter: method
 #    doc-expansion: none
