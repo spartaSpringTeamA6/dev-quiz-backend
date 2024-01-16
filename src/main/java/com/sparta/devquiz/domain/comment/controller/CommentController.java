@@ -1,5 +1,6 @@
 package com.sparta.devquiz.domain.comment.controller;
 
+import com.sparta.devquiz.domain.board.response.BoardResponseCode;
 import com.sparta.devquiz.domain.comment.dto.request.CommentCreateRequest;
 import com.sparta.devquiz.domain.comment.dto.request.CommentUpdateRequest;
 import com.sparta.devquiz.domain.comment.dto.response.CommentCreateResponse;
@@ -28,22 +29,16 @@ public class CommentController {
 
     @Operation(summary = "Comment 작성")
     @PostMapping("/boards/{board_id}/comments")
-    public ResponseEntity<CommonResponseDto<CommentCreateResponse>> createComment(@PathVariable Long boardId,
-                                                                                  @Valid @RequestBody CommentCreateRequest commentCreateRequestDto,
-                                                                                  @AuthUser User user) {
+    public ResponseEntity<CommonResponseDto> createComment(
+            @PathVariable Long board_id,
+            @Valid @RequestBody CommentCreateRequest commentCreateRequestDto,
+            @AuthUser User user
+    ) {
+        CommentCreateResponse commentCreateResponse = commentService.createComment(board_id, commentCreateRequestDto, user);
 
-        Comment comment = commentService.createComment(boardId, commentCreateRequestDto, user);
-
-        CommentCreateResponse commentCreateResponseDto = new CommentCreateResponse(comment.getContent());
-
-        return new ResponseEntity<>(
-                new CommonResponseDto<>(
-                        CommentResponseCode.CREATED_COMMENT.getHttpStatus(),
-                        CommentResponseCode.CREATED_COMMENT.getMessage(),
-                        commentCreateResponseDto
-                ),
-                HttpStatus.CREATED
-        );
+        return ResponseEntity
+                .status(CommentResponseCode.CREATED_COMMENT.getHttpStatus())
+                .body(CommonResponseDto.of(BoardResponseCode.CREATED_BOARD, commentCreateResponse));
     }
 
     @Operation(summary = "Board에 속한 모든 Comment 조회")

@@ -4,6 +4,7 @@ import com.sparta.devquiz.domain.board.entity.Board;
 import com.sparta.devquiz.domain.board.repository.BoardRepository;
 import com.sparta.devquiz.domain.comment.dto.request.CommentCreateRequest;
 import com.sparta.devquiz.domain.comment.dto.request.CommentUpdateRequest;
+import com.sparta.devquiz.domain.comment.dto.response.CommentCreateResponse;
 import com.sparta.devquiz.domain.comment.dto.response.CommentListGetResponse;
 import com.sparta.devquiz.domain.comment.dto.response.CommentSingleGetResponse;
 import com.sparta.devquiz.domain.comment.entity.Comment;
@@ -13,6 +14,7 @@ import com.sparta.devquiz.domain.comment.exception.CommentCustomException;
 import com.sparta.devquiz.domain.comment.exception.CommentExceptionCode;
 import com.sparta.devquiz.domain.comment.repository.CommentLikeRepository;
 import com.sparta.devquiz.domain.comment.repository.CommentRepository;
+import com.sparta.devquiz.domain.comment.response.CommentResponseCode;
 import com.sparta.devquiz.domain.user.entity.User;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -29,19 +31,18 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final CommentLikeRepository commentLikeRepository;
 
-    @Transactional
-    public Comment createComment(Long boardId, @Valid CommentCreateRequest commentCreateResponseDto, User user) {
-        Board board = boardRepository.findById(boardId)
+    public CommentCreateResponse createComment(Long boardId, @Valid CommentCreateRequest commentCreateResponseDto, User user) {
+                Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new CommentCustomException(CommentExceptionCode.NOT_FOUND_BOARD));
-
         Comment comment = Comment.builder()
                 .user(user)
                 .board(board)
                 .content(commentCreateResponseDto.getContent())
                 .isDeleted(false)
                 .build();
+        commentRepository.save(comment);
 
-        return commentRepository.save(comment);
+        return CommentCreateResponse.of(comment);
     }
 
     public CommentListGetResponse getCommentList(Long board_id) {
