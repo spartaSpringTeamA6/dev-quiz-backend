@@ -83,32 +83,28 @@ public class CommentController {
 
     @Operation(operationId = "Comment-005", summary = "댓글 좋아요")
     @PostMapping("/comments/{comment_id}/like")
-    public ResponseEntity<CommonResponseDto<Void>> likeComment(@PathVariable("comment_id") Long commentId,
-                                                               @AuthUser User user) {
+    public ResponseEntity<CommonResponseDto> likeComment(
+            @PathVariable("comment_id") Long commentId,
+            @AuthUser User user
+    ) {
         commentService.likeComment(commentId, user);
 
-        return new ResponseEntity<>(
-                new CommonResponseDto<>(
-                        CommentResponseCode.CREATED_LIKE.getHttpStatus(),
-                        CommentResponseCode.CREATED_LIKE.getMessage(),
-                        null
-                ),
-                HttpStatus.OK
-        );
+        return ResponseEntity
+                .status(CommentResponseCode.CREATED_LIKE.getHttpStatus())
+                .body(CommonResponseDto.of(CommentResponseCode.CREATED_LIKE));
     }
 
     @Operation(operationId = "Comment-006", summary = "댓글 좋아요 취소")
     @DeleteMapping("/comments/{comment_id}/unlike")
-    public ResponseEntity<CommonResponseDto<Void>> unlikeComment(@PathVariable("comment_id") Long commentId,
-                                                                 @AuthUser User user) {
+    public ResponseEntity<CommonResponseDto> unlikeComment(
+            @PathVariable("comment_id") Long commentId,
+            @AuthUser User user
+    ) {
         commentService.unlikeComment(commentId, user);
 
-        return new ResponseEntity<>(
-                new CommonResponseDto<>(
-                        CommentResponseCode.OK_DELETE_LIKE.getHttpStatus(),
-                        CommentResponseCode.OK_DELETE_LIKE.getMessage(),
-                        null),
-                HttpStatus.OK);
+        return ResponseEntity
+                .status(CommentResponseCode.OK_DELETE_LIKE.getHttpStatus())
+                .body(CommonResponseDto.of(CommentResponseCode.OK_DELETE_LIKE));
     }
 
 }
