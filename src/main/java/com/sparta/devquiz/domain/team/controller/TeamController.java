@@ -50,12 +50,12 @@ public class TeamController {
 
     @SecurityRequirement(name = "Bearer Authentication")
     @Operation(operationId = "TEAM-002",summary = "팀 상세조회")
-    @GetMapping("/{team_id}")
+    @GetMapping("/{teamId}")
     public ResponseEntity<CommonResponseDto> getTeam(
             @AuthUser User user,
-            @PathVariable Long team_id
+            @PathVariable Long teamId
     ) {
-        TeamGetResponse response = teamService.getTeam(user, team_id);
+        TeamGetResponse response = teamService.getTeam(user, teamId);
 
         return ResponseEntity
                 .status(TeamResponseCode.OK_GET_TEAM_INFO.getHttpStatus())
@@ -64,13 +64,13 @@ public class TeamController {
 
     @SecurityRequirement(name = "Bearer Authentication")
     @Operation(operationId = "TEAM-003",summary = "팀 이름 수정")
-    @PatchMapping("/{team_id}/name")
+    @PatchMapping("/{teamId}/name")
     public ResponseEntity<CommonResponseDto> updateTeamName(
             @AuthUser User user,
-            @PathVariable Long team_id,
+            @PathVariable Long teamId,
             @RequestBody TeamUpdateNameRequest request
     ) {
-        teamService.updateTeamName(user, team_id, request);
+        teamService.updateTeamName(user, teamId, request);
 
         return ResponseEntity.status(TeamResponseCode.OK_UPDATE_TEAM_NAME.getHttpStatus())
                 .body(CommonResponseDto.of(TeamResponseCode.OK_UPDATE_TEAM_NAME));
@@ -78,13 +78,13 @@ public class TeamController {
 
     @SecurityRequirement(name = "Bearer Authentication")
     @Operation(operationId = "TEAM-004",summary = "팀 관리자 변경")
-    @PatchMapping("/{team_id}/admin")
+    @PatchMapping("/{teamId}/admin")
     public ResponseEntity<CommonResponseDto> updateTeamAdmin(
             @AuthUser User user,
-            @PathVariable Long team_id,
+            @PathVariable Long teamId,
             @RequestBody TeamUpdateAdminRequest request
     ) {
-        teamService.updateTeamAdmin(user, team_id, request);
+        teamService.updateTeamAdmin(user, teamId, request);
 
         return ResponseEntity.status(TeamResponseCode.OK_CHANGE_TEAM_ADMIN.getHttpStatus())
                 .body(CommonResponseDto.of(TeamResponseCode.OK_CHANGE_TEAM_ADMIN));
@@ -92,13 +92,13 @@ public class TeamController {
 
     @SecurityRequirement(name = "Bearer Authentication")
     @Operation(operationId = "TEAM-005",summary = "팀 멤버 추방")
-    @DeleteMapping("/{team_id}/user")
+    @DeleteMapping("/{teamId}/user")
     public ResponseEntity<CommonResponseDto> deleteTeamUser(
             @AuthUser User user,
-            @PathVariable Long team_id,
+            @PathVariable Long teamId,
             @RequestBody TeamDeleteUserRequest request
     ) {
-         teamService.deleteTeamUser(user, team_id, request);
+         teamService.deleteTeamUser(user, teamId, request);
 
         return ResponseEntity.status(TeamResponseCode.OK_EXPEL_TEAM_MEMBER.getHttpStatus())
                 .body(CommonResponseDto.of(TeamResponseCode.OK_EXPEL_TEAM_MEMBER));
@@ -106,12 +106,12 @@ public class TeamController {
 
     @SecurityRequirement(name = "Bearer Authentication")
     @Operation(operationId = "TEAM-006",summary = "팀 탈퇴")
-    @DeleteMapping("/{team_id}/withdraw")
+    @DeleteMapping("/{teamId}/withdraw")
     public ResponseEntity<CommonResponseDto> withdrawTeam(
             @AuthUser User user,
-            @PathVariable Long team_id
+            @PathVariable Long teamId
     ) {
-        teamService.withdrawTeam(user, team_id);
+        teamService.withdrawTeam(user, teamId);
 
         return ResponseEntity.status(TeamResponseCode.OK_WITHDRAW_TEAM.getHttpStatus())
                 .body(CommonResponseDto.of(TeamResponseCode.OK_WITHDRAW_TEAM));
@@ -119,12 +119,12 @@ public class TeamController {
 
     @SecurityRequirement(name = "Bearer Authentication")
     @Operation(operationId = "TEAM-007",summary = "팀 삭제")
-    @DeleteMapping("/{team_id}")
+    @DeleteMapping("/{teamId}")
     public ResponseEntity<CommonResponseDto> deleteTeam(
             @AuthUser User user,
-            @PathVariable Long team_id
+            @PathVariable Long teamId
     ) {
-        teamService.deleteTeam(user, team_id);
+        teamService.deleteTeam(user, teamId);
 
         return ResponseEntity.status(TeamResponseCode.OK_DELETE_TEAM.getHttpStatus())
                 .body(CommonResponseDto.of(TeamResponseCode.OK_DELETE_TEAM));
@@ -132,13 +132,13 @@ public class TeamController {
 
     @SecurityRequirement(name = "Bearer Authentication")
     @Operation(operationId = "TEAM-008",summary = "팀 유저 초대")
-    @PostMapping("/{team_id}/invitation")
+    @PostMapping("/{teamId}/invitation")
     public ResponseEntity<CommonResponseDto> inviteTeamUser(
             @AuthUser User user,
-            @PathVariable Long team_id,
+            @PathVariable Long teamId,
             @RequestBody TeamInviteUserRequest request
     ) {
-        teamService.inviteTeamUser(user, team_id, request);
+        teamService.inviteTeamUser(user, teamId, request);
 
         return ResponseEntity.status(TeamResponseCode.OK_INVITE_TEAM_USER.getHttpStatus())
                 .body(CommonResponseDto.of(TeamResponseCode.OK_INVITE_TEAM_USER));
@@ -146,13 +146,13 @@ public class TeamController {
 
 //    @SecurityRequirement(name = "Bearer Authentication")
 //    @Operation(operationId = "TEAM-009",summary = "팀 내 유저 랭킹 및 나의 랭킹 조회")
-//    @PostMapping("/{team_id}/users/{user_id}/ranking")
+//    @PostMapping("/{teamId}/users/{userId}/ranking")
 //    public ResponseEntity<CommonResponseDto> getUserRankingInTeam(
 //            @AuthUser User user,
-//            @PathVariable Long team_id,
-//            @PathVariable Long user_id
+//            @PathVariable Long teamId,
+//            @PathVariable Long userId
 //    ) {
-//        TeamGetUserRankingResponse response = teamService.getUserRankingInTeam(user, team_id, user_id, request);
+//        TeamGetUserRankingResponse response = teamService.getUserRankingInTeam(user, teamId, userId, request);
 //
 //        return ResponseEntity.status(TeamResponseCode.OK_GET_USER_RANKING_IN_TEAM.getHttpStatus())
 //                .body(CommonResponseDto.of(TeamResponseCode.OK_GET_USER_RANKING_IN_TEAM, response));
