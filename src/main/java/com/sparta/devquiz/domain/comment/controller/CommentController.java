@@ -31,29 +31,24 @@ public class CommentController {
     @PostMapping("/boards/{board_id}/comments")
     public ResponseEntity<CommonResponseDto> createComment(
             @PathVariable Long board_id,
-            @Valid @RequestBody CommentCreateRequest commentCreateRequestDto,
+            @Valid @RequestBody CommentCreateRequest commentCreateRequest,
             @AuthUser User user
     ) {
-        CommentCreateResponse commentCreateResponse = commentService.createComment(board_id, commentCreateRequestDto, user);
+        CommentCreateResponse commentCreateResponse = commentService.createComment(board_id, commentCreateRequest, user);
 
         return ResponseEntity
                 .status(CommentResponseCode.CREATED_COMMENT.getHttpStatus())
-                .body(CommonResponseDto.of(BoardResponseCode.CREATED_BOARD, commentCreateResponse));
+                .body(CommonResponseDto.of(CommentResponseCode.CREATED_COMMENT, commentCreateResponse));
     }
 
     @Operation(summary = "Board에 속한 모든 Comment 조회")
     @GetMapping("/boards/{board_id}/comments")
-    public ResponseEntity<CommonResponseDto<CommentListGetResponse>> getBoardList(@PathVariable Long boardId) {
+    public ResponseEntity<CommonResponseDto> getBoardList(@PathVariable Long boardId) {
         CommentListGetResponse commentListGetResponseDto = commentService.getCommentList(boardId);
 
-        return new ResponseEntity<>(
-                new CommonResponseDto<>(
-                        CommentResponseCode.OK_GET_ALL_COMMENT.getHttpStatus(),
-                        CommentResponseCode.OK_GET_ALL_COMMENT.getMessage(),
-                        commentListGetResponseDto
-                ),
-                HttpStatus.OK
-        );
+        return ResponseEntity
+                .status(CommentResponseCode.OK_GET_ALL_COMMENT.getHttpStatus())
+                .body(CommonResponseDto.of(BoardResponseCode.OK_GET_ALL_COMMENT, commentCreateResponse));
     }
 
     @Operation(summary = "Comment 수정")
