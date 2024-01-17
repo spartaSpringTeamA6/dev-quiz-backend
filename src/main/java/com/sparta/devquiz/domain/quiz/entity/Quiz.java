@@ -41,8 +41,25 @@ public class Quiz extends BaseTimeEntity {
     @Column(nullable = false)
     private Long solveCount;
 
+    @Builder.Default
     @OneToMany(mappedBy = "quiz")
     private List<UserQuiz> userQuizList = new ArrayList<>();
 
+    public void updateQuiz(String question, String example, QuizCategory category, String answer){
+        this.question = question;
+        this.answer = answer;
+        this.category = category;
+        this.example = example;
+    }
 
+    public void updateCount(Long correctCount, Long failCount, Long solveCount){
+        this.correctCount = correctCount;
+        this.failCount = failCount;
+        this.solveCount = solveCount;
+    }
+    public void deleteQuiz(String question, String answer, String example){
+        this.question = question;
+        this.answer = answer;
+        this.example = example;
+    }
 }
