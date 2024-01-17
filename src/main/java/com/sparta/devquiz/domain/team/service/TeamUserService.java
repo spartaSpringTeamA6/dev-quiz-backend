@@ -42,63 +42,60 @@ public class TeamUserService {
         teamUserRepository.save(teamUser);
     }
 
-    public TeamUser getTeamAdmin(Team team){
-        return teamUserRepository.findByTeamAndIsAcceptedTrueAndUserRole(team, TeamUserRole.ADMIN)
-                .orElseThrow(
-                        ()-> new TeamCustomException(TeamExceptionCode.NOT_FOUND_TEAM_ADMIN)
-                );
+    public TeamUser getTeamAdmin(Long teamId){
+        return teamUserRepository.findByTeamIdAndIsAcceptedTrueAndUserRole(teamId, TeamUserRole.ADMIN)
+                .orElseThrow(()-> new TeamCustomException(TeamExceptionCode.NOT_FOUND_TEAM_ADMIN));
     }
 
-    public List<TeamUser> getTeamUser(Team team){
-        return teamUserRepository.findAllByTeamAndIsAcceptedTrueAndUserRole(team, TeamUserRole.USER);
+    public List<TeamUser> getTeamUser(Long teamId){
+        return teamUserRepository.findAllByTeamIdAndIsAcceptedTrueAndUserRole(teamId, TeamUserRole.USER);
     }
 
-    public void updateTeamUserRole(Team team, User user, TeamUserRole teamUserRole){
-        TeamUser teamUser = getTeamUserByTeamIdAndUserId(team, user);
+    public void updateTeamUserRole(Long teamId, Long userId, TeamUserRole teamUserRole){
+        TeamUser teamUser = getTeamUserByTeamIdAndUserId(teamId, userId);
         teamUser.updateTeamUserRole(teamUserRole);
         teamUserRepository.save(teamUser);
     }
 
-    public void deleteTeamUser(Team team, User user) {
-        TeamUser teamUser = getTeamUserByTeamIdAndUserId(team,user);
+    public void deleteTeamUser(Long teamId, Long userId) {
+        TeamUser teamUser = getTeamUserByTeamIdAndUserId(teamId, userId);
         teamUserRepository.delete(teamUser);
     }
 
-    public void acceptInvitation(Team team, User user) {
-        TeamUser findTeamUser = getTeamUserByTeamAndUserAndWait(team, user);
+    public void acceptInvitation(Long teamId, Long userId) {
+        TeamUser findTeamUser = getTeamUserByTeamAndUserAndWait(teamId, userId);
         findTeamUser.acceptInvitation();
     }
 
-    public void rejectInvitation(Team team, User user) {
-        TeamUser findTeamUser = getTeamUserByTeamAndUserAndWait(team, user);
+    public void rejectInvitation(Long teamId, Long userId) {
+        TeamUser findTeamUser = getTeamUserByTeamAndUserAndWait(teamId, userId);
         teamUserRepository.delete(findTeamUser);
     }
 
-    public TeamUser getTeamUserByTeamIdAndUserId(Team team, User user){
-        return teamUserRepository.findByTeamAndUser(team, user).orElseThrow(
+    public TeamUser getTeamUserByTeamIdAndUserId(Long teamId, Long userId){
+        return teamUserRepository.findByTeamIdAndUserId(teamId, userId).orElseThrow(
                 () -> new TeamCustomException(TeamExceptionCode.NOT_FOUND_TEAM_USER)
         );
     }
 
-    public Boolean isExistedUser(Team team, User user){
-        return teamUserRepository.existsByTeamAndUserAndIsAcceptedTrue(team, user);
+    public Boolean isExistedUser(Long teamId, Long userId){
+        return teamUserRepository.existsByTeamIdAndUserIdAndIsAcceptedTrue(teamId, userId);
     }
 
-    public Boolean isExistedAdmin(Team team, User user){
-        return teamUserRepository.existsByTeamAndUserAndIsAcceptedTrueAndUserRole(team, user,
-                TeamUserRole.ADMIN);
+    public Boolean isExistedAdmin(Long teamId, Long userId){
+        return teamUserRepository.existsByTeamIdAndUserIdAndIsAcceptedTrueAndUserRole(teamId, userId, TeamUserRole.ADMIN);
     }
 
-    public List<TeamUser> getTeamUserByUser(User user) {
-        return teamUserRepository.findAllByUserAndIsAcceptedTrue(user);
+    public List<TeamUser> getTeamUserByUser(Long userId) {
+        return teamUserRepository.findAllByUserIdAndIsAcceptedTrue(userId);
     }
 
-    public List<TeamUser> getTeamUserByUserAndWait(User user) {
-        return teamUserRepository.findAllByUserAndIsAcceptedFalse(user);
+    public List<TeamUser> getTeamUserByUserAndWait(Long userId) {
+        return teamUserRepository.findAllByUserIdAndIsAcceptedFalse(userId);
     }
 
-    public TeamUser getTeamUserByTeamAndUserAndWait(Team team, User user) {
-        return teamUserRepository.findByTeamAndUserAndIsAcceptedFalse(team, user).orElseThrow(
+    public TeamUser getTeamUserByTeamAndUserAndWait(Long teamId, Long userId) {
+        return teamUserRepository.findByTeamIdAndUserIdAndIsAcceptedFalse(teamId, userId).orElseThrow(
             () -> new TeamCustomException(TeamExceptionCode.NOT_FOUND_TEAM_USER_WAIT)
         );
     }
