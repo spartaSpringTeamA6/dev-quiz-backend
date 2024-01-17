@@ -19,8 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class TeamUserService {
 
     private final TeamUserRepository teamUserRepository;
-    private final TeamService teamService;
-    private final UserService userService;
 
     public void createTeamAdmin(Team team, User user){
         TeamUser teamUser = TeamUser.builder()
@@ -66,13 +64,13 @@ public class TeamUserService {
         teamUserRepository.delete(teamUser);
     }
 
-    public void acceptInvitation(Long teamId, Long userId) {
-        TeamUser findTeamUser = getTeamUserByTeamAndUserAndWait(teamId, userId);
+    public void acceptInvitation(Team team, User user) {
+        TeamUser findTeamUser = getTeamUserByTeamAndUserAndWait(team, user);
         findTeamUser.acceptInvitation();
     }
 
-    public void rejectInvitation(Long teamId, Long userId) {
-        TeamUser findTeamUser = getTeamUserByTeamAndUserAndWait(teamId, userId);
+    public void rejectInvitation(Team team, User user) {
+        TeamUser findTeamUser = getTeamUserByTeamAndUserAndWait(team, user);
         teamUserRepository.delete(findTeamUser);
     }
 
@@ -99,10 +97,7 @@ public class TeamUserService {
         return teamUserRepository.findAllByUserAndIsAcceptedFalse(user);
     }
 
-    public TeamUser getTeamUserByTeamAndUserAndWait(Long teamId, Long userId) {
-        Team team = teamService.getTeamById(teamId);
-        User user = userService.getUserById(userId);
-
+    public TeamUser getTeamUserByTeamAndUserAndWait(Team team, User user) {
         return teamUserRepository.findByTeamAndUserAndIsAcceptedFalse(team, user).orElseThrow(
             () -> new TeamCustomException(TeamExceptionCode.NOT_FOUND_TEAM_USER_WAIT)
         );

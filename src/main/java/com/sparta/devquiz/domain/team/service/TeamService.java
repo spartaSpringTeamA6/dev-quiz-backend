@@ -136,6 +136,19 @@ public class TeamService {
         }
     }
 
+    @Transactional
+    public void acceptInvitationTeamUser(User user, Long teamId) {
+        Team team = getTeamById(teamId);
+        teamUserService.acceptInvitation(team,user);
+    }
+
+    @Transactional
+    public void rejectInvitationTeamUser(User user, Long teamId) {
+        Team team = getTeamById(teamId);
+        teamUserService.rejectInvitation(team,user);
+    }
+
+
 //    public TeamGetUserRankingResponse getUserRankingInTeam(User user, Long teamId, Long userId, TeamGetUserRankingResponse request) {
 //        if(!user.getId().equals(userId)){
 //

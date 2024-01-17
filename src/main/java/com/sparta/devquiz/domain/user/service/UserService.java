@@ -1,7 +1,9 @@
 package com.sparta.devquiz.domain.user.service;
 
 import com.sparta.devquiz.domain.mypage.service.UserTeamUserService;
+import com.sparta.devquiz.domain.team.entity.Team;
 import com.sparta.devquiz.domain.team.entity.TeamUser;
+import com.sparta.devquiz.domain.team.service.TeamService;
 import com.sparta.devquiz.domain.user.dto.request.UserUpdateRequest;
 import com.sparta.devquiz.domain.user.dto.response.UserDetailResponse;
 import com.sparta.devquiz.domain.user.dto.response.UserInvitationsResponse;
@@ -85,13 +87,13 @@ public class UserService {
   @Transactional
   public void acceptInvitation(User user, Long userId, Long teamId) {
     User findUser = validateUser(user, userId);
-    userTeamUserService.acceptInvitation(teamId, findUser.getId());
+    userTeamUserService.acceptInvitation(findUser, teamId);
   }
 
   @Transactional
   public void rejectInvitation(User user, Long userId, Long teamId) {
     User findUser = validateUser(user, userId);
-    userTeamUserService.rejectInvitation(teamId, findUser.getId());
+    userTeamUserService.rejectInvitation(findUser, teamId);
   }
 
   public User validateUser(User authUser, Long userId) {
