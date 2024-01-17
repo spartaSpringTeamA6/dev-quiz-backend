@@ -6,15 +6,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
-@Builder
 @Getter
-@NoArgsConstructor
-@AllArgsConstructor
 @Schema(description = "유저 프로필 수정 요청 dto")
 public class UserUpdateRequest {
 

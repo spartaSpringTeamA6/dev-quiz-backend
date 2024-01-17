@@ -1,5 +1,6 @@
 package com.sparta.devquiz.domain.user.dto.response;
 
+import com.sparta.devquiz.domain.user.entity.Skill;
 import com.sparta.devquiz.domain.user.entity.User;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
@@ -19,14 +20,12 @@ public class UserSkillResponse {
   @Schema(description = "유저 스킬", defaultValue = "JAVA")
   private List<SkillResponse> skillList;
 
-  public static UserSkillResponse of(User user) {
+  public static UserSkillResponse of(User user, List<Skill> skillList) {
     return UserSkillResponse
         .builder()
         .userId(user.getId())
         .username(user.getUsername())
-        .skillList(user.getSkillList().stream()
-            .map(SkillResponse::of)
-            .toList())
+        .skillList(SkillResponse.of(skillList))
         .build();
   }
 }

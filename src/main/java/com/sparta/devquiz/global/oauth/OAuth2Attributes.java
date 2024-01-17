@@ -29,7 +29,6 @@ public class OAuth2Attributes {
         return google(userNameAttributeName, attributes);
     }
 
-
     public static OAuth2Attributes google(String userNameAttributeName, Map<String, Object> attributes) {
         return OAuth2Attributes.builder()
                 .nameAttributeKey(userNameAttributeName)
@@ -49,7 +48,7 @@ public class OAuth2Attributes {
                 .oauthId(oauth2UserInfo.getOauthId())
                 .oauthType(oauthType)
                 .username(username)
-                .role(UserRole.USER)
+                .role(UserRole.ROLE_USER)
                 .build();
     }
 }

@@ -34,5 +34,4 @@ public class UserInvitationsResponse {
                 .toList())
         .build();
   }
-  
 }

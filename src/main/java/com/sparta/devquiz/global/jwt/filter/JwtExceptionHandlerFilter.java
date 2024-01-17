@@ -1,4 +1,4 @@
-package com.sparta.devquiz.global.jwt;
+package com.sparta.devquiz.global.jwt.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparta.devquiz.global.exception.CustomException;
@@ -29,5 +29,4 @@ public class JwtExceptionHandlerFilter extends OncePerRequestFilter {
       response.getWriter().write(new ObjectMapper().writeValueAsString(result));
     }
   }
-
 }

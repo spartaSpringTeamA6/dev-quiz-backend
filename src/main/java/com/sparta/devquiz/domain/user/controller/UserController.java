@@ -3,6 +3,7 @@ package com.sparta.devquiz.domain.user.controller;
 import com.sparta.devquiz.domain.user.dto.request.UserUpdateRequest;
 import com.sparta.devquiz.domain.user.dto.response.UserDetailResponse;
 import com.sparta.devquiz.domain.user.dto.response.UserInvitationsResponse;
+import com.sparta.devquiz.domain.user.dto.response.UserSkillResponse;
 import com.sparta.devquiz.domain.user.dto.response.UserTeamsResponse;
 import com.sparta.devquiz.domain.user.entity.User;
 import com.sparta.devquiz.domain.user.response.UserResponseCode;
@@ -27,23 +28,22 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/users/{userId}")
-@Tag(name = "1. User API", description = "User 관련 API 입니다.")
+@Tag(name = "1-1. User API", description = "User 관련 API 입니다.")
 public class UserController {
 
   private final UserService userService;
 
   @SecurityRequirement(name = "Bearer Authentication")
-  @Operation(summary = "내 정보 조회")
+  @Operation(operationId = "USER-001", summary = "내 정보 조회")
   @GetMapping
   public ResponseEntity<CommonResponseDto> getMyProfile(@AuthUser User user, @PathVariable Long userId) {
     UserDetailResponse result = userService.getMyProfile(user, userId);
-    
     return ResponseEntity.status(UserResponseCode.GET_MY_INFO.getHttpStatus())
         .body(CommonResponseDto.of(UserResponseCode.GET_MY_INFO, result));
   }
 
   @SecurityRequirement(name = "Bearer Authentication")
-  @Operation(summary = "내 정보 수정")
+  @Operation(operationId = "USER-002", summary = "내 정보 수정")
   @PutMapping
   public ResponseEntity<CommonResponseDto> updateMyProfile(
       @AuthUser User user, @PathVariable Long userId,
@@ -55,7 +55,7 @@ public class UserController {
   }
 
   @SecurityRequirement(name = "Bearer Authentication")
-  @Operation(summary = "회원탈퇴")
+  @Operation(operationId = "USER-003", summary = "회원탈퇴")
   @DeleteMapping
   public ResponseEntity<CommonResponseDto> deleteMyProfile(@AuthUser User user, @PathVariable Long userId) {
     userService.deleteMyProfile(user, userId);
@@ -64,7 +64,16 @@ public class UserController {
   }
 
   @SecurityRequirement(name = "Bearer Authentication")
-  @Operation(summary = "내가 속한 그룹 조회")
+  @Operation(operationId = "USER-004", summary = "내 스킬 조회")
+  @GetMapping("/skills")
+  public ResponseEntity<CommonResponseDto> getMySkills(@AuthUser User user, @PathVariable Long userId) {
+    UserSkillResponse result = userService.getMySkills(user, userId);
+    return ResponseEntity.status(UserResponseCode.DELETE_USER.getHttpStatus())
+        .body(CommonResponseDto.of(UserResponseCode.DELETE_USER, result));
+  }
+
+  @SecurityRequirement(name = "Bearer Authentication")
+  @Operation(operationId = "USER-005",summary = "내가 속한 그룹 조회")
   @GetMapping("/teams")
   public ResponseEntity<CommonResponseDto> getMyGroups(@AuthUser User user, @PathVariable Long userId) {
     UserTeamsResponse result = userService.getMyTeams(user, userId);
@@ -73,7 +82,7 @@ public class UserController {
   }
 
   @SecurityRequirement(name = "Bearer Authentication")
-  @Operation(summary = "내가 받은 초대 조회")
+  @Operation(operationId = "USER-006", summary = "내가 받은 초대 조회")
   @GetMapping("/teams/invitations")
   public ResponseEntity<CommonResponseDto> getMyInvitations(@AuthUser User user, @PathVariable Long userId) {
     UserInvitationsResponse result = userService.getMyInvitations(user, userId);
@@ -82,7 +91,7 @@ public class UserController {
   }
 
   @SecurityRequirement(name = "Bearer Authentication")
-  @Operation(summary = "그룹 초대 수락")
+  @Operation(operationId = "USER-007", summary = "그룹 초대 수락")
   @PostMapping("/teams/{teamId}/accept")
   public ResponseEntity<CommonResponseDto> acceptInvitation(@AuthUser User user, @PathVariable Long userId, @PathVariable Long teamId) {
     userService.acceptInvitation(user, userId, teamId);
@@ -91,7 +100,7 @@ public class UserController {
   }
 
   @SecurityRequirement(name = "Bearer Authentication")
-  @Operation(summary = "그룹 초대 거절")
+  @Operation(operationId = "USER-008", summary = "그룹 초대 거절")
   @DeleteMapping("/teams/{teamId}/reject")
   public ResponseEntity<CommonResponseDto> rejectInvitation(@AuthUser User user, @PathVariable Long userId, @PathVariable Long teamId) {
     userService.rejectInvitation(user, userId, teamId);
