@@ -11,10 +11,12 @@ import org.springframework.http.HttpStatus;
 public enum QuizResponseCode implements ResponseCode {
 
     // OK 200
-    OK_GET_QUIZ(HttpStatus.OK.value(), "GET QUIZ"),
-    OK_GET_MY_SCORE(HttpStatus.OK.value(), "GET MY SCORE"),
-    OK_GET_RANDOM_QUIZZES(HttpStatus.OK.value(), "GET 10 QUIZZES"),
-    OK_SUBMIT_QUIZ_ANSWER(HttpStatus.OK.value(), "SUBMIT QUIZ ANSWER"),
+    OK_GET_QUIZ(HttpStatus.OK, "GET QUIZ"),
+    OK_GET_MY_SCORE(HttpStatus.OK, "GET MY SCORE"),
+    OK_GET_RANDOM_QUIZZES(HttpStatus.OK, "GET 10 QUIZZES"),
+    OK_SUBMIT_QUIZ_ANSWER(HttpStatus.OK, "SUBMIT QUIZ ANSWER"),
+    OK_UPDATE_QUIZ(HttpStatus.OK, "SUCCESS TO UPDATE QUIZ"),
+    OK_DELETE_QUIZ(HttpStatus.OK, "SUCCESS TO DELETE QUIZ"),
 
     // CREATED 201
     CREATED_QUIZ(HttpStatus.CREATED, "SUCCESS TO CREATE QUIZ");
