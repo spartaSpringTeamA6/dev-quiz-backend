@@ -1,9 +1,10 @@
 package com.sparta.devquiz.domain.quiz.entity;
 
 import jakarta.persistence.Embeddable;
+import lombok.Getter;
+
 import java.io.Serializable;
 import java.util.Objects;
-import lombok.Getter;
 
 
 @Getter
@@ -12,7 +13,13 @@ public class UserQuizId implements Serializable {
 
     private Long userId;
     private Long quizId;
+    public UserQuizId(Long userId, Long quizId) {
+        this.userId = userId;
+        this.quizId = quizId;
+    }
 
+    public UserQuizId() {
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -2,17 +2,18 @@ package com.sparta.devquiz.domain.board.service;
 
 import com.sparta.devquiz.domain.board.dto.request.BoardCreateRequest;
 import com.sparta.devquiz.domain.board.dto.request.BoardUpdateRequest;
-import com.sparta.devquiz.domain.board.dto.response.*;
+import com.sparta.devquiz.domain.board.dto.response.BoardCreateResponse;
+import com.sparta.devquiz.domain.board.dto.response.BoardDetailsResponse;
 import com.sparta.devquiz.domain.board.entity.Board;
 import com.sparta.devquiz.domain.board.exception.BoardCustomException;
 import com.sparta.devquiz.domain.board.exception.BoardExceptionCode;
 import com.sparta.devquiz.domain.board.repository.BoardRepository;
-import com.sparta.devquiz.domain.quiz.QuizRepository;
 import com.sparta.devquiz.domain.quiz.entity.Quiz;
+import com.sparta.devquiz.domain.quiz.repository.QuizRepository;
 import com.sparta.devquiz.domain.user.entity.User;
-import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
