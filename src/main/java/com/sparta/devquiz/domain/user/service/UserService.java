@@ -12,6 +12,7 @@ import com.sparta.devquiz.domain.user.entity.User;
 import com.sparta.devquiz.domain.user.enums.UserSkill;
 import com.sparta.devquiz.domain.user.exception.UserCustomException;
 import com.sparta.devquiz.domain.user.exception.UserExceptionCode;
+import com.sparta.devquiz.domain.user.repository.SkillRepository;
 import com.sparta.devquiz.domain.user.repository.UserRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -24,16 +25,17 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
   private final UserRepository userRepository;
+  private final SkillRepository skillRepository;
   private final UserTeamUserService userTeamUserService;
 
-  public UserDetailResponse getMyProfile(User user, Long userId) {
-    User findUser = validateUser(user, userId);
+  public UserDetailResponse getMyProfile(User authUser, Long userId) {
+    User findUser = validateUser(authUser, userId);
     return UserDetailResponse.of(findUser);
   }
 
   @Transactional
-  public void updateMyProfile(User user, Long userId, UserUpdateRequest request) {
-    User findUser = validateUser(user, userId);
+  public void updateMyProfile(User authUser, Long userId, UserUpdateRequest request) {
+    User findUser = validateUser(authUser, userId);
 
     String newUsername = request.getUsername();
     if (!findUser.getUsername().equals(newUsername) && isExistedUsername(newUsername)) {
@@ -48,7 +50,7 @@ public class UserService {
         .map(userSkill -> Skill
             .builder()
             .userSkill(userSkill)
-            .user(user)
+            .user(findUser)
             .build())
         .toList();
 
@@ -56,41 +58,41 @@ public class UserService {
   }
 
   @Transactional
-  public void deleteMyProfile(User user, Long userId) {
-    User findUser = validateUser(user, userId);
+  public void deleteMyProfile(User authUser, Long userId) {
+    User findUser = validateUser(authUser, userId);
     findUser.deleteUser();
     findUser.getTeamUserList()
         .forEach(teamUser ->
-            userTeamUserService.deleteTeamUser(teamUser.getTeam(), teamUser.getUser())
-        );
+            userTeamUserService.deleteTeamUser(teamUser.getTeam().getId(), teamUser.getUser().getId()));
   }
 
-  public UserSkillResponse getMySkills(User user, Long userId) {
-    User findUser = validateUser(user, userId);
-    return UserSkillResponse.of(findUser);
+  public UserSkillResponse getMySkills(User authUser, Long userId) {
+    User findUser = validateUser(authUser, userId);
+    List<Skill> skillList = skillRepository.findAllByUserId(userId);
+    return UserSkillResponse.of(findUser, skillList);
   }
 
-  public UserTeamsResponse getMyTeams(User user, Long userId) {
-    User findUser = validateUser(user, userId);
-    List<TeamUser> findTeamUserList = userTeamUserService.getTeamUserByUser(findUser);
+  public UserTeamsResponse getMyTeams(User authUser, Long userId) {
+    User findUser = validateUser(authUser, userId);
+    List<TeamUser> findTeamUserList = userTeamUserService.getTeamUserByUser(findUser.getId());
     return UserTeamsResponse.of(findUser, findTeamUserList);
   }
 
-  public UserInvitationsResponse getMyInvitations(User user, Long userId) {
-    User findUser = validateUser(user, userId);
-    List<TeamUser> findTeamUserList = userTeamUserService.getTeamUserByUserAndWait(findUser);
+  public UserInvitationsResponse getMyInvitations(User authUser, Long userId) {
+    User findUser = validateUser(authUser, userId);
+    List<TeamUser> findTeamUserList = userTeamUserService.getTeamUserByUserAndWait(findUser.getId());
     return UserInvitationsResponse.of(findUser, findTeamUserList);
   }
 
   @Transactional
-  public void acceptInvitation(User user, Long userId, Long teamId) {
-    User findUser = validateUser(user, userId);
+  public void acceptInvitation(User authUser, Long userId, Long teamId) {
+    User findUser = validateUser(authUser, userId);
     userTeamUserService.acceptInvitation(teamId, findUser.getId());
   }
 
   @Transactional
-  public void rejectInvitation(User user, Long userId, Long teamId) {
-    User findUser = validateUser(user, userId);
+  public void rejectInvitation(User authUser, Long userId, Long teamId) {
+    User findUser = validateUser(authUser, userId);
     userTeamUserService.rejectInvitation(teamId, findUser.getId());
   }
 
@@ -115,13 +117,13 @@ public class UserService {
     );
   }
 
-  public User getUserByUsername(String nickname){
-    return userRepository.findByUsernameAndIsDeletedFalse(nickname).orElseThrow(
+  public User getUserByUsername(String username){
+    return userRepository.findByUsernameAndIsDeletedFalse(username).orElseThrow(
             () -> new UserCustomException(UserExceptionCode.NOT_FOUND_USER)
     );
   }
 
-  public boolean isExistedUsername(String nickname){
-    return userRepository.existsByUsername(nickname);
+  public boolean isExistedUsername(String username){
+    return userRepository.existsByUsername(username);
   }
 }
