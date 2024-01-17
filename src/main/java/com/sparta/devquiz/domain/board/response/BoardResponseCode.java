@@ -17,8 +17,8 @@ public enum BoardResponseCode implements ResponseCode {
     CREATED_BOARD(HttpStatus.CREATED, "SUCCESS TO CREATE BOARD"),
 
     // OK 204:  기존 RESPONSE CODE 200에서 DATA가 "" 인 것들을 204로 사용
-    OK_UPDATE_BOARD(HttpStatus.NO_CONTENT, "SUCCESS TO UPDATE BOARD"),
-    OK_DELETE_BOARD(HttpStatus.NO_CONTENT, "SUCCESS TO DELETE BOARD");
+    OK_UPDATE_BOARD(HttpStatus.OK, "SUCCESS TO UPDATE BOARD"),
+    OK_DELETE_BOARD(HttpStatus.OK, "SUCCESS TO DELETE BOARD");
 
     private final HttpStatus httpStatus;
     private final String message;
