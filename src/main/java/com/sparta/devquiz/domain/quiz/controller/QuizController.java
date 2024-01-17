@@ -1,11 +1,12 @@
 package com.sparta.devquiz.domain.quiz.controller;
 
 import com.sparta.devquiz.domain.quiz.dto.request.QuizCreateRequest;
-import com.sparta.devquiz.domain.quiz.dto.request.QuizRandomRequest;
 import com.sparta.devquiz.domain.quiz.dto.request.QuizUpdateRequest;
+import com.sparta.devquiz.domain.quiz.dto.response.QuizAnswerSubmitResponse;
 import com.sparta.devquiz.domain.quiz.dto.response.QuizCreateResponse;
-import com.sparta.devquiz.domain.quiz.dto.response.QuizRandomResponse;
 import com.sparta.devquiz.domain.quiz.dto.response.QuizDetailResponse;
+import com.sparta.devquiz.domain.quiz.dto.response.QuizRandomResponse;
+import com.sparta.devquiz.domain.quiz.enums.QuizCategory;
 import com.sparta.devquiz.domain.quiz.response.QuizResponseCode;
 import com.sparta.devquiz.domain.quiz.service.QuizService;
 import com.sparta.devquiz.domain.user.entity.User;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -52,12 +54,13 @@ public class QuizController {
 
     // 퀴즈 10개 랜덤 출제
     @SecurityRequirement(name = "Bearer Authentication")
-    @Operation(operationId = "QUIZ-002", summary = "퀴즈 10개 랜덤 출제")
+    @Operation(operationId = "QUIZ-002", summary = "퀴즈 카테고리 10개 랜덤 출제")
     @GetMapping("")
     public ResponseEntity<CommonResponseDto> getRandomQuiz(
-            @RequestBody QuizRandomRequest quizRandomRequest
+            @RequestParam QuizCategory category
             ) {
-        List<QuizRandomResponse.QuizDto> quizRandomResponseList = quizService.getRandomQuizList(quizRandomRequest);
+        List<QuizRandomResponse> quizRandomResponseList = quizService.getRandomQuizList(category);
+//        List<QuizRandomResponse.QuizDto> quizRandomResponseList = quizService.getRandomQuizList(category);
 
         return ResponseEntity
                 .status(QuizResponseCode.OK_GET_RANDOM_QUIZZES.getHttpStatus())
@@ -113,11 +116,12 @@ public class QuizController {
     @PostMapping("/{quizId}")
     public ResponseEntity<CommonResponseDto> submitQuiz(
             @PathVariable Long quizId,
-            @RequestBody String submittedAnswer
+            @RequestBody String submittedAnswer,
+            @AuthUser User user
     ) {
-        quizService.submitQuizAnswer(quizId, submittedAnswer);
+        QuizAnswerSubmitResponse response = quizService.submitQuizAnswer(quizId, submittedAnswer, user); // 퀴즈 서비스 호출 결과 저장
         return ResponseEntity
                 .status(QuizResponseCode.OK_SUBMIT_QUIZ_ANSWER.getHttpStatus())
-                .body(CommonResponseDto.of(QuizResponseCode.OK_SUBMIT_QUIZ_ANSWER));
+                .body(CommonResponseDto.of(QuizResponseCode.OK_SUBMIT_QUIZ_ANSWER, response)); // 결과 반환에 response 추가
     }
 }
