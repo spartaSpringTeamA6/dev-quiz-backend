@@ -1,9 +1,10 @@
 package com.sparta.devquiz.global.security;
 
-import com.sparta.devquiz.global.jwt.JwtAuthorizationFilter;
-import com.sparta.devquiz.global.jwt.JwtExceptionHandlerFilter;
-import com.sparta.devquiz.global.jwt.JwtUtil;
+import com.sparta.devquiz.global.jwt.filter.JwtAuthorizationFilter;
+import com.sparta.devquiz.global.jwt.filter.JwtExceptionHandlerFilter;
+import com.sparta.devquiz.global.jwt.service.JwtService;
 import com.sparta.devquiz.global.oauth.handler.OAuth2LoginSuccessHandler;
+import com.sparta.devquiz.global.oauth.repository.CookieOAuth2RequestRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -22,15 +23,16 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class WebSecurityConfig {
 
-  private final JwtUtil jwtUtil;
+  private final JwtService jwtService;
   private final OAuth2UserService oAuth2UserService;
   private final UserDetailsService userDetailsService;
   private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
   private final JwtExceptionHandlerFilter jwtExceptionHandlerFilter;
+  private final CookieOAuth2RequestRepository cookieOAuth2RequestRepository;
 
   @Bean
   public JwtAuthorizationFilter jwtAuthorizationFilter() {
-    return new JwtAuthorizationFilter(jwtUtil, userDetailsService);
+    return new JwtAuthorizationFilter(jwtService, userDetailsService);
   }
 
   @Bean
@@ -43,14 +45,14 @@ public class WebSecurityConfig {
     http.authorizeHttpRequests(authReq -> authReq
           .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
           .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
-            //비회원 문제 풀기 url 추가 필요
           .anyRequest().authenticated()
     );
 
     http.oauth2Login(
         login -> login
-                  .userInfoEndpoint(userInfo -> userInfo.userService(oAuth2UserService))
-                  .successHandler(oAuth2LoginSuccessHandler)
+            .authorizationEndpoint(endPoint -> endPoint.authorizationRequestRepository(cookieOAuth2RequestRepository))
+            .userInfoEndpoint(userInfo -> userInfo.userService(oAuth2UserService))
+            .successHandler(oAuth2LoginSuccessHandler)
     );
 
     http.addFilterBefore(jwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
