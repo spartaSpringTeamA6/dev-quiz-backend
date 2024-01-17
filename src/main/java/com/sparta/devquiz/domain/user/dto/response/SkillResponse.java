@@ -3,6 +3,7 @@ package com.sparta.devquiz.domain.user.dto.response;
 import com.sparta.devquiz.domain.user.entity.Skill;
 import com.sparta.devquiz.domain.user.enums.UserSkill;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -19,5 +20,11 @@ public class SkillResponse {
         .builder()
         .userSkill(skill.getUserSkill())
         .build();
+  }
+
+  public static List<SkillResponse> of(List<Skill> skillList) {
+    return skillList.stream()
+        .map(SkillResponse::of)
+        .toList();
   }
 }

@@ -28,11 +28,11 @@ public enum UserResponseCode implements ResponseCode {
     REJECT_TEAM_INVITATION(HttpStatus.OK, "REJECT INVITATION"),
     GET_MY_RANKING(HttpStatus.OK, "GET MY RANKING"),
 
-    // CREATED 201
-    SIGNUP(HttpStatus.CREATED, "SIGN UP"),
+    UPDATE_MY_INFO(HttpStatus.OK, "SUCCESS TO UPDATE MY INFORMATION"),
 
-    // NO CONTENT 204:  기존 RESPONSE CODE 200에서  DATA가 "" 인 것들을 204로 사용
-    UPDATE_MY_INFO(HttpStatus.NO_CONTENT, "SUCCESS TO UPDATE MY INFORMATION");
+    // CREATED 201
+    SIGNUP(HttpStatus.CREATED, "SUCCESS TO SIGN UP"),
+    REISSUE(HttpStatus.CREATED, "SUCCESS TO REISSUE");
 
     private final HttpStatus httpStatus;
     private final String message;
@@ -44,5 +44,4 @@ public enum UserResponseCode implements ResponseCode {
     public String getMessage(UserResponseCode responseCode){
         return responseCode.getMessage();
     }
-
 }

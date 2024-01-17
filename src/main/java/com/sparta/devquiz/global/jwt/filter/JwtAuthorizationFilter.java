@@ -1,5 +1,6 @@
-package com.sparta.devquiz.global.jwt;
+package com.sparta.devquiz.global.jwt.filter;
 
+import com.sparta.devquiz.global.jwt.service.JwtService;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -19,19 +20,18 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @RequiredArgsConstructor
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
-    private final JwtUtil jwtUtil;
+    private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String accessToken = jwtUtil.resolveToken(request, JwtUtil.ACCESS_TOKEN_HEADER);
+        String accessToken = jwtService.resolveToken(request);
         if(StringUtils.hasText(accessToken)) {
-            Claims info = jwtUtil.getUserInfoFromToken(accessToken);
+            Claims info = jwtService.getClaimsFromToken(accessToken);
             setAuthentication(info.getSubject());
         }
         filterChain.doFilter(request, response);
     }
-
     public void setAuthentication(String oauthId) {
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         Authentication authentication = createAuthentication(oauthId);
@@ -43,5 +43,4 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         UserDetails userDetails = userDetailsService.loadUserByUsername(oauthId);
         return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     }
-
 }
