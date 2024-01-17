@@ -57,10 +57,10 @@ public class QuizController {
     @Operation(operationId = "QUIZ-002", summary = "퀴즈 카테고리 10개 랜덤 출제")
     @GetMapping("")
     public ResponseEntity<CommonResponseDto> getRandomQuiz(
-            @RequestParam QuizCategory category
+            @RequestParam QuizCategory category,
+            @AuthUser User user
             ) {
-        List<QuizRandomResponse> quizRandomResponseList = quizService.getRandomQuizList(category);
-//        List<QuizRandomResponse.QuizDto> quizRandomResponseList = quizService.getRandomQuizList(category);
+        List<QuizRandomResponse> quizRandomResponseList = quizService.getRandomNonAttemptedQuizzes(category, user);
 
         return ResponseEntity
                 .status(QuizResponseCode.OK_GET_RANDOM_QUIZZES.getHttpStatus())

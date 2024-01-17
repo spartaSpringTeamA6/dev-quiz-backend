@@ -20,13 +20,13 @@ import com.sparta.devquiz.domain.quiz.repository.QuizRepository;
 import com.sparta.devquiz.domain.quiz.repository.QuizUserRepository;
 import com.sparta.devquiz.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -64,12 +64,18 @@ public class QuizService {
 
 
     @Transactional(readOnly = true)
-    public List<QuizRandomResponse> getRandomQuizList(QuizCategory category) {
-        Pageable pageable = PageRequest.of(0, 10); // 첫 번째 페이지, 페이지 당 10개
-        Page<Quiz> page = quizRepository.findQuizByCategory(category, pageable);
-        List<Quiz> quizList = page.getContent();
+    public List<QuizRandomResponse> getRandomNonAttemptedQuizzes(QuizCategory category, User user) {
+        // 유저가 정답을 맞춘 퀴즈 ID 목록을 가져옵니다.
+        List<Long> correctQuizIds = quizUserRepository.findCorrectQuizIdsByUser(user);
 
-        return QuizRandomResponse.of(quizList);
+        // ID 목록을 제외하고 퀴즈를 조회하는 쿼리를 실행합니다.
+        Pageable pageable = PageRequest.of(0, 10); // 가져올 퀴즈 개수를 제한하고 (10개), 랜덤으로 가져옵니다.
+        List<Quiz> randomQuizzes = quizRepository.findQuizzesByCategoryExcludingIds(category, correctQuizIds, pageable);
+
+        // 가져온 퀴즈 목록을 DTO로 변환합니다.
+        return randomQuizzes.stream()
+                .map(QuizRandomResponse::of)
+                .collect(Collectors.toList());
 
     }
 
