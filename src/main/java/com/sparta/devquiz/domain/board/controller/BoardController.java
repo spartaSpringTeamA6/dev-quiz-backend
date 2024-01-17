@@ -28,7 +28,7 @@ public class BoardController {
     private final BoardService boardService;
 
     @Operation(operationId = "BOARD-001", summary = "보드 생성")
-    @PostMapping("/quizzes/{quiz_id}/boards")
+    @PostMapping("/quizzes/{quizId}/boards")
     public ResponseEntity<CommonResponseDto> createBoard(
             @PathVariable Long quizId,
             @Valid @RequestBody BoardCreateRequest boardRequest,
@@ -42,7 +42,7 @@ public class BoardController {
     }
 
     @Operation(operationId = "BOARD-002", summary = "단일 보드 조회")
-    @GetMapping("/boards/{board_id}")
+    @GetMapping("/boards/{boardId}")
     public ResponseEntity<CommonResponseDto> getBoard(
             @PathVariable Long boardId
     ) {
@@ -54,7 +54,7 @@ public class BoardController {
     }
 
     @Operation(operationId = "BOARD-003", summary = "보드 리스트 조회")
-    @GetMapping("/quizzes/{quiz_id}/boards")
+    @GetMapping("/quizzes/{quizId}/boards")
     public ResponseEntity<CommonResponseDto> getBoardList(
             @PathVariable Long quizId
     ){
@@ -66,7 +66,7 @@ public class BoardController {
     }
 
     @Operation(operationId = "BOARD-004", summary = "보드 수정")
-    @PatchMapping("/boards/{board_id}")
+    @PatchMapping("/boards/{boardId}")
     public ResponseEntity<CommonResponseDto> updateBoard(
             @PathVariable Long boardId,
             @Valid @RequestBody BoardUpdateRequest boardUpdateRequest,
@@ -80,7 +80,7 @@ public class BoardController {
     }
 
     @Operation(operationId = "BOARD-005",summary = "보드 삭제")
-    @DeleteMapping("/boards/{board_id}")
+    @DeleteMapping("/boards/{boardId}")
     public ResponseEntity<CommonResponseDto> deleteBoard(
             @PathVariable Long boardId,
             @AuthUser User user
