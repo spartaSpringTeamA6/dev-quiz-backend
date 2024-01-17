@@ -49,7 +49,7 @@ public class OAuth2Attributes {
                 .oauthId(oauth2UserInfo.getOauthId())
                 .oauthType(oauthType)
                 .username(username)
-                .role(UserRole.USER)
+                .role(UserRole.ROLE_USER)
                 .build();
     }
 }
