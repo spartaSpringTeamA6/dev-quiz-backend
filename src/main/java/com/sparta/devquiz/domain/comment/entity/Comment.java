@@ -39,4 +39,11 @@ public class Comment extends BaseTimeEntity {
     @OneToMany(mappedBy = "comment")
     private List<CommentLike> commentLikeList = new ArrayList<>();
 
+    public void updateContent(String content) {
+        this.content = content;
+    }
+
+    public void setDeleted(boolean isDeleted) {
+        this.isDeleted = isDeleted;
+    }
 }
