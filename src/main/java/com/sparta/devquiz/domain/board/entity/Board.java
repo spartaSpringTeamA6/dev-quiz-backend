@@ -1,10 +1,14 @@
 package com.sparta.devquiz.domain.board.entity;
 
+import com.sparta.devquiz.domain.comment.entity.Comment;
 import com.sparta.devquiz.domain.quiz.entity.Quiz;
 import com.sparta.devquiz.domain.user.entity.User;
 import com.sparta.devquiz.global.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Entity
@@ -34,4 +38,20 @@ public class Board extends BaseTimeEntity {
 
     @Column(nullable = false)
     private Boolean isDeleted = false;
+
+    @OneToMany(mappedBy = "board")
+    private List<Comment> comments = new ArrayList<>();
+
+    public void updateTitleAndContent(String title, String content) {
+        if (title != null) {
+            this.title = title;
+        }
+        if (content != null) {
+            this.content = content;
+        }
+    }
+
+    public void setDeleted(boolean isDeleted) {
+        this.isDeleted = isDeleted;
+    }
 }
