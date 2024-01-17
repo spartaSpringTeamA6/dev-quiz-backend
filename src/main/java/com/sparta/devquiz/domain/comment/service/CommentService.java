@@ -60,7 +60,6 @@ public class CommentService {
         }
 
         comment.updateContent(commentUpdateRequest.getContent());
-        commentRepository.save(comment);
     }
 
     @Transactional
@@ -72,7 +71,6 @@ public class CommentService {
         }
 
         comment.setDeleted(true);
-        commentRepository.save(comment);
     }
 
     @Transactional

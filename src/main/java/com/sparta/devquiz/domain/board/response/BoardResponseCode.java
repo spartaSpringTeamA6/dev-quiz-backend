@@ -12,13 +12,11 @@ public enum BoardResponseCode implements ResponseCode {
     // OK 200
     OK_GET_BOARDLIST_INFO(HttpStatus.OK, "SUCCESS TO GET BOARDLIST"),
     OK_GET_BOARD_INFO(HttpStatus.OK, "SUCCESS TO GET BOARD"),
+    OK_UPDATE_BOARD(HttpStatus.OK, "SUCCESS TO UPDATE BOARD"),
+    OK_DELETE_BOARD(HttpStatus.OK, "SUCCESS TO DELETE BOARD"),
 
     // CREATED 201
-    CREATED_BOARD(HttpStatus.CREATED, "SUCCESS TO CREATE BOARD"),
-
-    // OK 204:  기존 RESPONSE CODE 200에서 DATA가 "" 인 것들을 204로 사용
-    OK_UPDATE_BOARD(HttpStatus.OK, "SUCCESS TO UPDATE BOARD"),
-    OK_DELETE_BOARD(HttpStatus.OK, "SUCCESS TO DELETE BOARD");
+    CREATED_BOARD(HttpStatus.CREATED, "SUCCESS TO CREATE BOARD");
 
     private final HttpStatus httpStatus;
     private final String message;

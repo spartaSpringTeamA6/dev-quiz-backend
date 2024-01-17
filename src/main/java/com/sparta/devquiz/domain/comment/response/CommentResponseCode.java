@@ -11,15 +11,13 @@ public enum CommentResponseCode implements ResponseCode {
 
     // OK 200
     OK_GET_ALL_COMMENT(HttpStatus.OK, "GET ALL COMMENTS"),
+    OK_UPDATE_COMMENT(HttpStatus.OK, "SUCCESS TO UPDATE COMMENT"),
+    OK_DELETE_COMMENT(HttpStatus.OK, "SUCCESS TO DELETE COMMENT"),
+    OK_DELETE_LIKE(HttpStatus.OK, "SUCCESS TO DELETE LIKE"),
 
     // CREATED 201
     CREATED_COMMENT(HttpStatus.CREATED, "SUCCESS TO CREATE COMMENT"),
-    CREATED_LIKE(HttpStatus.CREATED, "SUCCESS TO LIKE COMMENT"),
-
-    // OK 204:  기존 RESPONSE CODE 200에서  DATA가 "" 인 것들을 204로 사용
-    OK_UPDATE_COMMENT(HttpStatus.OK, "SUCCESS TO UPDATE COMMENT"),
-    OK_DELETE_COMMENT(HttpStatus.OK, "SUCCESS TO DELETE COMMENT"),
-    OK_DELETE_LIKE(HttpStatus.OK, "SUCCESS TO DELETE LIKE");
+    CREATED_LIKE(HttpStatus.CREATED, "SUCCESS TO LIKE COMMENT");
 
     private final HttpStatus httpStatus;
     private final String message;
