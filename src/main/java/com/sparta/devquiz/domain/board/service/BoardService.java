@@ -61,7 +61,6 @@ public class BoardService {
         }
 
         board.updateTitleAndContent(request.getTitle(), request.getContent());
-        boardRepository.save(board);
     }
 
     @Transactional
@@ -74,7 +73,6 @@ public class BoardService {
         }
 
         board.setDeleted(true);
-        boardRepository.save(board);
     }
 
     private Board getBoardById(Long boardId) {
