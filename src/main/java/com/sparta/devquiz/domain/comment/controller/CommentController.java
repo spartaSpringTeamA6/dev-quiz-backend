@@ -41,7 +41,7 @@ public class CommentController {
     }
 
     @Operation(operationId = "COMMENT-002", summary = "보드에 속한 모든 댓글 조회")
-    @GetMapping("/boards/{board_id}/comments")
+    @GetMapping("/boards/{boardId}/comments")
     public ResponseEntity<CommonResponseDto> getCommentList(
             @PathVariable Long boardId
     ) {
@@ -53,7 +53,7 @@ public class CommentController {
     }
 
     @Operation(operationId = "COMMENT-003", summary = "댓글 수정")
-    @PatchMapping("/comments/{comment_id}")
+    @PatchMapping("/comments/{commentId}")
     public ResponseEntity<CommonResponseDto> updateComment(
             @PathVariable Long commentId,
             @Valid @RequestBody CommentUpdateRequest commentUpdateRequest,
@@ -67,7 +67,7 @@ public class CommentController {
     }
 
     @Operation(operationId = "COMMENT-004", summary = "댓글 삭제")
-    @DeleteMapping("/comments/{comment_id}")
+    @DeleteMapping("/comments/{commentId}")
     public ResponseEntity<CommonResponseDto> deleteComment(
             @PathVariable Long commentId,
             @AuthUser User user
@@ -81,7 +81,7 @@ public class CommentController {
 
 
     @Operation(operationId = "COMMENT-005", summary = "댓글 좋아요")
-    @PostMapping("/comments/{comment_id}/like")
+    @PostMapping("/comments/{commentId}/like")
     public ResponseEntity<CommonResponseDto> likeComment(
             @PathVariable Long commentId,
             @AuthUser User user
@@ -94,7 +94,7 @@ public class CommentController {
     }
 
     @Operation(operationId = "COMMENT-006", summary = "댓글 좋아요 취소")
-    @DeleteMapping("/comments/{comment_id}/unlike")
+    @DeleteMapping("/comments/{commentId}/unlike")
     public ResponseEntity<CommonResponseDto> unlikeComment(
             @PathVariable Long commentId,
             @AuthUser User user
