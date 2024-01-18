@@ -49,14 +49,18 @@ public class BoardService {
     public BoardDetailsResponse getBoard(Long boardId) {
         Board board = getBoardById(boardId);
 
+        if(Boolean.TRUE.equals(board.getIsDeleted())) {
+            throw new BoardCustomException(BoardExceptionCode.ALREADY_DELETED_BOARD);
+        }
+
         return BoardDetailsResponse.of(board);
     }
 
     public List<BoardDetailsResponse> getBoardList(Long quizId) {
-        List<Board> boards = boardRepository.findAllByQuizId(quizId);
-
+        List<Board> boards = boardRepository.findAllByQuizIdAndIsDeletedFalse(quizId);
         return BoardDetailsResponse.of(boards);
     }
+
 
     @Transactional
     public void updateBoard(Long boardId, BoardUpdateRequest request, User user) {
