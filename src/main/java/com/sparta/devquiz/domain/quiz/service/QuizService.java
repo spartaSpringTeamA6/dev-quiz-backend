@@ -1,5 +1,6 @@
 package com.sparta.devquiz.domain.quiz.service;
 
+import com.sparta.devquiz.domain.quiz.dto.request.QuizAnswerSubmitRequest;
 import com.sparta.devquiz.domain.quiz.dto.request.QuizCreateRequest;
 import com.sparta.devquiz.domain.quiz.dto.request.QuizUpdateRequest;
 import com.sparta.devquiz.domain.quiz.dto.response.QuizAnswerSubmitResponse;
@@ -84,14 +85,13 @@ public class QuizService {
     }
 
     @Transactional
-    public QuizAnswerSubmitResponse submitQuizAnswer(Long quizId, String submittedAnswer,
-            User user) {
+    public QuizAnswerSubmitResponse submitQuizAnswer(Long quizId, User user, QuizAnswerSubmitRequest request) {
         Quiz quiz = getQuizById(quizId);
 
-        boolean isCorrect = quiz.getAnswer().equalsIgnoreCase(submittedAnswer);
+        boolean isCorrect = quiz.getAnswer().equalsIgnoreCase(request.getAnswer());
         UserQuizStatus status;
 
-        if ("pass".equalsIgnoreCase(submittedAnswer)) {
+        if ("0".equalsIgnoreCase(request.getAnswer())) {
             status = UserQuizStatus.PASS;
         } else if (isCorrect) {
             status = UserQuizStatus.CORRECT;
@@ -113,7 +113,7 @@ public class QuizService {
             quizUserRepository.save(userQuiz);
         }
 
-        return QuizAnswerSubmitResponse.of(quiz, submittedAnswer, status);
+        return QuizAnswerSubmitResponse.of(quiz, request.getAnswer(), status);
     }
 
     public List<QuizGetByUserResponse> getCorrectQuizzesForUser(User user) {

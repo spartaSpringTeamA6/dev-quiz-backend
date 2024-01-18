@@ -1,5 +1,6 @@
 package com.sparta.devquiz.domain.quiz.controller;
 
+import com.sparta.devquiz.domain.quiz.dto.request.QuizAnswerSubmitRequest;
 import com.sparta.devquiz.domain.quiz.dto.request.QuizCreateRequest;
 import com.sparta.devquiz.domain.quiz.dto.request.QuizUpdateRequest;
 import com.sparta.devquiz.domain.quiz.dto.response.QuizAnswerSubmitResponse;
@@ -102,10 +103,10 @@ public class QuizController {
     @PostMapping("/{quizId}")
     public ResponseEntity<CommonResponseDto> submitQuiz(
             @PathVariable Long quizId,
-            @RequestBody String submittedAnswer,
+            @RequestBody QuizAnswerSubmitRequest request,
             @AuthUser User user
     ) {
-        QuizAnswerSubmitResponse response = quizService.submitQuizAnswer(quizId, submittedAnswer, user);
+        QuizAnswerSubmitResponse response = quizService.submitQuizAnswer(quizId, user, request);
         return ResponseEntity.status(QuizResponseCode.OK_SUBMIT_QUIZ_ANSWER.getHttpStatus())
                 .body(CommonResponseDto.of(QuizResponseCode.OK_SUBMIT_QUIZ_ANSWER, response));
     }
