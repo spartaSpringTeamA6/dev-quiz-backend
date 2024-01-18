@@ -50,8 +50,7 @@ public class QuizController {
     ) {
         QuizCreateResponse response = quizService.createQuiz(user, request);
 
-        return ResponseEntity
-                .status(QuizResponseCode.CREATED_QUIZ.getHttpStatus())
+        return ResponseEntity.status(QuizResponseCode.CREATED_QUIZ.getHttpStatus())
                 .body(CommonResponseDto.of(QuizResponseCode.CREATED_QUIZ, response));
     }
 
@@ -64,8 +63,7 @@ public class QuizController {
             ) {
         List<QuizRandomResponse> quizRandomResponseList = quizService.getRandomNonAttemptedQuizzes(category, user);
 
-        return ResponseEntity
-                .status(QuizResponseCode.OK_GET_RANDOM_QUIZZES.getHttpStatus())
+        return ResponseEntity.status(QuizResponseCode.OK_GET_RANDOM_QUIZZES.getHttpStatus())
                 .body(CommonResponseDto.of(QuizResponseCode.OK_GET_RANDOM_QUIZZES, quizRandomResponseList));
     }
 
@@ -77,8 +75,7 @@ public class QuizController {
     ) {
         QuizDetailResponse response = quizService.getQuiz(quizId);
 
-        return ResponseEntity
-                .status(QuizResponseCode.OK_GET_QUIZ.getHttpStatus())
+        return ResponseEntity.status(QuizResponseCode.OK_GET_QUIZ.getHttpStatus())
                 .body(CommonResponseDto.of(QuizResponseCode.OK_GET_QUIZ, response));
     }
 
@@ -91,8 +88,7 @@ public class QuizController {
             @RequestBody QuizUpdateRequest quizUpdateRequest
     ) {
         quizService.updateQuiz(quizId, quizUpdateRequest);
-        return ResponseEntity
-                .status(QuizResponseCode.OK_UPDATE_QUIZ.getHttpStatus())
+        return ResponseEntity.status(QuizResponseCode.OK_UPDATE_QUIZ.getHttpStatus())
                 .body(CommonResponseDto.of(QuizResponseCode.OK_UPDATE_QUIZ));
     }
 
@@ -104,8 +100,7 @@ public class QuizController {
             @PathVariable Long quizId
     ) {
         quizService.deleteQuiz(quizId);
-        return ResponseEntity
-                .status(QuizResponseCode.OK_DELETE_QUIZ.getHttpStatus())
+        return ResponseEntity.status(QuizResponseCode.OK_DELETE_QUIZ.getHttpStatus())
                 .body(CommonResponseDto.of(QuizResponseCode.OK_DELETE_QUIZ));
     }
 
@@ -118,44 +113,8 @@ public class QuizController {
             @AuthUser User user
     ) {
         QuizAnswerSubmitResponse response = quizService.submitQuizAnswer(quizId, submittedAnswer, user);
-        return ResponseEntity
-                .status(QuizResponseCode.OK_SUBMIT_QUIZ_ANSWER.getHttpStatus())
+        return ResponseEntity.status(QuizResponseCode.OK_SUBMIT_QUIZ_ANSWER.getHttpStatus())
                 .body(CommonResponseDto.of(QuizResponseCode.OK_SUBMIT_QUIZ_ANSWER, response));
     }
 
-    @SecurityRequirement(name = "Bearer Authentication")
-    @Operation(operationId = "QUIZ-007", summary = "사용자가 맞춘 퀴즈 조회")
-    @GetMapping("/correct")
-    public ResponseEntity<CommonResponseDto> getCorrectQuizzes(
-            @AuthUser User user
-    ) {
-        List<QuizCorrectUserResponse> correctQuizzes = quizService.getCorrectQuizzesForUser(user);
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(CommonResponseDto.of(QuizResponseCode.OK_GET_CORRECT_QUIZZES, correctQuizzes));
-    }
-
-    @SecurityRequirement(name = "Bearer Authentication")
-    @Operation(operationId = "QUIZ-008", summary = "사용자가 틀린 퀴즈 조회")
-    @GetMapping("/fail")
-    public ResponseEntity<CommonResponseDto> getFailQuizzes(
-            @AuthUser User user
-    ) {
-        List<QuizFailUserResponse> failQuizzes = quizService.getFailQuizzesForUser(user);
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(CommonResponseDto.of(QuizResponseCode.OK_GET_FAIL_QUIZZES, failQuizzes));
-    }
-
-    @SecurityRequirement(name = "Bearer Authentication")
-    @Operation(operationId = "QUIZ-009", summary = "사용자가 넘긴 퀴즈 조회")
-    @GetMapping("/pass")
-    public ResponseEntity<CommonResponseDto> getPassQuizzes(
-            @AuthUser User user
-    ) {
-        List<QuizPassUserResponse> passQuizzes = quizService.getPassQuizzesForUser(user);
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(CommonResponseDto.of(QuizResponseCode.OK_GET_PASS_QUIZZES, passQuizzes));
-    }
 }

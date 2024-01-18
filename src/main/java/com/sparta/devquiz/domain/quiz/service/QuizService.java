@@ -113,7 +113,7 @@ public class QuizService {
         Quiz quiz = quizRepository.findById(quizid)
                 .orElseThrow(() -> new QuizCustomException(QuizExceptionCode.NOT_FOUND_QUIZ));
 
-        quizRepository.delete(quiz);
+        quiz.deleteQuiz();
         return QuizDeleteResponse.of(quiz.getId(), "퀴즈가 성공적으로 삭제되었습니다");
     }
 
@@ -179,7 +179,6 @@ public class QuizService {
     @Transactional(readOnly = true)
     public List<QuizFailUserResponse> getFailQuizzesForUser(User user) {
         List<Quiz> failQuizzes = quizUserRepository.findFAILQuizzesByUser(user);
-
 
         return failQuizzes.stream()
                 .map(this::failToDto)

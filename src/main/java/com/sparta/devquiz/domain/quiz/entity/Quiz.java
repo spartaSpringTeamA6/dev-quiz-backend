@@ -3,6 +3,7 @@ package com.sparta.devquiz.domain.quiz.entity;
 import com.sparta.devquiz.domain.quiz.enums.QuizCategory;
 import com.sparta.devquiz.global.entity.BaseTimeEntity;
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -41,6 +42,12 @@ public class Quiz extends BaseTimeEntity {
     @Column(nullable = false)
     private Long solveCount;
 
+    @Column(nullable = false)
+    private boolean isDeleted;
+
+    @Column
+    private LocalDateTime deletedAt;
+
     @Builder.Default
     @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserQuiz> userQuizList = new ArrayList<>();
@@ -50,6 +57,11 @@ public class Quiz extends BaseTimeEntity {
         this.answer = answer;
         this.category = category;
         this.example = example;
+    }
+
+    public void deleteQuiz(){
+        this.isDeleted = true;
+        this.deletedAt = LocalDateTime.now();
     }
 
     public void updateCount(Long correctCount, Long failCount, Long solveCount){
