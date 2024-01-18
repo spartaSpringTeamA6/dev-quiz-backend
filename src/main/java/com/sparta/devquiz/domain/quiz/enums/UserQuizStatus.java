@@ -7,10 +7,12 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum UserQuizStatus {
 
-    CORRECT("CORRECT"),
-    FAIL("FAIL"),
-    PASS("PASS");
+    FIRST("FIRST", "20"),
+    CORRECT("CORRECT", "10"),
+    FAIL("FAIL", "5"),
+    PASS("PASS", "0");
 
     private final String status;
+    private final String score;
 
 }
