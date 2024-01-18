@@ -17,10 +17,15 @@ public class CommentDetailsResponse {
     @Schema(description = "댓글 내용", defaultValue = "모두 키보드에서 손 떼!")
     private String content;
 
+    @Column
+    @Schema(description = "댓글 좋아요 개수", defaultValue = "1")
+    private int likeCount;
+
     public static CommentDetailsResponse of(Comment comment) {
         return CommentDetailsResponse
                 .builder()
                 .content(comment.getContent())
+                .likeCount(comment.getCommentLikeList().size())
                 .build();
     }
 
