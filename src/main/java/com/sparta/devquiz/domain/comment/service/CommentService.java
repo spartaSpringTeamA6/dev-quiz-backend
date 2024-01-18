@@ -88,6 +88,10 @@ public class CommentService {
     public void likeComment(Long commentId, User user) {
         Comment comment = getCommentById(commentId);
 
+        if(Boolean.TRUE.equals(comment.getIsDeleted())) {
+            throw new BoardCustomException(BoardExceptionCode.ALREADY_DELETED_BOARD);
+        }
+
         CommentLikeId commentLikeId = new CommentLikeId(user.getId(), commentId);
 
         if (commentLikeRepository.existsById(commentLikeId)) {
@@ -105,7 +109,14 @@ public class CommentService {
 
     @Transactional
     public void unlikeComment(Long commentId, User user) {
+
+        Comment comment = getCommentById(commentId);
+
         CommentLikeId commentLikeId = new CommentLikeId(user.getId(), commentId);
+
+        if(Boolean.TRUE.equals(comment.getIsDeleted())) {
+            throw new BoardCustomException(BoardExceptionCode.ALREADY_DELETED_BOARD);
+        }
 
         if (commentLikeRepository.existsById(commentLikeId)) {
             commentLikeRepository.deleteById(commentLikeId);
