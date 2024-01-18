@@ -1,6 +1,8 @@
 package com.sparta.devquiz.domain.comment.service;
 
 import com.sparta.devquiz.domain.board.entity.Board;
+import com.sparta.devquiz.domain.board.exception.BoardCustomException;
+import com.sparta.devquiz.domain.board.exception.BoardExceptionCode;
 import com.sparta.devquiz.domain.board.repository.BoardRepository;
 import com.sparta.devquiz.domain.comment.dto.request.CommentCreateRequest;
 import com.sparta.devquiz.domain.comment.dto.request.CommentUpdateRequest;
@@ -48,8 +50,13 @@ public class CommentService {
     }
 
     public List<CommentDetailsResponse> getCommentList(Long boardId) {
-        List<Comment> comments = commentRepository.findAllByBoardId(boardId);
+        Board board = getBoardById(boardId);
 
+        if(Boolean.TRUE.equals(board.getIsDeleted())) {
+            throw new BoardCustomException(BoardExceptionCode.ALREADY_DELETED_BOARD);
+        }
+
+        List<Comment> comments = commentRepository.findAllByBoardIdAndIsDeletedFalse(boardId);
         return CommentDetailsResponse.of(comments);
     }
 
