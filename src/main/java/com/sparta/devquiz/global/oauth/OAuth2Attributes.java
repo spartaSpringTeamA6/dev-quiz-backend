@@ -6,9 +6,10 @@ import com.sparta.devquiz.domain.user.enums.UserRole;
 import com.sparta.devquiz.global.oauth.userinfo.GithubUserInfo;
 import com.sparta.devquiz.global.oauth.userinfo.GoogleUserInfo;
 import com.sparta.devquiz.global.oauth.userinfo.OAuth2UserInfo;
-import java.util.Map;
 import lombok.Builder;
 import lombok.Getter;
+
+import java.util.Map;
 
 @Getter
 public class OAuth2Attributes {
