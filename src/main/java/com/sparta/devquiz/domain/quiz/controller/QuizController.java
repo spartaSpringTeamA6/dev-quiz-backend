@@ -117,10 +117,10 @@ public class QuizController {
             @RequestBody String submittedAnswer,
             @AuthUser User user
     ) {
-        QuizAnswerSubmitResponse response = quizService.submitQuizAnswer(quizId, submittedAnswer, user); // 퀴즈 서비스 호출 결과 저장
+        QuizAnswerSubmitResponse response = quizService.submitQuizAnswer(quizId, submittedAnswer, user);
         return ResponseEntity
                 .status(QuizResponseCode.OK_SUBMIT_QUIZ_ANSWER.getHttpStatus())
-                .body(CommonResponseDto.of(QuizResponseCode.OK_SUBMIT_QUIZ_ANSWER, response)); // 결과 반환에 response 추가
+                .body(CommonResponseDto.of(QuizResponseCode.OK_SUBMIT_QUIZ_ANSWER, response));
     }
 
     @SecurityRequirement(name = "Bearer Authentication")
