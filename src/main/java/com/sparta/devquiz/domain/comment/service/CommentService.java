@@ -14,6 +14,9 @@ import com.sparta.devquiz.domain.comment.exception.CommentExceptionCode;
 import com.sparta.devquiz.domain.comment.repository.CommentLikeRepository;
 import com.sparta.devquiz.domain.comment.repository.CommentRepository;
 import com.sparta.devquiz.domain.user.entity.User;
+import com.sparta.devquiz.domain.user.exception.UserCustomException;
+import com.sparta.devquiz.domain.user.exception.UserExceptionCode;
+import com.sparta.devquiz.domain.user.repository.UserRepository;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -55,7 +58,7 @@ public class CommentService {
     public void updateComment(Long commentId, CommentUpdateRequest commentUpdateRequest, User user) {
         Comment comment = getCommentById(commentId);
 
-        if (!comment.getUser().equals(user)) {
+        if (!comment.getUser().getId().equals(user.getId())) {
             throw new CommentCustomException(CommentExceptionCode.UNAUTHORIZED_USER);
         }
 
@@ -66,7 +69,7 @@ public class CommentService {
     public void deleteComment(Long commentId, User user) {
         Comment comment = getCommentById(commentId);
 
-        if (!comment.getUser().equals(user)) {
+        if (!comment.getUser().getId().equals(user.getId())) {
             throw new CommentCustomException(CommentExceptionCode.UNAUTHORIZED_USER);
         }
 
@@ -112,6 +115,5 @@ public class CommentService {
         return commentRepository.findById(commentId)
                 .orElseThrow(() -> new CommentCustomException(CommentExceptionCode.NOT_FOUND_COMMENT));
     }
-
 
 }
