@@ -15,7 +15,7 @@ public class QuizDeleteResponse {
     @Schema(description = "삭제 요청 처리 결과 메시지")
     private final String message;
 
-    public static QuizDeleteResponse of(Long id, String username) {
+    public static QuizDeleteResponse of(Long id, String message) {
         return QuizDeleteResponse.builder()
                 .id(id)
                 .message("퀴즈 삭제 성공")

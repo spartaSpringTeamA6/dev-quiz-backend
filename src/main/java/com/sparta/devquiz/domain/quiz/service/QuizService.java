@@ -4,9 +4,12 @@ import com.sparta.devquiz.domain.coin.service.CoinService;
 import com.sparta.devquiz.domain.quiz.dto.request.QuizCreateRequest;
 import com.sparta.devquiz.domain.quiz.dto.request.QuizUpdateRequest;
 import com.sparta.devquiz.domain.quiz.dto.response.QuizAnswerSubmitResponse;
+import com.sparta.devquiz.domain.quiz.dto.response.QuizCorrectUserResponse;
 import com.sparta.devquiz.domain.quiz.dto.response.QuizCreateResponse;
 import com.sparta.devquiz.domain.quiz.dto.response.QuizDeleteResponse;
 import com.sparta.devquiz.domain.quiz.dto.response.QuizDetailResponse;
+import com.sparta.devquiz.domain.quiz.dto.response.QuizFailUserResponse;
+import com.sparta.devquiz.domain.quiz.dto.response.QuizPassUserResponse;
 import com.sparta.devquiz.domain.quiz.dto.response.QuizRandomResponse;
 import com.sparta.devquiz.domain.quiz.dto.response.QuizUpdateResponse;
 import com.sparta.devquiz.domain.quiz.entity.Quiz;
@@ -39,7 +42,7 @@ public class QuizService {
 
     @Transactional
     public QuizCreateResponse createQuiz(User user, QuizCreateRequest createRequest) {
-        /* 일반유저가 접근하지 못한다면  유저검인증 필요없이 ROLE.admin 검증만 하는걸로 */
+
         Quiz quiz = Quiz.builder()
                 .category(createRequest.getCategory())
                 .question(createRequest.getQuestion())
@@ -65,14 +68,14 @@ public class QuizService {
 
     @Transactional(readOnly = true)
     public List<QuizRandomResponse> getRandomNonAttemptedQuizzes(QuizCategory category, User user) {
-        // 유저가 정답을 맞춘 퀴즈 ID 목록을 가져옵니다.
+
         List<Long> correctQuizIds = quizUserRepository.findCorrectQuizIdsByUser(user);
 
-        // ID 목록을 제외하고 퀴즈를 조회하는 쿼리를 실행합니다.
-        Pageable pageable = PageRequest.of(0, 10); // 가져올 퀴즈 개수를 제한하고 (10개), 랜덤으로 가져옵니다.
+
+        Pageable pageable = PageRequest.of(0, 10);
         List<Quiz> randomQuizzes = quizRepository.findQuizzesByCategoryExcludingIds(category, correctQuizIds, pageable);
 
-        // 가져온 퀴즈 목록을 DTO로 변환합니다.
+
         return randomQuizzes.stream()
                 .map(QuizRandomResponse::of)
                 .collect(Collectors.toList());
@@ -80,7 +83,7 @@ public class QuizService {
     }
 
     public QuizDetailResponse getQuiz(Long quizid){
-        // 퀴즈 가져오는건 비회원도 가능하기 때문에 유저 검증 안함
+
         return quizRepository.findById(quizid)
                 .map(quiz -> QuizDetailResponse.builder()
                         .id(quiz.getId())
@@ -122,35 +125,35 @@ public class QuizService {
         Quiz quiz = quizRepository.findById(quizId)
                 .orElseThrow(() -> new QuizCustomException(QuizExceptionCode.NOT_FOUND_QUIZ));
 
-        boolean isCorrect = quiz.getAnswer().equalsIgnoreCase(submittedAnswer); // 정답과 대소문자 구분 없이 비교
+        boolean isCorrect = quiz.getAnswer().equalsIgnoreCase(submittedAnswer);
         UserQuizStatus status;
 
         if ("pass".equalsIgnoreCase(submittedAnswer)) {
-            status = UserQuizStatus.PASS; // 사용자가 PASS를 선택
+            status = UserQuizStatus.PASS;
         } else if (isCorrect) {
-            status = UserQuizStatus.CORRECT; // 정답
+            status = UserQuizStatus.CORRECT;
             quiz.updateCount(quiz.getCorrectCount() + 1, quiz.getFailCount(), quiz.getSolveCount() + 1);
         } else {
-            status = UserQuizStatus.FAIL; // 오답
+            status = UserQuizStatus.FAIL;
             quiz.updateCount(quiz.getCorrectCount(), quiz.getFailCount() + 1, quiz.getSolveCount() + 1);
         }
 
-        // 유저가 로그인한 상태라면 UserQuiz 엔티티에 결과를 저장
+
         if (user != null) {
-            // UserQuizId 객체를 만들어 사용자 ID와 퀴즈 ID를 설정합니다.
+
             UserQuizId userQuizId = new UserQuizId(user.getId(), quiz.getId());
 
             UserQuiz userQuiz = UserQuiz.builder()
-                    .userQuizId(userQuizId) // UserQuizId 객체를 사용하여 UserQuiz 객체에 설정합니다.
+                    .userQuizId(userQuizId)
                     .user(user)
                     .quiz(quiz)
                     .status(status)
-                    .score(Long.parseLong(status.getScore())) // enum에서 정의된 점수 사용
+                    .score(Long.parseLong(status.getScore()))
                     .build();
             quizUserRepository.save(userQuiz);
         }
 
-        String resultMessage = isCorrect ? "정답입니다!" : "틀렸습니다. 올바른 답은 " + quiz.getAnswer() + " 입니다.";
+        String resultMessage = isCorrect ? "정답입니다!" : "틀렸습니다.";
 
         return QuizAnswerSubmitResponse.builder()
                 .id(quizId)
@@ -158,6 +161,67 @@ public class QuizService {
                 .isCorrect(isCorrect)
                 .correctAnswer(quiz.getAnswer())
                 .resultMessage(resultMessage)
+                .build();
+    }
+
+    @Transactional(readOnly = true)
+    public List<QuizCorrectUserResponse> getCorrectQuizzesForUser(User user) {
+        List<Quiz> correctQuizzes = quizUserRepository.findCorrectQuizzesByUser(user);
+
+
+        return correctQuizzes.stream()
+                .map(this::CorrectToDto)
+                .toList();
+    }
+
+    private QuizCorrectUserResponse CorrectToDto(Quiz quiz) {
+
+        return QuizCorrectUserResponse.builder()
+                .id(quiz.getId())
+                .category(quiz.getCategory())
+                .question(quiz.getQuestion())
+                .example(quiz.getExample())
+                .answer(quiz.getAnswer())
+                .build();
+    }
+
+    @Transactional(readOnly = true)
+    public List<QuizFailUserResponse> getFailQuizzesForUser(User user) {
+        List<Quiz> failQuizzes = quizUserRepository.findFAILQuizzesByUser(user);
+
+
+        return failQuizzes.stream()
+                .map(this::failToDto)
+                .toList();
+    }
+
+    private QuizFailUserResponse failToDto(Quiz quiz) {
+
+        return QuizFailUserResponse.builder()
+                .id(quiz.getId())
+                .category(quiz.getCategory())
+                .question(quiz.getQuestion())
+                .example(quiz.getExample())
+                .build();
+    }
+
+    @Transactional(readOnly = true)
+    public List<QuizPassUserResponse> getPassQuizzesForUser(User user) {
+        List<Quiz> passQuizzes = quizUserRepository.findPASSQuizzesByUser(user);
+
+
+        return passQuizzes.stream()
+                .map(this::passToDto)
+                .toList();
+    }
+
+    private QuizPassUserResponse passToDto(Quiz quiz) {
+
+        return QuizPassUserResponse.builder()
+                .id(quiz.getId())
+                .category(quiz.getCategory())
+                .question(quiz.getQuestion())
+                .example(quiz.getExample())
                 .build();
     }
 }

@@ -3,8 +3,11 @@ package com.sparta.devquiz.domain.quiz.controller;
 import com.sparta.devquiz.domain.quiz.dto.request.QuizCreateRequest;
 import com.sparta.devquiz.domain.quiz.dto.request.QuizUpdateRequest;
 import com.sparta.devquiz.domain.quiz.dto.response.QuizAnswerSubmitResponse;
+import com.sparta.devquiz.domain.quiz.dto.response.QuizCorrectUserResponse;
 import com.sparta.devquiz.domain.quiz.dto.response.QuizCreateResponse;
 import com.sparta.devquiz.domain.quiz.dto.response.QuizDetailResponse;
+import com.sparta.devquiz.domain.quiz.dto.response.QuizFailUserResponse;
+import com.sparta.devquiz.domain.quiz.dto.response.QuizPassUserResponse;
 import com.sparta.devquiz.domain.quiz.dto.response.QuizRandomResponse;
 import com.sparta.devquiz.domain.quiz.enums.QuizCategory;
 import com.sparta.devquiz.domain.quiz.response.QuizResponseCode;
@@ -16,6 +19,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -123,5 +127,41 @@ public class QuizController {
         return ResponseEntity
                 .status(QuizResponseCode.OK_SUBMIT_QUIZ_ANSWER.getHttpStatus())
                 .body(CommonResponseDto.of(QuizResponseCode.OK_SUBMIT_QUIZ_ANSWER, response)); // 결과 반환에 response 추가
+    }
+
+    @SecurityRequirement(name = "Bearer Authentication")
+    @Operation(operationId = "QUIZ-007", summary = "사용자가 맞춘 퀴즈 조회")
+    @GetMapping("/correct")
+    public ResponseEntity<CommonResponseDto> getCorrectQuizzes(
+            @AuthUser User user
+    ) {
+        List<QuizCorrectUserResponse> correctQuizzes = quizService.getCorrectQuizzesForUser(user);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(CommonResponseDto.of(QuizResponseCode.OK_GET_CORRECT_QUIZZES, correctQuizzes));
+    }
+
+    @SecurityRequirement(name = "Bearer Authentication")
+    @Operation(operationId = "QUIZ-008", summary = "사용자가 틀린 퀴즈 조회")
+    @GetMapping("/fail")
+    public ResponseEntity<CommonResponseDto> getFailQuizzes(
+            @AuthUser User user
+    ) {
+        List<QuizFailUserResponse> failQuizzes = quizService.getFailQuizzesForUser(user);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(CommonResponseDto.of(QuizResponseCode.OK_GET_FAIL_QUIZZES, failQuizzes));
+    }
+
+    @SecurityRequirement(name = "Bearer Authentication")
+    @Operation(operationId = "QUIZ-009", summary = "사용자가 넘긴 퀴즈 조회")
+    @GetMapping("/pass")
+    public ResponseEntity<CommonResponseDto> getPassQuizzes(
+            @AuthUser User user
+    ) {
+        List<QuizPassUserResponse> passQuizzes = quizService.getPassQuizzesForUser(user);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(CommonResponseDto.of(QuizResponseCode.OK_GET_PASS_QUIZZES, passQuizzes));
     }
 }

@@ -36,12 +36,12 @@ public class QuizAnswerSubmitResponse {
         this.resultMessage = resultMessage;
     }
 
-    // 퀴즈 답안 제출에 대한 응답 객체를 빌더 패턴으로 생성하기 위한 메서드
+
     public static QuizAnswerSubmitResponse.Builder builder() {
         return new QuizAnswerSubmitResponse.Builder();
     }
 
-    // QuizAnswerSubmitResponse 객체의 빌더를 내부 클래스로 정의
+
     public static class Builder {
         private Long id;
         private String submittedAnswer;
