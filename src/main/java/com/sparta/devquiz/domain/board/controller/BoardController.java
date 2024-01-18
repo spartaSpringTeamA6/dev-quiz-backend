@@ -10,6 +10,7 @@ import com.sparta.devquiz.domain.user.entity.User;
 import com.sparta.devquiz.global.annotation.AuthUser;
 import com.sparta.devquiz.global.response.CommonResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,7 @@ public class BoardController {
 
     private final BoardService boardService;
 
+    @SecurityRequirement(name = "Bearer Authentication")
     @Operation(operationId = "BOARD-001", summary = "보드 생성")
     @PostMapping("/quizzes/{quizId}/boards")
     public ResponseEntity<CommonResponseDto> createBoard(
@@ -41,6 +43,7 @@ public class BoardController {
                 .body(CommonResponseDto.of(BoardResponseCode.CREATED_BOARD, response));
     }
 
+    @SecurityRequirement(name = "Bearer Authentication")
     @Operation(operationId = "BOARD-002", summary = "단일 보드 조회")
     @GetMapping("/boards/{boardId}")
     public ResponseEntity<CommonResponseDto> getBoard(
@@ -53,6 +56,7 @@ public class BoardController {
                 .body(CommonResponseDto.of(BoardResponseCode.OK_GET_BOARD_INFO, response));
     }
 
+    @SecurityRequirement(name = "Bearer Authentication")
     @Operation(operationId = "BOARD-003", summary = "보드 리스트 조회")
     @GetMapping("/quizzes/{quizId}/boards")
     public ResponseEntity<CommonResponseDto> getBoardList(
@@ -65,6 +69,7 @@ public class BoardController {
                 .body(CommonResponseDto.of(BoardResponseCode.OK_GET_BOARD_INFO, boardDetailsResponse));
     }
 
+    @SecurityRequirement(name = "Bearer Authentication")
     @Operation(operationId = "BOARD-004", summary = "보드 수정")
     @PatchMapping("/boards/{boardId}")
     public ResponseEntity<CommonResponseDto> updateBoard(
@@ -79,6 +84,7 @@ public class BoardController {
                 .body(CommonResponseDto.of(BoardResponseCode.OK_UPDATE_BOARD));
     }
 
+    @SecurityRequirement(name = "Bearer Authentication")
     @Operation(operationId = "BOARD-005",summary = "보드 삭제")
     @DeleteMapping("/boards/{boardId}")
     public ResponseEntity<CommonResponseDto> deleteBoard(
