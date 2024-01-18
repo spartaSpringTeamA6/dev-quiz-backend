@@ -1,6 +1,7 @@
 package com.sparta.devquiz.domain.mypage.service;
 
 import com.sparta.devquiz.domain.team.entity.TeamUser;
+import com.sparta.devquiz.domain.team.service.TeamService;
 import com.sparta.devquiz.domain.team.service.TeamUserService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;

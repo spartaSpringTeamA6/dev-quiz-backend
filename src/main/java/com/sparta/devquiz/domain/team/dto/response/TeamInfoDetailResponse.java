@@ -15,19 +15,15 @@ import lombok.Getter;
 @Schema(description = "팀 정보 디테일 응답 dto")
 public class TeamInfoDetailResponse {
 
-    @Column
     @Schema(description = "팀 id", defaultValue = "1")
     private Long teamId;
 
-    @Column
     @Schema(description = "팀 이름", defaultValue = "개발.zip")
     private String name;
 
-    @Column
     @Schema(description = "팀 관리자", defaultValue = "개발.zip")
     private UserInfoResponse admin;
 
-    @Column
     @Schema(description = "팀 유저 리스트", defaultValue = "개발.zip")
     private List<UserInfoResponse> userList = new ArrayList<>();
 

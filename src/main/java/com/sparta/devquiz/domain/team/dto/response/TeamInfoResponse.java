@@ -11,11 +11,9 @@ import lombok.Getter;
 @Schema(description = "팀 정보 응답 dto")
 public class TeamInfoResponse {
 
-    @Column
     @Schema(description = "팀 id", defaultValue = "1")
     private Long teamId;
 
-    @Column
     @Schema(description = "팀 이름", defaultValue = "개발.zip")
     private String name;
 

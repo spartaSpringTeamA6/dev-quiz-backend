@@ -15,10 +15,8 @@ import lombok.NoArgsConstructor;
 @Schema(description = "팀 내 유저 랭킹 및 나의 랭킹 조회 응답 dto")
 public class TeamGetUserRankingResponse {
 
-//    @Column
 //    private UserScoreResponse myRanking;
 //
-//    @Column
 //    private List<UserScoreResponse>
 //
 //

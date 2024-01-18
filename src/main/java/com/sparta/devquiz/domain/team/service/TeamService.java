@@ -5,7 +5,6 @@ import com.sparta.devquiz.domain.team.dto.request.TeamDeleteUserRequest;
 import com.sparta.devquiz.domain.team.dto.request.TeamInviteUserRequest;
 import com.sparta.devquiz.domain.team.dto.request.TeamUpdateAdminRequest;
 import com.sparta.devquiz.domain.team.dto.request.TeamUpdateNameRequest;
-import com.sparta.devquiz.domain.team.dto.request.TeamWithdrawRequest;
 import com.sparta.devquiz.domain.team.dto.response.TeamCreateResponse;
 import com.sparta.devquiz.domain.team.dto.response.TeamGetResponse;
 import com.sparta.devquiz.domain.team.entity.Team;
@@ -98,7 +97,7 @@ public class TeamService {
     }
 
     @Transactional
-    public void withdrawTeam(User user, Long teamId, TeamWithdrawRequest request) {
+    public void withdrawTeam(User user, Long teamId) {
         Team team = getTeamAndCheckAuthUser(user,teamId);
 
         if(teamUserService.isExistedAdmin(team.getId(), user.getId())){
@@ -137,6 +136,19 @@ public class TeamService {
         }
     }
 
+    @Transactional
+    public void acceptInvitationTeamUser(User user, Long teamId) {
+        Team team = getTeamById(teamId);
+        teamUserService.acceptInvitation(teamId,user.getId());
+    }
+
+    @Transactional
+    public void rejectInvitationTeamUser(User user, Long teamId) {
+        Team team = getTeamById(teamId);
+        teamUserService.rejectInvitation(teamId,user.getId());
+    }
+
+
 //    public TeamGetUserRankingResponse getUserRankingInTeam(User user, Long teamId, Long userId, TeamGetUserRankingResponse request) {
 //        if(!user.getId().equals(userId)){
 //
@@ -172,7 +184,5 @@ public class TeamService {
                 () -> new TeamCustomException(TeamExceptionCode.NOT_FOUND_TEAM)
         );
     }
-
-
 
 }
