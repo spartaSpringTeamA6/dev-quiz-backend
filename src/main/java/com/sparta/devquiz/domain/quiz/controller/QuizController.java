@@ -41,7 +41,6 @@ public class QuizController {
 
     private final QuizService quizService;
 
-    // 퀴즈 생성   관리자
     @SecurityRequirement(name = "Bearer Authentication")
     @Operation(operationId = "QUIZ-001", summary = "퀴즈 생성")
     @PostMapping("")
@@ -56,7 +55,6 @@ public class QuizController {
                 .body(CommonResponseDto.of(QuizResponseCode.CREATED_QUIZ, response));
     }
 
-    // 퀴즈 10개 랜덤 출제
     @SecurityRequirement(name = "Bearer Authentication")
     @Operation(operationId = "QUIZ-002", summary = "퀴즈 카테고리 10개 랜덤 출제")
     @GetMapping("")
@@ -71,8 +69,6 @@ public class QuizController {
                 .body(CommonResponseDto.of(QuizResponseCode.OK_GET_RANDOM_QUIZZES, quizRandomResponseList));
     }
 
-
-    // 퀴즈 단일 조회
     @SecurityRequirement(name = "Bearer Authentication")
     @Operation(operationId = "QUIZ-003", summary = "퀴즈 단일 조회")
     @GetMapping("/{quizId}")
@@ -86,7 +82,6 @@ public class QuizController {
                 .body(CommonResponseDto.of(QuizResponseCode.OK_GET_QUIZ, response));
     }
 
-    // 퀴즈 수정   관리자
     @SecurityRequirement(name = "Bearer Authentication")
     @Operation(operationId = "QUIZ-004", summary = "퀴즈 수정: 카테고리, 문제, 예시, 정답을 수정할 수 있습니다.")
     @PatchMapping("/{quizId}")
@@ -101,11 +96,11 @@ public class QuizController {
                 .body(CommonResponseDto.of(QuizResponseCode.OK_UPDATE_QUIZ));
     }
 
-    // 퀴즈 삭제   관리자
     @SecurityRequirement(name = "Bearer Authentication")
     @Operation(operationId = "QUIZ-005", summary = "퀴즈 삭제")
     @DeleteMapping("/{quizId}")
     public ResponseEntity<CommonResponseDto> deleteQuiz(
+            @AuthUser User user,
             @PathVariable Long quizId
     ) {
         quizService.deleteQuiz(quizId);
@@ -114,7 +109,6 @@ public class QuizController {
                 .body(CommonResponseDto.of(QuizResponseCode.OK_DELETE_QUIZ));
     }
 
-    // 퀴즈 정답 제출
     @SecurityRequirement(name = "Bearer Authentication")
     @Operation(operationId = "QUIZ-006", summary = "퀴즈 정답 제출")
     @PostMapping("/{quizId}")

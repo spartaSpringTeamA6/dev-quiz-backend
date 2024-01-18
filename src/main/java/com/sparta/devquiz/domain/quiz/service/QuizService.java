@@ -1,6 +1,5 @@
 package com.sparta.devquiz.domain.quiz.service;
 
-import com.sparta.devquiz.domain.coin.service.CoinService;
 import com.sparta.devquiz.domain.quiz.dto.request.QuizCreateRequest;
 import com.sparta.devquiz.domain.quiz.dto.request.QuizUpdateRequest;
 import com.sparta.devquiz.domain.quiz.dto.response.QuizAnswerSubmitResponse;
@@ -38,7 +37,6 @@ public class QuizService {
 
     private final QuizRepository quizRepository;
     private final QuizUserRepository quizUserRepository;
-    private final CoinService coinService;
 
     @Transactional
     public QuizCreateResponse createQuiz(User user, QuizCreateRequest createRequest) {
