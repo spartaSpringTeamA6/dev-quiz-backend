@@ -35,6 +35,10 @@ public class CommentService {
     public CommentCreateResponse createComment(Long boardId,CommentCreateRequest commentCreateResponseDto, User user) {
         Board board = getBoardById(boardId);
 
+        if(Boolean.TRUE.equals(board.getIsDeleted())) {
+            throw new BoardCustomException(BoardExceptionCode.ALREADY_DELETED_BOARD);
+        }
+
         Comment comment = Comment.builder()
                 .user(user)
                 .board(board)
