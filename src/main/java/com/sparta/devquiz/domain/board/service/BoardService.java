@@ -11,9 +11,6 @@ import com.sparta.devquiz.domain.board.repository.BoardRepository;
 import com.sparta.devquiz.domain.quiz.repository.QuizRepository;
 import com.sparta.devquiz.domain.quiz.entity.Quiz;
 import com.sparta.devquiz.domain.user.entity.User;
-import com.sparta.devquiz.domain.user.exception.UserCustomException;
-import com.sparta.devquiz.domain.user.exception.UserExceptionCode;
-import com.sparta.devquiz.domain.user.repository.UserRepository;
 import com.sparta.devquiz.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -58,6 +55,7 @@ public class BoardService {
 
     public List<BoardDetailsResponse> getBoardList(Long quizId) {
         List<Board> boards = boardRepository.findAllByQuizIdAndIsDeletedFalse(quizId);
+
         return BoardDetailsResponse.of(boards);
     }
 
