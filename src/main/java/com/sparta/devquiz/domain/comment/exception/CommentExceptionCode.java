@@ -15,7 +15,7 @@ public enum CommentExceptionCode {
     // NOT FOUND 404
     NOT_FOUND_BOARD(HttpStatus.NOT_FOUND, "COMMENT-001", "해당 보드를 찾을 수 없습니다."),
     NOT_FOUND_COMMENT(HttpStatus.NOT_FOUND, "COMMENT-002", "해당 댓글을 찾을 수 없습니다."),
-
+    ALREADY_DELETED_COMMENT(HttpStatus.NOT_FOUND, "BOARD-006", "이미 삭제된 댓글입니다."),
     // FORBIDDEN 403
     UNAUTHORIZED_USER(HttpStatus.FORBIDDEN, "COMMENT-003", "권한이 없습니다.");
 

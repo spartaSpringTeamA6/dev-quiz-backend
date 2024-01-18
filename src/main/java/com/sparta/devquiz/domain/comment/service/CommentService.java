@@ -81,6 +81,10 @@ public class CommentService {
             throw new CommentCustomException(CommentExceptionCode.UNAUTHORIZED_USER);
         }
 
+        if(Boolean.TRUE.equals(comment.getIsDeleted())) {
+            throw new CommentCustomException(CommentExceptionCode.ALREADY_DELETED_COMMENT);
+        }
+
         comment.setDeleted(true);
     }
 
