@@ -75,6 +75,10 @@ public class BoardService {
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new BoardCustomException(BoardExceptionCode.NOT_FOUND_BOARD));
 
+        if(Boolean.TRUE.equals(board.getIsDeleted())) {
+            throw new BoardCustomException(BoardExceptionCode.ALREADY_DELETED_BOARD);
+        }
+
         if (!board.getUser().getId().equals(user.getId())) {
             throw new BoardCustomException(BoardExceptionCode.UNAUTHORIZED_USER);
         }
