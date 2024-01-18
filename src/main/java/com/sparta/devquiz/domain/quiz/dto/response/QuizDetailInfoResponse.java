@@ -8,8 +8,9 @@ import lombok.Getter;
 
 @Getter
 @Builder
-@Schema(description = "유저가 퀴즈를 틀렸을 때 응답 dto")
-public class QuizFailUserResponse {
+@Schema(description = "단일 퀴즈 조회 응답 dto")
+public class QuizDetailInfoResponse {
+
     @Schema(description = "퀴즈 ID", defaultValue = "1")
     private final Long id;
 
@@ -22,12 +23,16 @@ public class QuizFailUserResponse {
     @Schema(description = "퀴즈 보기 내용", defaultValue = "1. 객체지향 프로그래밍\n2. JVM 위에서 실행\n3. 포인터를 직접 다룰 수 있음\n4. 가비지 컬렉션 제공")
     private final String example;
 
-    public static QuizFailUserResponse of(Quiz quiz) {
-        return QuizFailUserResponse.builder()
+    @Schema(description = "퀴즈의 정답", defaultValue = "3")
+    private final String answer;
+
+    public static QuizDetailInfoResponse of(Quiz quiz) {
+        return QuizDetailInfoResponse.builder()
                 .id(quiz.getId())
                 .category(quiz.getCategory())
                 .question(quiz.getQuestion())
                 .example(quiz.getExample())
+                .answer(quiz.getAnswer())
                 .build();
     }
 }

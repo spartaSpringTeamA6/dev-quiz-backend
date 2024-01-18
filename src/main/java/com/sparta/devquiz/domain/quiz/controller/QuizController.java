@@ -3,8 +3,7 @@ package com.sparta.devquiz.domain.quiz.controller;
 import com.sparta.devquiz.domain.quiz.dto.request.QuizCreateRequest;
 import com.sparta.devquiz.domain.quiz.dto.request.QuizUpdateRequest;
 import com.sparta.devquiz.domain.quiz.dto.response.QuizAnswerSubmitResponse;
-import com.sparta.devquiz.domain.quiz.dto.response.QuizDetailResponse;
-import com.sparta.devquiz.domain.quiz.dto.response.QuizGetQuizzesByUserResponse;
+import com.sparta.devquiz.domain.quiz.dto.response.QuizDetailInfoResponse;
 import com.sparta.devquiz.domain.quiz.dto.response.QuizRandomResponse;
 import com.sparta.devquiz.domain.quiz.enums.QuizCategory;
 import com.sparta.devquiz.domain.quiz.response.QuizResponseCode;
@@ -67,7 +66,7 @@ public class QuizController {
     public ResponseEntity<CommonResponseDto> getQuiz(
             @PathVariable Long quizId
     ) {
-        QuizDetailResponse response = quizService.getQuiz(quizId);
+        QuizDetailInfoResponse response = quizService.getQuiz(quizId);
 
         return ResponseEntity.status(QuizResponseCode.OK_GET_QUIZ.getHttpStatus())
                 .body(CommonResponseDto.of(QuizResponseCode.OK_GET_QUIZ, response));

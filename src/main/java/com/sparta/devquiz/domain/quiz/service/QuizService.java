@@ -3,11 +3,8 @@ package com.sparta.devquiz.domain.quiz.service;
 import com.sparta.devquiz.domain.quiz.dto.request.QuizCreateRequest;
 import com.sparta.devquiz.domain.quiz.dto.request.QuizUpdateRequest;
 import com.sparta.devquiz.domain.quiz.dto.response.QuizAnswerSubmitResponse;
-import com.sparta.devquiz.domain.quiz.dto.response.QuizCorrectUserResponse;
-import com.sparta.devquiz.domain.quiz.dto.response.QuizDetailResponse;
-import com.sparta.devquiz.domain.quiz.dto.response.QuizFailUserResponse;
-import com.sparta.devquiz.domain.quiz.dto.response.QuizGetQuizzesByUserResponse;
-import com.sparta.devquiz.domain.quiz.dto.response.QuizPassUserResponse;
+import com.sparta.devquiz.domain.quiz.dto.response.QuizDetailInfoResponse;
+import com.sparta.devquiz.domain.quiz.dto.response.QuizGetByUserResponse;
 import com.sparta.devquiz.domain.quiz.dto.response.QuizRandomResponse;
 import com.sparta.devquiz.domain.quiz.entity.Quiz;
 import com.sparta.devquiz.domain.quiz.entity.UserQuiz;
@@ -65,11 +62,10 @@ public class QuizService {
                 .collect(Collectors.toList());
     }
 
-    public QuizDetailResponse getQuiz(Long quizId) {
+    public QuizDetailInfoResponse getQuiz(Long quizId) {
+        Quiz quiz = getQuizById(quizId);
 
-        return quizRepository.findById(quizId)
-                .map(QuizDetailResponse::of)
-                .orElseThrow(() -> new QuizCustomException(QuizExceptionCode.NOT_FOUND_QUIZ));
+        return QuizDetailInfoResponse.of(quiz);
     }
 
     @Transactional
@@ -120,19 +116,19 @@ public class QuizService {
         return QuizAnswerSubmitResponse.of(quiz, submittedAnswer, status);
     }
 
-    public List<QuizGetQuizzesByUserResponse> getCorrectQuizzesForUser(User user) {
+    public List<QuizGetByUserResponse> getCorrectQuizzesForUser(User user) {
         return quizUserRepository.findCorrectQuizzesByUsers(user,UserQuizStatus.CORRECT);
     }
 
-    public List<QuizGetQuizzesByUserResponse> getFailQuizzesForUser(User user) {
+    public List<QuizGetByUserResponse> getFailQuizzesForUser(User user) {
         return quizUserRepository.findCorrectQuizzesByUsers(user,UserQuizStatus.FAIL);
     }
 
-    public List<QuizGetQuizzesByUserResponse> getPassQuizzesForUser(User user) {
+    public List<QuizGetByUserResponse> getPassQuizzesForUser(User user) {
         return quizUserRepository.findCorrectQuizzesByUsers(user,UserQuizStatus.PASS);
     }
 
-    public List<QuizGetQuizzesByUserResponse> getAllQuizzesForUser(User user) {
+    public List<QuizGetByUserResponse> getAllQuizzesForUser(User user) {
         return quizUserRepository.findCorrectQuizzesByUsers(user);
     }
 
