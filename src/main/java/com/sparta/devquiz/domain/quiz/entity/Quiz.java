@@ -42,7 +42,7 @@ public class Quiz extends BaseTimeEntity {
     private Long solveCount;
 
     @Builder.Default
-    @OneToMany(mappedBy = "quiz")
+    @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserQuiz> userQuizList = new ArrayList<>();
 
     public void updateQuiz(String question, String example, QuizCategory category, String answer){
