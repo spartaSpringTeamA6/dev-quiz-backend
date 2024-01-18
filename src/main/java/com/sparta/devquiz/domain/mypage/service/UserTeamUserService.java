@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserTeamUserService {
 
   private final TeamUserService teamUserService;
-//  private final TeamService teamService;
 
   public void deleteTeamUser(Long teamId, Long userId) {
     teamUserService.deleteTeamUser(teamId, userId);
