@@ -1,5 +1,6 @@
 package com.sparta.devquiz.domain.quiz.dto.response;
 
+import com.sparta.devquiz.domain.quiz.entity.Quiz;
 import com.sparta.devquiz.domain.quiz.enums.QuizCategory;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
@@ -7,7 +8,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-@Schema(description = "유저가 퀴즈를 맞췄을 때 응답 DTO")
+@Schema(description = "유저가 퀴즈를 맞췄을 때 응답 dto")
 public class QuizCorrectUserResponse {
     @Schema(description = "퀴즈 ID", defaultValue = "1")
     private final Long id;
@@ -23,4 +24,14 @@ public class QuizCorrectUserResponse {
 
     @Schema(description = "퀴즈의 정답", defaultValue = "3")
     private final String answer;
+
+    public static QuizCorrectUserResponse of(Quiz quiz) {
+        return QuizCorrectUserResponse.builder()
+                .id(quiz.getId())
+                .category(quiz.getCategory())
+                .question(quiz.getQuestion())
+                .example(quiz.getExample())
+                .answer(quiz.getAnswer())
+                .build();
+    }
 }

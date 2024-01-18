@@ -7,7 +7,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-@Schema(description = "단일 퀴즈 간략 조회 응답 DTO")
+@Schema(description = "단일 퀴즈 간략 조회 응답 dto")
 public class QuizInfoResponse {
     @Schema(description = "퀴즈 ID", defaultValue = "1")
     private final Long id;
