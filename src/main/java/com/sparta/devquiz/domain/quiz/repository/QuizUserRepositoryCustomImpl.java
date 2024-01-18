@@ -5,7 +5,7 @@ import static com.sparta.devquiz.domain.quiz.entity.QQuiz.quiz;
 
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.sparta.devquiz.domain.quiz.dto.response.QuizGetQuizzesByUserResponse;
+import com.sparta.devquiz.domain.quiz.dto.response.QuizGetByUserResponse;
 import com.sparta.devquiz.domain.quiz.entity.QUserQuiz;
 import com.sparta.devquiz.domain.quiz.entity.UserQuiz;
 import com.sparta.devquiz.domain.quiz.enums.UserQuizStatus;
@@ -21,7 +21,7 @@ public class QuizUserRepositoryCustomImpl implements QuizUserRepositoryCustom {
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public List<QuizGetQuizzesByUserResponse> findCorrectQuizzesByUsers(User loginUser,
+    public List<QuizGetByUserResponse> findCorrectQuizzesByUsers(User loginUser,
             UserQuizStatus status){
         QUserQuiz uq = QUserQuiz.userQuiz;
 
@@ -41,11 +41,11 @@ public class QuizUserRepositoryCustomImpl implements QuizUserRepositoryCustom {
                 )
                 .fetch();
 
-        return resultUserQuiz.stream().map(QuizGetQuizzesByUserResponse::of).toList();
+        return resultUserQuiz.stream().map(QuizGetByUserResponse::of).toList();
     }
 
     @Override
-    public List<QuizGetQuizzesByUserResponse> findCorrectQuizzesByUsers(User loginUser){
+    public List<QuizGetByUserResponse> findCorrectQuizzesByUsers(User loginUser){
         QUserQuiz uq = QUserQuiz.userQuiz;
 
         List<UserQuiz> resultUserQuiz = jpaQueryFactory.select(userQuiz)
@@ -63,6 +63,6 @@ public class QuizUserRepositoryCustomImpl implements QuizUserRepositoryCustom {
                 )
                 .fetch();
 
-        return resultUserQuiz.stream().map(QuizGetQuizzesByUserResponse::of).toList();
+        return resultUserQuiz.stream().map(QuizGetByUserResponse::of).toList();
     }
 }

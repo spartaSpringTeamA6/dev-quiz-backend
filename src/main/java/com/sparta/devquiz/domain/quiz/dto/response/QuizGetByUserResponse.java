@@ -10,8 +10,8 @@ import lombok.Getter;
 
 @Getter
 @Builder
-@Schema(description = "유저가 푼 퀴즈 조회 dto")
-public class QuizGetQuizzesByUserResponse {
+@Schema(description = "유저가 푼 퀴즈 조회 응답 dto")
+public class QuizGetByUserResponse {
 
     @Schema(description = "퀴즈 ID", defaultValue = "1")
     private Long id;
@@ -31,8 +31,8 @@ public class QuizGetQuizzesByUserResponse {
     @Schema(description = "퀴즈 보기 내용", defaultValue = "1. 객체지향 프로그래밍\n2. JVM 위에서 실행\n3. 포인터를 직접 다룰 수 있음\n4. 가비지 컬렉션 제공")
     private String example;
 
-    public static QuizGetQuizzesByUserResponse of (UserQuiz userQuiz){
-        return QuizGetQuizzesByUserResponse.builder()
+    public static QuizGetByUserResponse of (UserQuiz userQuiz){
+        return QuizGetByUserResponse.builder()
                 .id(userQuiz.getQuiz().getId())
                 .solvedDate(userQuiz.getCreatedAt())
                 .category(userQuiz.getQuiz().getCategory())
