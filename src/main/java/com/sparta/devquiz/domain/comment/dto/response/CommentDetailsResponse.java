@@ -14,6 +14,10 @@ import java.util.List;
 public class CommentDetailsResponse {
 
     @Column
+    @Schema(description = "댓글 작성자", defaultValue = "잼민이")
+    private String username;
+
+    @Column
     @Schema(description = "댓글 내용", defaultValue = "모두 키보드에서 손 떼!")
     private String content;
 
@@ -24,6 +28,7 @@ public class CommentDetailsResponse {
     public static CommentDetailsResponse of(Comment comment) {
         return CommentDetailsResponse
                 .builder()
+                .username(comment.getUser().getUsername())
                 .content(comment.getContent())
                 .likeCount(comment.getCommentLikeList().size())
                 .build();
