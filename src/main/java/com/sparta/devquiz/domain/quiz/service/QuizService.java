@@ -13,7 +13,6 @@ import com.sparta.devquiz.domain.quiz.dto.response.QuizRandomResponse;
 import com.sparta.devquiz.domain.quiz.dto.response.QuizUpdateResponse;
 import com.sparta.devquiz.domain.quiz.entity.Quiz;
 import com.sparta.devquiz.domain.quiz.entity.UserQuiz;
-import com.sparta.devquiz.domain.quiz.entity.UserQuizId;
 import com.sparta.devquiz.domain.quiz.enums.QuizCategory;
 import com.sparta.devquiz.domain.quiz.enums.UserQuizStatus;
 import com.sparta.devquiz.domain.quiz.exception.QuizCustomException;
@@ -136,13 +135,8 @@ public class QuizService {
             quiz.updateCount(quiz.getCorrectCount(), quiz.getFailCount() + 1, quiz.getSolveCount() + 1);
         }
 
-
         if (user != null) {
-
-            UserQuizId userQuizId = new UserQuizId(user.getId(), quiz.getId());
-
             UserQuiz userQuiz = UserQuiz.builder()
-                    .userQuizId(userQuizId)
                     .user(user)
                     .quiz(quiz)
                     .status(status)
@@ -165,7 +159,6 @@ public class QuizService {
     @Transactional(readOnly = true)
     public List<QuizCorrectUserResponse> getCorrectQuizzesForUser(User user) {
         List<Quiz> correctQuizzes = quizUserRepository.findCorrectQuizzesByUser(user);
-
 
         return correctQuizzes.stream()
                 .map(this::CorrectToDto)

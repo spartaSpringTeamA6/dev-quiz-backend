@@ -17,17 +17,16 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserQuiz extends BaseTimeEntity {
 
-    @EmbeddedId
-    private UserQuizId userQuizId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    @MapsId("userId")
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "quiz_id")
-    @MapsId("quizId")
     private Quiz quiz;
 
     @Column(nullable = false)
