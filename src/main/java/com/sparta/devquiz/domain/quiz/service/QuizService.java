@@ -6,6 +6,7 @@ import com.sparta.devquiz.domain.quiz.dto.response.QuizAnswerSubmitResponse;
 import com.sparta.devquiz.domain.quiz.dto.response.QuizCorrectUserResponse;
 import com.sparta.devquiz.domain.quiz.dto.response.QuizDetailResponse;
 import com.sparta.devquiz.domain.quiz.dto.response.QuizFailUserResponse;
+import com.sparta.devquiz.domain.quiz.dto.response.QuizGetQuizzesByUserResponse;
 import com.sparta.devquiz.domain.quiz.dto.response.QuizPassUserResponse;
 import com.sparta.devquiz.domain.quiz.dto.response.QuizRandomResponse;
 import com.sparta.devquiz.domain.quiz.entity.Quiz;
@@ -119,28 +120,20 @@ public class QuizService {
         return QuizAnswerSubmitResponse.of(quiz, submittedAnswer, status);
     }
 
-    public List<QuizCorrectUserResponse> getCorrectQuizzesForUser(User user) {
-        List<Quiz> correctQuizzes = quizUserRepository.findCorrectQuizzesByUser(user);
-
-        return correctQuizzes.stream()
-                .map(QuizCorrectUserResponse::of)
-                .toList();
+    public List<QuizGetQuizzesByUserResponse> getCorrectQuizzesForUser(User user) {
+        return quizUserRepository.findCorrectQuizzesByUsers(user,UserQuizStatus.CORRECT);
     }
 
-    public List<QuizFailUserResponse> getFailQuizzesForUser(User user) {
-        List<Quiz> failQuizzes = quizUserRepository.findFAILQuizzesByUser(user);
-
-        return failQuizzes.stream()
-                .map(QuizFailUserResponse::of)
-                .toList();
+    public List<QuizGetQuizzesByUserResponse> getFailQuizzesForUser(User user) {
+        return quizUserRepository.findCorrectQuizzesByUsers(user,UserQuizStatus.FAIL);
     }
 
-    public List<QuizPassUserResponse> getPassQuizzesForUser(User user) {
-        List<Quiz> passQuizzes = quizUserRepository.findPASSQuizzesByUser(user);
+    public List<QuizGetQuizzesByUserResponse> getPassQuizzesForUser(User user) {
+        return quizUserRepository.findCorrectQuizzesByUsers(user,UserQuizStatus.PASS);
+    }
 
-        return passQuizzes.stream()
-                .map(QuizPassUserResponse::of)
-                .toList();
+    public List<QuizGetQuizzesByUserResponse> getAllQuizzesForUser(User user) {
+        return quizUserRepository.findCorrectQuizzesByUsers(user);
     }
 
     public Quiz getQuizById(Long id) {

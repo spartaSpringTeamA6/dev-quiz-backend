@@ -4,6 +4,7 @@ import com.sparta.devquiz.domain.quiz.dto.request.QuizCreateRequest;
 import com.sparta.devquiz.domain.quiz.dto.request.QuizUpdateRequest;
 import com.sparta.devquiz.domain.quiz.dto.response.QuizAnswerSubmitResponse;
 import com.sparta.devquiz.domain.quiz.dto.response.QuizDetailResponse;
+import com.sparta.devquiz.domain.quiz.dto.response.QuizGetQuizzesByUserResponse;
 import com.sparta.devquiz.domain.quiz.dto.response.QuizRandomResponse;
 import com.sparta.devquiz.domain.quiz.enums.QuizCategory;
 import com.sparta.devquiz.domain.quiz.response.QuizResponseCode;
