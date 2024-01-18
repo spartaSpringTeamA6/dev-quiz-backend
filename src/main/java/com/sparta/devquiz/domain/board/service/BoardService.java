@@ -8,10 +8,10 @@ import com.sparta.devquiz.domain.board.entity.Board;
 import com.sparta.devquiz.domain.board.exception.BoardCustomException;
 import com.sparta.devquiz.domain.board.exception.BoardExceptionCode;
 import com.sparta.devquiz.domain.board.repository.BoardRepository;
+import com.sparta.devquiz.domain.comment.entity.Comment;
 import com.sparta.devquiz.domain.quiz.repository.QuizRepository;
 import com.sparta.devquiz.domain.quiz.entity.Quiz;
 import com.sparta.devquiz.domain.user.entity.User;
-import com.sparta.devquiz.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +25,6 @@ public class BoardService {
 
     private final BoardRepository boardRepository;
     private final QuizRepository quizRepository;
-    private final UserService userService;
 
     @Transactional
     public BoardCreateResponse createBoard(Long quizId, BoardCreateRequest request, User user) {
@@ -78,6 +77,10 @@ public class BoardService {
 
         if (!board.getUser().getId().equals(user.getId())) {
             throw new BoardCustomException(BoardExceptionCode.UNAUTHORIZED_USER);
+        }
+
+        for (Comment comment : board.getComments()) {
+            comment.setDeleted(true);
         }
 
         board.setDeleted(true);
