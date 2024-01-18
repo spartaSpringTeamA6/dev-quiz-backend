@@ -3,11 +3,7 @@ package com.sparta.devquiz.domain.quiz.controller;
 import com.sparta.devquiz.domain.quiz.dto.request.QuizCreateRequest;
 import com.sparta.devquiz.domain.quiz.dto.request.QuizUpdateRequest;
 import com.sparta.devquiz.domain.quiz.dto.response.QuizAnswerSubmitResponse;
-import com.sparta.devquiz.domain.quiz.dto.response.QuizCorrectUserResponse;
-import com.sparta.devquiz.domain.quiz.dto.response.QuizCreateResponse;
 import com.sparta.devquiz.domain.quiz.dto.response.QuizDetailResponse;
-import com.sparta.devquiz.domain.quiz.dto.response.QuizFailUserResponse;
-import com.sparta.devquiz.domain.quiz.dto.response.QuizPassUserResponse;
 import com.sparta.devquiz.domain.quiz.dto.response.QuizRandomResponse;
 import com.sparta.devquiz.domain.quiz.enums.QuizCategory;
 import com.sparta.devquiz.domain.quiz.response.QuizResponseCode;
@@ -19,7 +15,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -48,13 +43,12 @@ public class QuizController {
             @AuthUser User user,
             @RequestBody QuizCreateRequest request
     ) {
-        QuizCreateResponse response = quizService.createQuiz(user, request);
+        quizService.createQuiz(user, request);
 
         return ResponseEntity.status(QuizResponseCode.CREATED_QUIZ.getHttpStatus())
-                .body(CommonResponseDto.of(QuizResponseCode.CREATED_QUIZ, response));
+                .body(CommonResponseDto.of(QuizResponseCode.CREATED_QUIZ));
     }
 
-    @SecurityRequirement(name = "Bearer Authentication")
     @Operation(operationId = "QUIZ-002", summary = "퀴즈 카테고리 10개 랜덤 출제")
     @GetMapping("")
     public ResponseEntity<CommonResponseDto> getRandomQuiz(
@@ -67,7 +61,6 @@ public class QuizController {
                 .body(CommonResponseDto.of(QuizResponseCode.OK_GET_RANDOM_QUIZZES, quizRandomResponseList));
     }
 
-    @SecurityRequirement(name = "Bearer Authentication")
     @Operation(operationId = "QUIZ-003", summary = "퀴즈 단일 조회")
     @GetMapping("/{quizId}")
     public ResponseEntity<CommonResponseDto> getQuiz(
