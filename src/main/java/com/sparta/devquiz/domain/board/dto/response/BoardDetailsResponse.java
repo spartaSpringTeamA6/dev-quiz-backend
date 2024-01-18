@@ -25,12 +25,17 @@ public class BoardDetailsResponse {
     @Schema(description = "보드 설명", defaultValue = "치키치키차카차카")
     private String content;
 
+    @Column
+    @Schema(description = "댓글 수", defaultValue = "1")
+    private int countComment;
+
     public static BoardDetailsResponse of(Board board) {
         return BoardDetailsResponse
                 .builder()
                 .boardId(board.getId())
                 .title(board.getTitle())
                 .content(board.getContent())
+                .countComment(board.getComments().size())
                 .build();
     }
 
