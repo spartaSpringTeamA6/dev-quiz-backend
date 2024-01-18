@@ -12,7 +12,7 @@ import java.util.Optional;
 
 public interface QuizRepository extends JpaRepository<Quiz, Long> {
 
-    Optional<Quiz> findById(Long quizid);
+    Optional<Quiz> findById(Long quizId);
 
     Page<Quiz> findQuizByCategory(QuizCategory category, Pageable pageable);
 
