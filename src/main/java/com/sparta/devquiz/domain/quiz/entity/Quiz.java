@@ -57,9 +57,5 @@ public class Quiz extends BaseTimeEntity {
         this.failCount = failCount;
         this.solveCount = solveCount;
     }
-    public void deleteQuiz(String question, String answer, String example){
-        this.question = question;
-        this.answer = answer;
-        this.example = example;
-    }
+
 }
