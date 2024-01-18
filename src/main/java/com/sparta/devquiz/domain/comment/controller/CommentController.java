@@ -10,6 +10,7 @@ import com.sparta.devquiz.domain.user.entity.User;
 import com.sparta.devquiz.global.annotation.AuthUser;
 import com.sparta.devquiz.global.response.CommonResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -26,8 +27,9 @@ public class CommentController {
 
     private final CommentService commentService;
 
+    @SecurityRequirement(name = "Bearer Authentication")
     @Operation(operationId = "COMMENT-001", summary = "댓글 작성")
-    @PostMapping("/boards/{board_id}/comments")
+    @PostMapping("/boards/{boardId}/comments")
     public ResponseEntity<CommonResponseDto> createComment(
             @PathVariable Long boardId,
             @Valid @RequestBody CommentCreateRequest commentCreateRequest,
@@ -40,6 +42,7 @@ public class CommentController {
                 .body(CommonResponseDto.of(CommentResponseCode.CREATED_COMMENT, response));
     }
 
+    @SecurityRequirement(name = "Bearer Authentication")
     @Operation(operationId = "COMMENT-002", summary = "보드에 속한 모든 댓글 조회")
     @GetMapping("/boards/{boardId}/comments")
     public ResponseEntity<CommonResponseDto> getCommentList(
@@ -52,6 +55,7 @@ public class CommentController {
                 .body(CommonResponseDto.of(CommentResponseCode.OK_GET_ALL_COMMENT, response));
     }
 
+    @SecurityRequirement(name = "Bearer Authentication")
     @Operation(operationId = "COMMENT-003", summary = "댓글 수정")
     @PatchMapping("/comments/{commentId}")
     public ResponseEntity<CommonResponseDto> updateComment(
@@ -66,6 +70,7 @@ public class CommentController {
                 .body(CommonResponseDto.of(CommentResponseCode.OK_UPDATE_COMMENT));
     }
 
+    @SecurityRequirement(name = "Bearer Authentication")
     @Operation(operationId = "COMMENT-004", summary = "댓글 삭제")
     @DeleteMapping("/comments/{commentId}")
     public ResponseEntity<CommonResponseDto> deleteComment(
@@ -79,7 +84,7 @@ public class CommentController {
                 .body(CommonResponseDto.of(CommentResponseCode.OK_DELETE_COMMENT));
     }
 
-
+    @SecurityRequirement(name = "Bearer Authentication")
     @Operation(operationId = "COMMENT-005", summary = "댓글 좋아요")
     @PostMapping("/comments/{commentId}/like")
     public ResponseEntity<CommonResponseDto> likeComment(
@@ -93,6 +98,7 @@ public class CommentController {
                 .body(CommonResponseDto.of(CommentResponseCode.CREATED_LIKE));
     }
 
+    @SecurityRequirement(name = "Bearer Authentication")
     @Operation(operationId = "COMMENT-006", summary = "댓글 좋아요 취소")
     @DeleteMapping("/comments/{commentId}/unlike")
     public ResponseEntity<CommonResponseDto> unlikeComment(
