@@ -12,5 +12,4 @@ public interface UserRepository extends JpaRepository<User, Long> {
   Optional<User> findByUsernameAndIsDeletedFalse(String username);
   boolean existsByUsername(String username);
   WeekScoreResponse findWeekScoreByIdAndIsDeletedFalse(Long id);
-
 }

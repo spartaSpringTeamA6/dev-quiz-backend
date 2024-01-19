@@ -1,6 +1,6 @@
 package com.sparta.devquiz.domain.user.dto.response;
 
-import com.sparta.devquiz.domain.board.dto.response.BoardDetailsResponse;
+import com.sparta.devquiz.domain.quiz.dto.response.QuizGetByUserResponse;
 import com.sparta.devquiz.domain.user.entity.User;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
@@ -9,8 +9,8 @@ import lombok.Getter;
 
 @Builder
 @Getter
-@Schema(description = "유저 작성 보드 정보 응답 dto")
-public class UserBoardsResponse {
+@Schema(description = "유저 퀴즈 정보 응답 dto")
+public class UserQuizzesResponse {
 
   @Schema(description = "유저 id", defaultValue = "1")
   private Long userId;
@@ -18,15 +18,15 @@ public class UserBoardsResponse {
   @Schema(description = "유저 이름", defaultValue = "봉골레파스타")
   private String username;
 
-  @Schema(description = "유저 보드", defaultValue = "질문 1")
-  private List<BoardDetailsResponse> boardInfoList;
+  @Schema(description = "퀴즈 정보", defaultValue = "퀴즈 1")
+  private List<QuizGetByUserResponse> quizList;
 
-  public static UserBoardsResponse of(User user, List<BoardDetailsResponse> boardInfoList) {
-    return UserBoardsResponse
+  public static UserQuizzesResponse of(User user, List<QuizGetByUserResponse> quizList) {
+    return UserQuizzesResponse
         .builder()
         .userId(user.getId())
         .username(user.getUsername())
-        .boardInfoList(boardInfoList)
+        .quizList(quizList)
         .build();
   }
 }

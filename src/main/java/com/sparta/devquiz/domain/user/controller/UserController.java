@@ -5,6 +5,7 @@ import com.sparta.devquiz.domain.user.dto.response.UserBoardsResponse;
 import com.sparta.devquiz.domain.user.dto.response.UserCommentsResponse;
 import com.sparta.devquiz.domain.user.dto.response.UserDetailResponse;
 import com.sparta.devquiz.domain.user.dto.response.UserInvitationsResponse;
+import com.sparta.devquiz.domain.user.dto.response.UserQuizzesResponse;
 import com.sparta.devquiz.domain.user.dto.response.UserSkillResponse;
 import com.sparta.devquiz.domain.user.dto.response.UserTeamsResponse;
 import com.sparta.devquiz.domain.user.entity.User;
@@ -126,5 +127,41 @@ public class UserController {
     UserCommentsResponse result = userService.getMyComments(authUser, userId);
     return ResponseEntity.status(UserResponseCode.GET_MY_COMMENT.getHttpStatus())
         .body(CommonResponseDto.of(UserResponseCode.GET_MY_COMMENT, result));
+  }
+
+  @SecurityRequirement(name = "Bearer Authentication")
+  @Operation(operationId = "USER-011", summary = "내가 시도한 문제 조회")
+  @GetMapping("/quizzes")
+  public ResponseEntity<CommonResponseDto> getMyQuizzes(@AuthUser User authUser, @PathVariable Long userId) {
+    UserQuizzesResponse result = userService.getMyQuizzes(authUser, userId);
+    return ResponseEntity.status(UserResponseCode.GET_MY_QUIZ.getHttpStatus())
+        .body(CommonResponseDto.of(UserResponseCode.GET_MY_QUIZ, result));
+  }
+
+  @SecurityRequirement(name = "Bearer Authentication")
+  @Operation(operationId = "USER-012", summary = "내가 맞은 문제 조회")
+  @GetMapping("/quizzes/correct")
+  public ResponseEntity<CommonResponseDto> getMyCorrectQuizzes(@AuthUser User authUser, @PathVariable Long userId) {
+    UserQuizzesResponse result = userService.getMyCorrectQuizzes(authUser, userId);
+    return ResponseEntity.status(UserResponseCode.GET_MY_CORRECT_QUIZ.getHttpStatus())
+        .body(CommonResponseDto.of(UserResponseCode.GET_MY_CORRECT_QUIZ, result));
+  }
+
+  @SecurityRequirement(name = "Bearer Authentication")
+  @Operation(operationId = "USER-013", summary = "내가 틀린 문제 조회")
+  @GetMapping("/quizzes/fail")
+  public ResponseEntity<CommonResponseDto> getMyFailQuizzes(@AuthUser User authUser, @PathVariable Long userId) {
+    UserQuizzesResponse result = userService.getMyFailQuizzes(authUser, userId);
+    return ResponseEntity.status(UserResponseCode.GET_MY_FAILED_QUIZ.getHttpStatus())
+        .body(CommonResponseDto.of(UserResponseCode.GET_MY_FAILED_QUIZ, result));
+  }
+
+  @SecurityRequirement(name = "Bearer Authentication")
+  @Operation(operationId = "USER-014", summary = "내가 모르는 문제 조회")
+  @GetMapping("/quizzes/pass")
+  public ResponseEntity<CommonResponseDto> getMyPassQuizzes(@AuthUser User authUser, @PathVariable Long userId) {
+    UserQuizzesResponse result = userService.getMyPassQuizzes(authUser, userId);
+    return ResponseEntity.status(UserResponseCode.GET_MY_PASSED_QUIZ.getHttpStatus())
+        .body(CommonResponseDto.of(UserResponseCode.GET_MY_PASSED_QUIZ, result));
   }
 }
