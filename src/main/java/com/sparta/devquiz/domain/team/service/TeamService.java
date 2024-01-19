@@ -101,11 +101,8 @@ public class TeamService {
         Team team = getTeamAndCheckAuthUser(user,teamId);
 
         if(teamUserService.isExistedAdmin(team.getId(), user.getId())){
-            if(team.getTeamUserList().size()!=1){
-                throw new TeamCustomException(
-                        TeamExceptionCode.BAD_REQUEST_INVALID_REQUEST_DELETE_ADMIN);
-            }
             deleteTeam(user,teamId);
+            return;
         }
 
         teamUserService.deleteTeamUser(team.getId(), user.getId());
