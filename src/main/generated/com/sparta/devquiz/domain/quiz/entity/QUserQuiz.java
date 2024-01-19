@@ -27,6 +27,8 @@ public class QUserQuiz extends EntityPathBase<UserQuiz> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
 
+    public final NumberPath<Long> id = createNumber("id", Long.class);
+
     //inherited
     public final DateTimePath<java.time.LocalDateTime> modifiedAt = _super.modifiedAt;
 
@@ -37,8 +39,6 @@ public class QUserQuiz extends EntityPathBase<UserQuiz> {
     public final EnumPath<com.sparta.devquiz.domain.quiz.enums.UserQuizStatus> status = createEnum("status", com.sparta.devquiz.domain.quiz.enums.UserQuizStatus.class);
 
     public final com.sparta.devquiz.domain.user.entity.QUser user;
-
-    public final QUserQuizId userQuizId;
 
     public QUserQuiz(String variable) {
         this(UserQuiz.class, forVariable(variable), INITS);
@@ -60,7 +60,6 @@ public class QUserQuiz extends EntityPathBase<UserQuiz> {
         super(type, metadata, inits);
         this.quiz = inits.isInitialized("quiz") ? new QQuiz(forProperty("quiz")) : null;
         this.user = inits.isInitialized("user") ? new com.sparta.devquiz.domain.user.entity.QUser(forProperty("user")) : null;
-        this.userQuizId = inits.isInitialized("userQuizId") ? new QUserQuizId(forProperty("userQuizId")) : null;
     }
 
 }

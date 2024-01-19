@@ -8,6 +8,7 @@ import com.sparta.devquiz.domain.board.entity.Board;
 import com.sparta.devquiz.domain.board.exception.BoardCustomException;
 import com.sparta.devquiz.domain.board.exception.BoardExceptionCode;
 import com.sparta.devquiz.domain.board.repository.BoardRepository;
+import com.sparta.devquiz.domain.comment.entity.Comment;
 import com.sparta.devquiz.domain.quiz.repository.QuizRepository;
 import com.sparta.devquiz.domain.quiz.entity.Quiz;
 import com.sparta.devquiz.domain.user.entity.User;
@@ -44,20 +45,25 @@ public class BoardService {
     public BoardDetailsResponse getBoard(Long boardId) {
         Board board = getBoardById(boardId);
 
+        if(Boolean.TRUE.equals(board.getIsDeleted())) {
+            throw new BoardCustomException(BoardExceptionCode.ALREADY_DELETED_BOARD);
+        }
+
         return BoardDetailsResponse.of(board);
     }
 
     public List<BoardDetailsResponse> getBoardList(Long quizId) {
-        List<Board> boards = boardRepository.findAllByQuizId(quizId);
+        List<Board> boards = boardRepository.findAllByQuizIdAndIsDeletedFalse(quizId);
 
         return BoardDetailsResponse.of(boards);
     }
+
 
     @Transactional
     public void updateBoard(Long boardId, BoardUpdateRequest request, User user) {
         Board board = getBoardById(boardId);
 
-        if (!board.getUser().equals(user)) {
+        if (!board.getUser().getId().equals(user.getId())) {
             throw new BoardCustomException(BoardExceptionCode.UNAUTHORIZED_USER);
         }
 
@@ -69,8 +75,16 @@ public class BoardService {
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new BoardCustomException(BoardExceptionCode.NOT_FOUND_BOARD));
 
-        if (!board.getUser().equals(user)) {
+        if(Boolean.TRUE.equals(board.getIsDeleted())) {
+            throw new BoardCustomException(BoardExceptionCode.ALREADY_DELETED_BOARD);
+        }
+
+        if (!board.getUser().getId().equals(user.getId())) {
             throw new BoardCustomException(BoardExceptionCode.UNAUTHORIZED_USER);
+        }
+
+        for (Comment comment : board.getComments()) {
+            comment.setDeleted(true);
         }
 
         board.setDeleted(true);

@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 
 @Getter
+@Schema(description = "퀴즈 수정 요청 dto")
 public class QuizUpdateRequest {
     @Schema(description = "퀴즈의 카테고리", defaultValue = "JAVA")
     @NotNull(message = "카테고리는 필수로 입력해야 합니다.")

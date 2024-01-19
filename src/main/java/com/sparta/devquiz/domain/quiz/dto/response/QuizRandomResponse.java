@@ -20,7 +20,6 @@ public class QuizRandomResponse {
     @Schema(description = "퀴즈 보기 내용", defaultValue = "1. 객체지향 프로그래밍\n2. JVM 위에서 실행\n3. 포인터를 직접 다룰 수 있음\n4. 가비지 컬렉션 제공")
     private String example;
 
-
     public static QuizRandomResponse of(Quiz quiz) {
         return QuizRandomResponse.builder()
                 .id(quiz.getId())

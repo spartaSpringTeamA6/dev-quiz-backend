@@ -12,11 +12,26 @@ import lombok.Getter;
 public class CommentCreateResponse {
 
     @Column
+    @Schema(description = "보드 번호", defaultValue = "1")
+    private Long boardId;
+
+    @Column
+    @Schema(description = "댓글 번호", defaultValue = "1")
+    private Long commentId;
+
+    @Column
+    @Schema(description = "댓글 작성자", defaultValue = "잼민이")
+    private String username;
+
+    @Column
     @Schema(description = "댓글 내용", defaultValue = "모두 키보드에서 손 떼!")
     private String content;
 
     public static CommentCreateResponse of(Comment comment) {
         return CommentCreateResponse.builder()
+                .boardId(comment.getBoard().getId())
+                .commentId(comment.getId())
+                .username(comment.getUser().getUsername())
                 .content(comment.getContent())
                 .build();
     }
