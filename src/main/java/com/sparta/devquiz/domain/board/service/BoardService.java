@@ -58,6 +58,11 @@ public class BoardService {
         return BoardDetailsResponse.of(boards);
     }
 
+    public List<BoardDetailsResponse> getBoardListByUserId(Long userId) {
+        List<Board> boards = boardRepository.findAllByUserIdAndIsDeletedFalse(userId);
+
+        return BoardDetailsResponse.of(boards);
+    }
 
     @Transactional
     public void updateBoard(Long boardId, BoardUpdateRequest request, User user) {

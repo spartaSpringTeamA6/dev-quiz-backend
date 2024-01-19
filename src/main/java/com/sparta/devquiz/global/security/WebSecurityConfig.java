@@ -10,7 +10,6 @@ import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -47,8 +46,8 @@ public class WebSecurityConfig {
     http.authorizeHttpRequests(authReq -> authReq
           .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
           .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
-            .requestMatchers(HttpMethod.GET,"/api/quizzes","/api/quizzes/{quizId}").permitAll()
-            .requestMatchers(HttpMethod.POST,"/api/quizzes/{quizId}").permitAll()
+          .requestMatchers(HttpMethod.GET,"/api/quizzes","/api/quizzes/{quizId}").permitAll()
+          .requestMatchers(HttpMethod.POST,"/api/quizzes/{quizId}").permitAll()
           .anyRequest().authenticated()
     );
 
