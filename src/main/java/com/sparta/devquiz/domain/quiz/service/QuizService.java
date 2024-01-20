@@ -103,7 +103,7 @@ public class QuizService {
                     quiz.getSolveCount() + 1);
         }
 
-        if (user != null) {
+                if (user != null) {
             UserQuiz userQuiz = UserQuiz.builder()
                     .user(user)
                     .quiz(quiz)
