@@ -36,9 +36,11 @@ public class Board extends BaseTimeEntity {
     @Column(nullable = false)
     private String content;
 
+    @Builder.Default
     @Column(nullable = false)
     private Boolean isDeleted = false;
 
+    @Builder.Default
     @OneToMany(mappedBy = "board")
     private List<Comment> comments = new ArrayList<>();
 

@@ -24,6 +24,7 @@ public class TeamInfoDetailResponse {
     @Schema(description = "팀 관리자", defaultValue = "개발.zip")
     private UserInfoResponse admin;
 
+    @Builder.Default
     @Schema(description = "팀 유저 리스트", defaultValue = "개발.zip")
     private List<UserInfoResponse> userList = new ArrayList<>();
 
