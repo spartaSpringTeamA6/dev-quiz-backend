@@ -16,12 +16,14 @@ import com.sparta.devquiz.domain.quiz.exception.QuizExceptionCode;
 import com.sparta.devquiz.domain.quiz.repository.QuizRepository;
 import com.sparta.devquiz.domain.quiz.repository.QuizUserRepository;
 import com.sparta.devquiz.domain.user.entity.User;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
 
 @Service
 @RequiredArgsConstructor
@@ -33,11 +35,11 @@ public class QuizService {
 
     @Transactional
     public void createQuiz(QuizCreateRequest createRequest) {
-
+        String Example = String.join("\n", createRequest.getExample());
         Quiz quiz = Quiz.builder()
                 .category(createRequest.getCategory())
                 .question(createRequest.getQuestion())
-                .example(createRequest.getExample())
+                .example(Example)
                 .answer(createRequest.getAnswer())
                 .correctCount(0L)
                 .failCount(0L)
@@ -75,7 +77,7 @@ public class QuizService {
     public void updateQuiz(Long quizId, QuizUpdateRequest updateRequest) {
         Quiz quiz = getQuizById(quizId);
 
-        quiz.updateQuiz(updateRequest.getQuestion(), updateRequest.getExample(),
+        quiz.updateQuiz(updateRequest.getQuestion(), String.join("\n", updateRequest.getExample()),
                 updateRequest.getCategory(), updateRequest.getAnswer());
     }
 
