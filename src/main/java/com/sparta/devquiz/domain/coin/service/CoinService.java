@@ -1,6 +1,5 @@
 package com.sparta.devquiz.domain.coin.service;
 
-import com.sparta.devquiz.domain.coin.dto.request.CoinSaveRequest;
 import com.sparta.devquiz.domain.coin.dto.request.CoinUseRequest;
 import com.sparta.devquiz.domain.coin.dto.response.CoinGetInfoResponse;
 import com.sparta.devquiz.domain.coin.dto.response.CoinUseResponse;
@@ -15,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -24,16 +24,16 @@ public class CoinService {
     private final UserService userService;
 
     @Transactional
-    public void saveCoin(Long userId, CoinSaveRequest coinSaveRequest, User authUser) {
-        userService.validateUser(authUser, userId);
+    public void saveCoin(Long userId, CoinContent coinContent, User authUser) {
+        User user = userService.validateUser(authUser, userId);
 
-        CoinContent coinContent = coinSaveRequest.getCoinContent();
         if (coinContent == null) {
             throw new CoinCustomException(CoinExceptionCode.BAD_REQUEST_COIN);
         }
 
         Coin coin = Coin.saveCoins(authUser, coinContent);
-        authUser.getCoinList().add(coin);   // 사용시 유저 코인리스트 실시간 반영.  사용하지 않으면 유저가 직접 DB에서 불러와서 업데이트
+        user.getCoinList().add(coin);
+        /* user.getTotalCoin() += coin;     요기 추가하시면 됩니다. */
         coinRepository.save(coin);
     }
 
@@ -43,7 +43,7 @@ public class CoinService {
 
         int totalCoin = getTotalCoin(userId);
 
-        int payment = coinUseRequest.getCoinContent().getCoinSupplier().get();
+        int payment = coinUseRequest.getCoinContent().getCoin();
 
         if (totalCoin < payment) {
             throw new CoinCustomException(CoinExceptionCode.BAD_REQUEST_NOT_ENOUGH_COIN);
