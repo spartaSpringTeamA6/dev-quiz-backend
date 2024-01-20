@@ -1,8 +1,10 @@
-package com.sparta.devquiz.domain.user.service;
+package com.sparta.devquiz.domain.user.service.command;
 
 import static com.sparta.devquiz.global.jwt.service.JwtService.ACCESS_TOKEN_HEADER;
+import static com.sparta.devquiz.global.jwt.service.JwtService.REFRESH_TOKEN_COOKIE;
 
 import com.sparta.devquiz.global.jwt.service.JwtService;
+import com.sparta.devquiz.global.oauth.CookieUtil;
 import com.sparta.devquiz.global.redis.RedisService;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
@@ -39,6 +41,7 @@ public class AuthService {
       if (redisService.hasValues(oauthId) && refreshToken.equals(redisService.getValues(oauthId))) {
         String newAccessToken = jwtService.createAccessToken(oauthId, userRole);
         response.setHeader(ACCESS_TOKEN_HEADER, newAccessToken);
+        CookieUtil.addCookie(response, REFRESH_TOKEN_COOKIE, refreshToken, CookieUtil.OAUTH2_COOKIE_TIME);
       }
     }
   }

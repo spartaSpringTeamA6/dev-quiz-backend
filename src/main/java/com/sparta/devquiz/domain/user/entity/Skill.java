@@ -14,7 +14,6 @@ public class Skill extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
     @Enumerated(value = EnumType.STRING)
     private UserSkill userSkill;
 

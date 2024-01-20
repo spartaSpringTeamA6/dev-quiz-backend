@@ -1,7 +1,7 @@
 package com.sparta.devquiz.domain.user.controller;
 
 import com.sparta.devquiz.domain.user.response.UserResponseCode;
-import com.sparta.devquiz.domain.user.service.AuthService;
+import com.sparta.devquiz.domain.user.service.command.AuthService;
 import com.sparta.devquiz.global.response.CommonResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/auth")
-@Tag(name = "1-2. Auth API", description = "Auth 관련 API 입니다.")
+@Tag(name = "1-3. Auth API", description = "Auth 관련 API 입니다.")
 public class AuthController {
 
   private final AuthService authService;

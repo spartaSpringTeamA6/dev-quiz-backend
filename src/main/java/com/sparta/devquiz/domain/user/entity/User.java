@@ -18,15 +18,15 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter
@@ -93,7 +93,7 @@ public class User extends BaseTimeEntity {
     @OneToMany(mappedBy = "user")
     private List<Comment> commentList = new ArrayList<>();
 
-    public void updateUsernameAndSkill(String username, List<Skill> skillList) {
+    public void updateUsernameAndSkill(String username, Set<Skill> skillList) {
         this.username = username;
         this.skillList.clear();
         this.skillList.addAll(skillList);
@@ -101,5 +101,14 @@ public class User extends BaseTimeEntity {
     public void deleteUser() {
         this.isDeleted = true;
         this.deletedAt = LocalDateTime.now();
+    }
+
+    public void updateWeekScore(int score) {
+        this.weekScore += score;
+    }
+
+    public void updateCoin(Coin coin) {
+        this.getCoinList().add(coin);
+        this.totalCoin += coin.getCoins();
     }
 }

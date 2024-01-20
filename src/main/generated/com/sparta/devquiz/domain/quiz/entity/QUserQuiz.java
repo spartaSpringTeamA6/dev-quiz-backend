@@ -34,7 +34,7 @@ public class QUserQuiz extends EntityPathBase<UserQuiz> {
 
     public final QQuiz quiz;
 
-    public final NumberPath<Long> score = createNumber("score", Long.class);
+    public final NumberPath<Integer> score = createNumber("score", Integer.class);
 
     public final EnumPath<com.sparta.devquiz.domain.quiz.enums.UserQuizStatus> status = createEnum("status", com.sparta.devquiz.domain.quiz.enums.UserQuizStatus.class);
 

@@ -1,7 +1,7 @@
 package com.sparta.devquiz.global.security;
 
 import com.sparta.devquiz.domain.user.entity.User;
-import com.sparta.devquiz.domain.user.service.UserService;
+import com.sparta.devquiz.domain.user.service.command.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
