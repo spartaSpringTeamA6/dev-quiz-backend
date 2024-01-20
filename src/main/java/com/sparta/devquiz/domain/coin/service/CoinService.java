@@ -21,24 +21,22 @@ import org.springframework.transaction.annotation.Transactional;
 public class CoinService {
 
     private final CoinRepository coinRepository;
-    //    private final UserService userService;
+        private final UserService userService;
 
     @Transactional
     public void saveCoin(Long userId, CoinContent coinContent, User authUser) {
-//        userService.validateUser(authUser, userId);
 
         if (coinContent == null) {
             throw new CoinCustomException(CoinExceptionCode.BAD_REQUEST_COIN);
         }
 
         Coin coin = Coin.saveCoins(authUser, coinContent);
-//        authUser.getCoinList().add(coin);
         coinRepository.save(coin);
     }
 
     @Transactional
     public CoinUseResponse useCoin(Long userId, CoinUseRequest coinUseRequest, User authUser) {
-//        userService.validateUser(authUser, userId);
+        userService.validateUser(authUser, userId);
 
         int totalCoin = getTotalCoin(userId);
 
@@ -58,7 +56,7 @@ public class CoinService {
     }
 
     public CoinGetInfoResponse getCoinInfo(Long userId, User authUser) {
-//        userService.validateUser(authUser, userId);
+        userService.validateUser(authUser, userId);
 
         int totalCoin = getTotalCoin(userId);
 
