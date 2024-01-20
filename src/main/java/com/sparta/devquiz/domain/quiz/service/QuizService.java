@@ -37,11 +37,11 @@ public class QuizService {
 
     @Transactional
     public void createQuiz(QuizCreateRequest createRequest) {
-
+        String Example = String.join("\n", createRequest.getExample());
         Quiz quiz = Quiz.builder()
                 .category(createRequest.getCategory())
                 .question(createRequest.getQuestion())
-                .example(createRequest.getExample())
+                .example(Example)
                 .answer(createRequest.getAnswer())
                 .correctCount(0L)
                 .failCount(0L)
@@ -79,7 +79,7 @@ public class QuizService {
     public void updateQuiz(Long quizId, QuizUpdateRequest updateRequest) {
         Quiz quiz = getQuizById(quizId);
 
-        quiz.updateQuiz(updateRequest.getQuestion(), updateRequest.getExample(),
+        quiz.updateQuiz(updateRequest.getQuestion(), String.join("\n", updateRequest.getExample()),
                 updateRequest.getCategory(), updateRequest.getAnswer());
     }
 
