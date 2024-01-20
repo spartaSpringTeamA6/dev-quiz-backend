@@ -8,6 +8,7 @@ import com.sparta.devquiz.domain.comment.dto.request.CommentCreateRequest;
 import com.sparta.devquiz.domain.comment.dto.request.CommentUpdateRequest;
 import com.sparta.devquiz.domain.comment.dto.response.CommentCreateResponse;
 import com.sparta.devquiz.domain.comment.dto.response.CommentDetailsResponse;
+import com.sparta.devquiz.domain.comment.dto.response.CommentInfoResponse;
 import com.sparta.devquiz.domain.comment.entity.Comment;
 import com.sparta.devquiz.domain.comment.entity.CommentLike;
 import com.sparta.devquiz.domain.comment.entity.CommentLikeId;
@@ -16,11 +17,10 @@ import com.sparta.devquiz.domain.comment.exception.CommentExceptionCode;
 import com.sparta.devquiz.domain.comment.repository.CommentLikeRepository;
 import com.sparta.devquiz.domain.comment.repository.CommentRepository;
 import com.sparta.devquiz.domain.user.entity.User;
-import org.springframework.transaction.annotation.Transactional;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -61,6 +61,10 @@ public class CommentService {
         return CommentDetailsResponse.of(comments);
     }
 
+    public List<CommentInfoResponse> getCommentListByUserId(Long userId) {
+        List<Comment> comments = commentRepository.findAllByUserIdAndIsDeletedFalse(userId);
+        return CommentInfoResponse.of(comments);
+    }
 
     @Transactional
     public void updateComment(Long commentId, CommentUpdateRequest commentUpdateRequest, User user) {

@@ -39,19 +39,20 @@ public class QuizController {
 
     @SecurityRequirement(name = "Bearer Authentication")
     @Operation(operationId = "QUIZ-001", summary = "퀴즈 생성")
-    @PostMapping("")
+    @PostMapping
     public ResponseEntity<CommonResponseDto> createQuiz(
             @AuthUser User user,
             @RequestBody QuizCreateRequest request
     ) {
-        quizService.createQuiz(user, request);
+        quizService.createQuiz(request);
 
         return ResponseEntity.status(QuizResponseCode.CREATED_QUIZ.getHttpStatus())
                 .body(CommonResponseDto.of(QuizResponseCode.CREATED_QUIZ));
     }
 
+    @SecurityRequirement(name = "Bearer Authentication")
     @Operation(operationId = "QUIZ-002", summary = "퀴즈 카테고리 10개 랜덤 출제")
-    @GetMapping("")
+    @GetMapping
     public ResponseEntity<CommonResponseDto> getRandomQuiz(
             @RequestParam QuizCategory category,
             @AuthUser User user
@@ -110,5 +111,4 @@ public class QuizController {
         return ResponseEntity.status(QuizResponseCode.OK_SUBMIT_QUIZ_ANSWER.getHttpStatus())
                 .body(CommonResponseDto.of(QuizResponseCode.OK_SUBMIT_QUIZ_ANSWER, response));
     }
-
 }

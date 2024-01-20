@@ -16,14 +16,12 @@ import com.sparta.devquiz.domain.quiz.exception.QuizExceptionCode;
 import com.sparta.devquiz.domain.quiz.repository.QuizRepository;
 import com.sparta.devquiz.domain.quiz.repository.QuizUserRepository;
 import com.sparta.devquiz.domain.user.entity.User;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -34,7 +32,7 @@ public class QuizService {
     private final QuizUserRepository quizUserRepository;
 
     @Transactional
-    public void createQuiz(User user, QuizCreateRequest createRequest) {
+    public void createQuiz(QuizCreateRequest createRequest) {
 
         Quiz quiz = Quiz.builder()
                 .category(createRequest.getCategory())
@@ -47,20 +45,24 @@ public class QuizService {
                 .isDeleted(false)
                 .build();
 
-        Quiz savedQuiz = quizRepository.save(quiz);
+        quizRepository.save(quiz);
     }
 
     public List<QuizRandomResponse> getRandomNonAttemptedQuizzes(QuizCategory category, User user) {
 
-        List<Long> correctQuizIds = quizUserRepository.findCorrectQuizIdsByUser(user);
-
+        List<Quiz> randomQuizzes;
         Pageable pageable = PageRequest.of(0, 10);
-        List<Quiz> randomQuizzes = quizRepository.findQuizzesByCategoryExcludingIds(category,
-                correctQuizIds, pageable);
+
+        if (user == null) {
+            randomQuizzes = quizRepository.findQuizByCategory(category, pageable);
+        } else {
+            List<Long> correctQuizIds = quizUserRepository.findCorrectQuizIdsByUser(user);
+            randomQuizzes = quizRepository.findQuizzesByCategoryExcludingIds(category, correctQuizIds, pageable);
+        }
 
         return randomQuizzes.stream()
                 .map(QuizRandomResponse::of)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public QuizDetailInfoResponse getQuiz(Long quizId) {
@@ -116,6 +118,10 @@ public class QuizService {
         return QuizAnswerSubmitResponse.of(quiz, request.getAnswer(), status);
     }
 
+    public List<QuizGetByUserResponse> getAllQuizzesForUser(User user) {
+        return quizUserRepository.findCorrectQuizzesByUsers(user);
+    }
+
     public List<QuizGetByUserResponse> getCorrectQuizzesForUser(User user) {
         return quizUserRepository.findCorrectQuizzesByUsers(user,UserQuizStatus.CORRECT);
     }
@@ -126,10 +132,6 @@ public class QuizService {
 
     public List<QuizGetByUserResponse> getPassQuizzesForUser(User user) {
         return quizUserRepository.findCorrectQuizzesByUsers(user,UserQuizStatus.PASS);
-    }
-
-    public List<QuizGetByUserResponse> getAllQuizzesForUser(User user) {
-        return quizUserRepository.findCorrectQuizzesByUsers(user);
     }
 
     public Quiz getQuizById(Long id) {
