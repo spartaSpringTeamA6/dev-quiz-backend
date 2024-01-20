@@ -21,16 +21,19 @@ import org.springframework.transaction.annotation.Transactional;
 public class CoinService {
 
     private final CoinRepository coinRepository;
-        private final UserService userService;
+    private final UserService userService;
 
     @Transactional
     public void saveCoin(Long userId, CoinContent coinContent, User authUser) {
+        User user = userService.validateUser(authUser, userId);
 
         if (coinContent == null) {
             throw new CoinCustomException(CoinExceptionCode.BAD_REQUEST_COIN);
         }
 
         Coin coin = Coin.saveCoins(authUser, coinContent);
+        user.getCoinList().add(coin);
+        /* user.getTotalCoin() += coin;     요기 추가하시면 됩니다. */
         coinRepository.save(coin);
     }
 
