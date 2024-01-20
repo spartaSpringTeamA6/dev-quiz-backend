@@ -44,7 +44,7 @@ public class Coin extends BaseTimeEntity {
     public static Coin saveCoins(User user, CoinContent coinContent) {
         return Coin.builder()
                 .user(user)
-                .coins(coinContent.getCoinSupplier().get())
+                .coins(coinContent.getCoin())
                 .status(coinContent.getStatus())
                 .content(coinContent.getContent())
                 .build();
@@ -53,7 +53,7 @@ public class Coin extends BaseTimeEntity {
     public static Coin useCoins(User user,CoinContent coinContent) {
         return Coin.builder()
                 .user(user)
-                .coins(-coinContent.getCoinSupplier().get())
+                .coins(-coinContent.getCoin())
                 .status(coinContent.getStatus())
                 .content(coinContent.getContent())
                 .build();

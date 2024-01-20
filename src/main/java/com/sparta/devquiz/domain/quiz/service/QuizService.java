@@ -1,5 +1,7 @@
 package com.sparta.devquiz.domain.quiz.service;
 
+import com.sparta.devquiz.domain.coin.enums.CoinContent;
+import com.sparta.devquiz.domain.coin.service.CoinService;
 import com.sparta.devquiz.domain.quiz.dto.request.QuizAnswerSubmitRequest;
 import com.sparta.devquiz.domain.quiz.dto.request.QuizCreateRequest;
 import com.sparta.devquiz.domain.quiz.dto.request.QuizUpdateRequest;
@@ -24,7 +26,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -32,6 +33,7 @@ public class QuizService {
 
     private final QuizRepository quizRepository;
     private final QuizUserRepository quizUserRepository;
+    private final CoinService coinService;
 
     @Transactional
     public void createQuiz(QuizCreateRequest createRequest) {
@@ -107,6 +109,9 @@ public class QuizService {
                     quiz.getSolveCount() + 1);
         }
 
+        CoinContent coinContent = CoinContent.matchingQuizStatus(status);
+        coinService.saveCoin(user.getId(), coinContent, user);
+
         if (user != null) {
             UserQuiz userQuiz = UserQuiz.builder()
                     .user(user)
@@ -125,15 +130,15 @@ public class QuizService {
     }
 
     public List<QuizGetByUserResponse> getCorrectQuizzesForUser(User user) {
-        return quizUserRepository.findCorrectQuizzesByUsers(user,UserQuizStatus.CORRECT);
+        return quizUserRepository.findCorrectQuizzesByUsers(user, UserQuizStatus.CORRECT);
     }
 
     public List<QuizGetByUserResponse> getFailQuizzesForUser(User user) {
-        return quizUserRepository.findCorrectQuizzesByUsers(user,UserQuizStatus.FAIL);
+        return quizUserRepository.findCorrectQuizzesByUsers(user, UserQuizStatus.FAIL);
     }
 
     public List<QuizGetByUserResponse> getPassQuizzesForUser(User user) {
-        return quizUserRepository.findCorrectQuizzesByUsers(user,UserQuizStatus.PASS);
+        return quizUserRepository.findCorrectQuizzesByUsers(user, UserQuizStatus.PASS);
     }
 
     public Quiz getQuizById(Long id) {

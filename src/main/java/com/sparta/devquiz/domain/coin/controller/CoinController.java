@@ -4,6 +4,7 @@ import com.sparta.devquiz.domain.coin.dto.request.CoinSaveRequest;
 import com.sparta.devquiz.domain.coin.dto.request.CoinUseRequest;
 import com.sparta.devquiz.domain.coin.dto.response.CoinGetInfoResponse;
 import com.sparta.devquiz.domain.coin.dto.response.CoinUseResponse;
+import com.sparta.devquiz.domain.coin.enums.CoinContent;
 import com.sparta.devquiz.domain.coin.response.CoinResponseCode;
 import com.sparta.devquiz.domain.coin.service.CoinService;
 import com.sparta.devquiz.domain.user.entity.User;
@@ -26,11 +27,11 @@ public class CoinController {
 
 
     @SecurityRequirement(name = "Bearer Authentication")
-    @Operation(operationId = "COIN-001", summary = "코인 적립")
+    @Operation(operationId = "COIN-001", summary = "코인 적립   테스트용")
     @PostMapping("/save")
-    public ResponseEntity<CommonResponseDto> saveCoin(@PathVariable Long userId, @RequestBody CoinSaveRequest coinSaveRequest,
-                                                                         @AuthUser User authUser) {
-        coinService.saveCoin(userId, coinSaveRequest, authUser);
+    public ResponseEntity<CommonResponseDto> saveCoin(@PathVariable Long userId, @RequestBody CoinContent coinContent,
+                                                      @AuthUser User authUser) {
+        coinService.saveCoin(userId, coinContent, authUser);
 
         return ResponseEntity.status(CoinResponseCode.CREATED_SAVE_COIN.getHttpStatus())
                 .body(CommonResponseDto.of(CoinResponseCode.CREATED_SAVE_COIN));

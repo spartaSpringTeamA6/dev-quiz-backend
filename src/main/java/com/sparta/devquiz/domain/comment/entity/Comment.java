@@ -33,9 +33,11 @@ public class Comment extends BaseTimeEntity {
 
     private LocalDateTime deletedAt;
 
+    @Builder.Default
     @Column(nullable = false)
     private Boolean isDeleted = false;
 
+    @Builder.Default
     @OneToMany(mappedBy = "comment")
     private List<CommentLike> commentLikeList = new ArrayList<>();
 
