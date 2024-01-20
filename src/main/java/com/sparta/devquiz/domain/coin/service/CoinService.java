@@ -9,7 +9,7 @@ import com.sparta.devquiz.domain.coin.exception.CoinCustomException;
 import com.sparta.devquiz.domain.coin.exception.CoinExceptionCode;
 import com.sparta.devquiz.domain.coin.repository.CoinRepository;
 import com.sparta.devquiz.domain.user.entity.User;
-import com.sparta.devquiz.domain.user.service.UserService;
+import com.sparta.devquiz.domain.user.service.command.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,8 +32,7 @@ public class CoinService {
         }
 
         Coin coin = Coin.saveCoins(authUser, coinContent);
-        user.getCoinList().add(coin);
-        /* user.getTotalCoin() += coin;     요기 추가하시면 됩니다. */
+        user.updateCoin(coin);
         coinRepository.save(coin);
     }
 

@@ -14,7 +14,7 @@ import com.sparta.devquiz.domain.team.exception.TeamCustomException;
 import com.sparta.devquiz.domain.team.exception.TeamExceptionCode;
 import com.sparta.devquiz.domain.team.repository.TeamRepository;
 import com.sparta.devquiz.domain.user.entity.User;
-import com.sparta.devquiz.domain.user.service.UserService;
+import com.sparta.devquiz.domain.user.service.command.UserService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

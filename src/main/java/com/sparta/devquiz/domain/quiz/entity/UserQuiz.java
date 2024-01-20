@@ -34,5 +34,5 @@ public class UserQuiz extends BaseTimeEntity {
     private UserQuizStatus status;
 
     @Column(nullable = false)
-    private Long score;
+    private int score;
 }

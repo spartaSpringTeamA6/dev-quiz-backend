@@ -10,7 +10,7 @@
 //import com.sparta.devquiz.domain.coin.repository.CoinRepository;
 //import com.sparta.devquiz.domain.user.entity.User;
 //import com.sparta.devquiz.domain.user.repository.UserRepository;
-//import com.sparta.devquiz.domain.user.service.UserService;
+//import com.sparta.devquiz.domain.user.service.command.UserService;
 //import org.junit.jupiter.api.BeforeEach;
 //import org.junit.jupiter.api.DisplayName;
 //import org.junit.jupiter.api.Test;

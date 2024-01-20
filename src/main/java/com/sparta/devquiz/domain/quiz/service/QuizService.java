@@ -18,19 +18,20 @@ import com.sparta.devquiz.domain.quiz.exception.QuizExceptionCode;
 import com.sparta.devquiz.domain.quiz.repository.QuizRepository;
 import com.sparta.devquiz.domain.quiz.repository.QuizUserRepository;
 import com.sparta.devquiz.domain.user.entity.User;
+import com.sparta.devquiz.domain.user.service.command.UserService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class QuizService {
 
+    private final UserService userService;
     private final QuizRepository quizRepository;
     private final QuizUserRepository quizUserRepository;
     private final CoinService coinService;
@@ -53,7 +54,6 @@ public class QuizService {
     }
 
     public List<QuizRandomResponse> getRandomNonAttemptedQuizzes(QuizCategory category, User user) {
-
         List<Quiz> randomQuizzes;
         Pageable pageable = PageRequest.of(0, 10);
 
@@ -61,7 +61,11 @@ public class QuizService {
             randomQuizzes = quizRepository.findQuizByCategory(category, pageable);
         } else {
             List<Long> correctQuizIds = quizUserRepository.findCorrectQuizIdsByUser(user);
-            randomQuizzes = quizRepository.findQuizzesByCategoryExcludingIds(category, correctQuizIds, pageable);
+            if (correctQuizIds.isEmpty()) {
+                randomQuizzes = quizRepository.findQuizzesByCategoryExcludingIds(category, pageable);
+            } else {
+                randomQuizzes = quizRepository.findQuizzesByCategoryExcludingIds(category, correctQuizIds, pageable);
+            }
         }
 
         return randomQuizzes.stream()
@@ -109,16 +113,20 @@ public class QuizService {
                     quiz.getSolveCount() + 1);
         }
 
-        CoinContent coinContent = CoinContent.matchingQuizStatus(status);
-        coinService.saveCoin(user.getId(), coinContent, user);
-
         if (user != null) {
+            User findUser = userService.getUserById(user.getId());
+            int score = status.getScore();
             UserQuiz userQuiz = UserQuiz.builder()
-                    .user(user)
+                    .user(findUser)
                     .quiz(quiz)
                     .status(status)
-                    .score(Long.parseLong(status.getScore()))
+                    .score(score)
                     .build();
+
+            CoinContent coinContent = CoinContent.matchingQuizStatus(status);
+            coinService.saveCoin(findUser.getId(), coinContent, findUser);
+            findUser.updateWeekScore(score);
+
             quizUserRepository.save(userQuiz);
         }
 
