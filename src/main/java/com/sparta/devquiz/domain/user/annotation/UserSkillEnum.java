@@ -14,7 +14,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface UserSkillEnum {
-  String message() default "잘못된 유저 스킬입니다.";
+  String message() default "잘못된 유저 스킬 요청입니다.";
   Class<?>[] groups() default {};
   Class<? extends Payload>[] payload() default {};
   Class<? extends java.lang.Enum<?>> enumClass();

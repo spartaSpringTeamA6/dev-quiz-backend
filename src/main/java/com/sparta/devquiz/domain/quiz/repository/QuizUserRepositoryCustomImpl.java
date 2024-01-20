@@ -1,7 +1,8 @@
 package com.sparta.devquiz.domain.quiz.repository;
 
-import static com.sparta.devquiz.domain.quiz.entity.QUserQuiz.userQuiz;
+
 import static com.sparta.devquiz.domain.quiz.entity.QQuiz.quiz;
+import static com.sparta.devquiz.domain.quiz.entity.QUserQuiz.userQuiz;
 
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -21,9 +22,8 @@ public class QuizUserRepositoryCustomImpl implements QuizUserRepositoryCustom {
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public List<QuizGetByUserResponse> findCorrectQuizzesByUsers(User loginUser,
-            UserQuizStatus status){
-        QUserQuiz uq = QUserQuiz.userQuiz;
+    public List<QuizGetByUserResponse> findCorrectQuizzesByUsers(User loginUser, UserQuizStatus status){
+        QUserQuiz uq = userQuiz;
 
         List<UserQuiz> resultUserQuiz = jpaQueryFactory.select(userQuiz)
                 .from(userQuiz)
@@ -46,7 +46,7 @@ public class QuizUserRepositoryCustomImpl implements QuizUserRepositoryCustom {
 
     @Override
     public List<QuizGetByUserResponse> findCorrectQuizzesByUsers(User loginUser){
-        QUserQuiz uq = QUserQuiz.userQuiz;
+        QUserQuiz uq = userQuiz;
 
         List<UserQuiz> resultUserQuiz = jpaQueryFactory.select(userQuiz)
                 .from(userQuiz)
