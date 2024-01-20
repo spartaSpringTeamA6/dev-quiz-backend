@@ -27,7 +27,7 @@ public class CoinController {
 
 
     @SecurityRequirement(name = "Bearer Authentication")
-    @Operation(operationId = "COIN-001", summary = "코인 적립")
+    @Operation(operationId = "COIN-001", summary = "코인 적립   테스트용")
     @PostMapping("/save")
     public ResponseEntity<CommonResponseDto> saveCoin(@PathVariable Long userId, @RequestBody CoinContent coinContent,
                                                       @AuthUser User authUser) {

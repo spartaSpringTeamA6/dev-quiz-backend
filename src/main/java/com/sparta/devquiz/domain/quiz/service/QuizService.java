@@ -1,5 +1,7 @@
 package com.sparta.devquiz.domain.quiz.service;
 
+import com.sparta.devquiz.domain.coin.enums.CoinContent;
+import com.sparta.devquiz.domain.coin.service.CoinService;
 import com.sparta.devquiz.domain.quiz.dto.request.QuizAnswerSubmitRequest;
 import com.sparta.devquiz.domain.quiz.dto.request.QuizCreateRequest;
 import com.sparta.devquiz.domain.quiz.dto.request.QuizUpdateRequest;
@@ -16,7 +18,9 @@ import com.sparta.devquiz.domain.quiz.exception.QuizExceptionCode;
 import com.sparta.devquiz.domain.quiz.repository.QuizRepository;
 import com.sparta.devquiz.domain.quiz.repository.QuizUserRepository;
 import com.sparta.devquiz.domain.user.entity.User;
+
 import java.util.List;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -30,6 +34,7 @@ public class QuizService {
 
     private final QuizRepository quizRepository;
     private final QuizUserRepository quizUserRepository;
+    private final CoinService coinService;
 
     @Transactional
     public void createQuiz(QuizCreateRequest createRequest) {
@@ -105,7 +110,10 @@ public class QuizService {
                     quiz.getSolveCount() + 1);
         }
 
-                if (user != null) {
+        CoinContent coinContent = CoinContent.matchingQuizStatus(status);
+        coinService.saveCoin(user.getId(), coinContent, user);
+
+        if (user != null) {
             UserQuiz userQuiz = UserQuiz.builder()
                     .user(user)
                     .quiz(quiz)
@@ -123,15 +131,15 @@ public class QuizService {
     }
 
     public List<QuizGetByUserResponse> getCorrectQuizzesForUser(User user) {
-        return quizUserRepository.findCorrectQuizzesByUsers(user,UserQuizStatus.CORRECT);
+        return quizUserRepository.findCorrectQuizzesByUsers(user, UserQuizStatus.CORRECT);
     }
 
     public List<QuizGetByUserResponse> getFailQuizzesForUser(User user) {
-        return quizUserRepository.findCorrectQuizzesByUsers(user,UserQuizStatus.FAIL);
+        return quizUserRepository.findCorrectQuizzesByUsers(user, UserQuizStatus.FAIL);
     }
 
     public List<QuizGetByUserResponse> getPassQuizzesForUser(User user) {
-        return quizUserRepository.findCorrectQuizzesByUsers(user,UserQuizStatus.PASS);
+        return quizUserRepository.findCorrectQuizzesByUsers(user, UserQuizStatus.PASS);
     }
 
     public Quiz getQuizById(Long id) {
