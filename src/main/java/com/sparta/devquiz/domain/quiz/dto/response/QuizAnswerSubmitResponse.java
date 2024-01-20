@@ -2,8 +2,6 @@ package com.sparta.devquiz.domain.quiz.dto.response;
 
 import com.sparta.devquiz.domain.quiz.entity.Quiz;
 import com.sparta.devquiz.domain.quiz.enums.UserQuizStatus;
-import com.sparta.devquiz.domain.team.dto.response.TeamCreateResponse;
-import com.sparta.devquiz.domain.team.entity.Team;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
