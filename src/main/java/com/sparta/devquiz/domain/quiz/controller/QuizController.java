@@ -44,7 +44,7 @@ public class QuizController {
             @AuthUser User user,
             @RequestBody QuizCreateRequest request
     ) {
-        quizService.createQuiz(request);
+        quizService.createQuiz(request, user);
 
         return ResponseEntity.status(QuizResponseCode.CREATED_QUIZ.getHttpStatus())
                 .body(CommonResponseDto.of(QuizResponseCode.CREATED_QUIZ));
@@ -82,7 +82,7 @@ public class QuizController {
             @PathVariable Long quizId,
             @RequestBody QuizUpdateRequest quizUpdateRequest
     ) {
-        quizService.updateQuiz(quizId, quizUpdateRequest);
+        quizService.updateQuiz(quizId, quizUpdateRequest, user);
         return ResponseEntity.status(QuizResponseCode.OK_UPDATE_QUIZ.getHttpStatus())
                 .body(CommonResponseDto.of(QuizResponseCode.OK_UPDATE_QUIZ));
     }
@@ -94,7 +94,7 @@ public class QuizController {
             @AuthUser User user,
             @PathVariable Long quizId
     ) {
-        quizService.deleteQuiz(quizId);
+        quizService.deleteQuiz(quizId, user);
         return ResponseEntity.status(QuizResponseCode.OK_DELETE_QUIZ.getHttpStatus())
                 .body(CommonResponseDto.of(QuizResponseCode.OK_DELETE_QUIZ));
     }

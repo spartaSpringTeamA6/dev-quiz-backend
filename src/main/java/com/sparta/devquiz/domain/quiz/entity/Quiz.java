@@ -2,10 +2,22 @@ package com.sparta.devquiz.domain.quiz.entity;
 
 import com.sparta.devquiz.domain.quiz.enums.QuizCategory;
 import com.sparta.devquiz.global.entity.BaseTimeEntity;
-import jakarta.persistence.*;
-import java.time.LocalDateTime;
-import lombok.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -18,13 +18,17 @@ import com.sparta.devquiz.domain.quiz.exception.QuizExceptionCode;
 import com.sparta.devquiz.domain.quiz.repository.QuizRepository;
 import com.sparta.devquiz.domain.quiz.repository.QuizUserRepository;
 import com.sparta.devquiz.domain.user.entity.User;
+import com.sparta.devquiz.domain.user.enums.UserRole;
+import com.sparta.devquiz.domain.user.exception.UserCustomException;
+import com.sparta.devquiz.domain.user.exception.UserExceptionCode;
 import com.sparta.devquiz.domain.user.service.command.UserService;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -37,7 +41,14 @@ public class QuizService {
     private final CoinService coinService;
 
     @Transactional
-    public void createQuiz(QuizCreateRequest createRequest) {
+    public void createQuiz(QuizCreateRequest createRequest, User User) {
+
+        if (User == null) {
+            throw new UserCustomException(UserExceptionCode.UNAUTHORIZED_USER);
+        }
+        if (User.getRole() != UserRole.ROLE_ADMIN) {
+            throw new UserCustomException(UserExceptionCode.UNAUTHORIZED_USER);
+        }
         String Example = String.join("\n", createRequest.getExample());
         Quiz quiz = Quiz.builder()
                 .category(createRequest.getCategory())
@@ -80,7 +91,13 @@ public class QuizService {
     }
 
     @Transactional
-    public void updateQuiz(Long quizId, QuizUpdateRequest updateRequest) {
+    public void updateQuiz(Long quizId, QuizUpdateRequest updateRequest, User User) {
+        if (User == null) {
+            throw new UserCustomException(UserExceptionCode.UNAUTHORIZED_USER);
+        }
+        if (User.getRole() != UserRole.ROLE_ADMIN) {
+            throw new UserCustomException(UserExceptionCode.UNAUTHORIZED_USER);
+        }
         Quiz quiz = getQuizById(quizId);
 
         quiz.updateQuiz(updateRequest.getQuestion(), String.join("\n", updateRequest.getExample()),
@@ -88,7 +105,13 @@ public class QuizService {
     }
 
     @Transactional
-    public void deleteQuiz(Long quizId) {
+    public void deleteQuiz(Long quizId, User User) {
+        if (User == null) {
+            throw new UserCustomException(UserExceptionCode.UNAUTHORIZED_USER);
+        }
+        if (User.getRole() != UserRole.ROLE_ADMIN) {
+            throw new UserCustomException(UserExceptionCode.UNAUTHORIZED_USER);
+        }
         Quiz quiz = getQuizById(quizId);
 
         quiz.deleteQuiz();
