@@ -15,7 +15,6 @@ import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -49,15 +48,12 @@ public class JwtService {
   }
 
   public void addToCookie(HttpServletResponse res, String name, String value, int maxAge) {
-    try {
-      value = URLEncoder.encode(value, "utf-8").replaceAll("\\+", "%20");
-      Cookie cookie = new Cookie(name, value);
-      cookie.setPath("/");
-      cookie.setMaxAge(maxAge);
-      cookie.setHttpOnly(true);
-      res.addCookie(cookie);
-    } catch (UnsupportedEncodingException e) {
-    }
+    value = URLEncoder.encode(value, StandardCharsets.UTF_8).replaceAll("\\+", "%20");
+    Cookie cookie = new Cookie(name, value);
+    cookie.setPath("/");
+    cookie.setMaxAge(maxAge);
+    cookie.setHttpOnly(true);
+    res.addCookie(cookie);
   }
 
   public String getTokenFromRequest(HttpServletRequest req, String name) {

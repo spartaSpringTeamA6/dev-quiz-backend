@@ -4,7 +4,6 @@ import static com.sparta.devquiz.global.oauth.CookieUtil.REDIRECT_URI_COOKIE_NAM
 import static com.sparta.devquiz.global.oauth.CookieUtil.getCookie;
 
 import com.sparta.devquiz.global.oauth.repository.CookieOAuth2RequestRepository;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -23,7 +22,7 @@ public class OAuth2LoginFailureHandler extends SimpleUrlAuthenticationFailureHan
 
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
-      AuthenticationException exception) throws IOException, ServletException {
+      AuthenticationException exception) throws IOException {
       String targetUrl = getCookie(request, REDIRECT_URI_COOKIE_NAME)
                                     .map(Cookie::getValue)
                                     .orElse(("/"));
