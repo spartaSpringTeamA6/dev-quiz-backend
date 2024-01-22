@@ -13,7 +13,6 @@ import com.sparta.devquiz.domain.user.service.query.UserQueryService;
 import com.sparta.devquiz.global.annotation.AuthUser;
 import com.sparta.devquiz.global.response.CommonResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +29,6 @@ public class UserQueryController {
 
   private final UserQueryService userQueryService;
 
-  @SecurityRequirement(name = "Bearer Authentication")
   @Operation(operationId = "USER-005", summary = "내 정보 조회")
   @GetMapping
   public ResponseEntity<CommonResponseDto> getMyProfile(@AuthUser User authUser, @PathVariable Long userId) {
@@ -39,7 +37,6 @@ public class UserQueryController {
         .body(CommonResponseDto.of(UserResponseCode.GET_MY_INFO, result));
   }
 
-  @SecurityRequirement(name = "Bearer Authentication")
   @Operation(operationId = "USER-006", summary = "내 스킬 조회")
   @GetMapping("/skills")
   public ResponseEntity<CommonResponseDto> getMySkills(@AuthUser User authUser, @PathVariable Long userId) {
@@ -48,7 +45,6 @@ public class UserQueryController {
         .body(CommonResponseDto.of(UserResponseCode.DELETE_USER, result));
   }
 
-  @SecurityRequirement(name = "Bearer Authentication")
   @Operation(operationId = "USER-007",summary = "내가 속한 그룹 조회")
   @GetMapping("/teams")
   public ResponseEntity<CommonResponseDto> getMyGroups(@AuthUser User authUser, @PathVariable Long userId) {
@@ -57,7 +53,6 @@ public class UserQueryController {
         .body(CommonResponseDto.of(UserResponseCode.GET_MY_TEAM, result));
   }
 
-  @SecurityRequirement(name = "Bearer Authentication")
   @Operation(operationId = "USER-008", summary = "내가 받은 초대 조회")
   @GetMapping("/teams/invitations")
   public ResponseEntity<CommonResponseDto> getMyInvitations(@AuthUser User authUser, @PathVariable Long userId) {
@@ -66,7 +61,6 @@ public class UserQueryController {
         .body(CommonResponseDto.of(UserResponseCode.GET_TEAM_INVITATION, result));
   }
 
-  @SecurityRequirement(name = "Bearer Authentication")
   @Operation(operationId = "USER-009", summary = "내가 작성한 보드 조회")
   @GetMapping("/boards")
   public ResponseEntity<CommonResponseDto> getMyBoards(@AuthUser User authUser, @PathVariable Long userId) {
@@ -75,7 +69,6 @@ public class UserQueryController {
         .body(CommonResponseDto.of(UserResponseCode.GET_MY_BOARD, result));
   }
 
-  @SecurityRequirement(name = "Bearer Authentication")
   @Operation(operationId = "USER-010", summary = "내가 작성한 댓글 조회")
   @GetMapping("/comments")
   public ResponseEntity<CommonResponseDto> getMyComments(@AuthUser User authUser, @PathVariable Long userId) {
@@ -84,7 +77,6 @@ public class UserQueryController {
         .body(CommonResponseDto.of(UserResponseCode.GET_MY_COMMENT, result));
   }
 
-  @SecurityRequirement(name = "Bearer Authentication")
   @Operation(operationId = "USER-011", summary = "내가 시도한 문제 조회")
   @GetMapping("/quizzes")
   public ResponseEntity<CommonResponseDto> getMyQuizzes(@AuthUser User authUser, @PathVariable Long userId) {
@@ -93,7 +85,6 @@ public class UserQueryController {
         .body(CommonResponseDto.of(UserResponseCode.GET_MY_QUIZ, result));
   }
 
-  @SecurityRequirement(name = "Bearer Authentication")
   @Operation(operationId = "USER-012", summary = "내가 맞은 문제 조회")
   @GetMapping("/quizzes/correct")
   public ResponseEntity<CommonResponseDto> getMyCorrectQuizzes(@AuthUser User authUser, @PathVariable Long userId) {
@@ -102,7 +93,6 @@ public class UserQueryController {
         .body(CommonResponseDto.of(UserResponseCode.GET_MY_CORRECT_QUIZ, result));
   }
 
-  @SecurityRequirement(name = "Bearer Authentication")
   @Operation(operationId = "USER-013", summary = "내가 틀린 문제 조회")
   @GetMapping("/quizzes/fail")
   public ResponseEntity<CommonResponseDto> getMyFailQuizzes(@AuthUser User authUser, @PathVariable Long userId) {
@@ -111,7 +101,6 @@ public class UserQueryController {
         .body(CommonResponseDto.of(UserResponseCode.GET_MY_FAILED_QUIZ, result));
   }
 
-  @SecurityRequirement(name = "Bearer Authentication")
   @Operation(operationId = "USER-014", summary = "내가 모르는 문제 조회")
   @GetMapping("/quizzes/pass")
   public ResponseEntity<CommonResponseDto> getMyPassQuizzes(@AuthUser User authUser, @PathVariable Long userId) {

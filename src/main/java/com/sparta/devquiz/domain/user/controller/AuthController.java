@@ -4,7 +4,6 @@ import com.sparta.devquiz.domain.user.response.UserResponseCode;
 import com.sparta.devquiz.domain.user.service.command.AuthService;
 import com.sparta.devquiz.global.response.CommonResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -22,7 +21,6 @@ public class AuthController {
 
   private final AuthService authService;
 
-  @SecurityRequirement(name = "Bearer Authentication")
   @Operation(operationId = "AUTH-001", summary = "로그아웃")
   @PostMapping("/logout")
   public ResponseEntity<CommonResponseDto> logout(HttpServletRequest request) {
@@ -31,7 +29,6 @@ public class AuthController {
         .body(CommonResponseDto.of(UserResponseCode.LOGOUT));
   }
 
-  @SecurityRequirement(name = "Bearer Authentication")
   @Operation(operationId = "AUTH-002", summary = "토큰 재발급")
   @PostMapping("/reissue")
   public ResponseEntity<CommonResponseDto> reissue(HttpServletRequest request, HttpServletResponse response) {

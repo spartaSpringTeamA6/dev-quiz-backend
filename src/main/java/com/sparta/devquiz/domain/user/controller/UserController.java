@@ -7,7 +7,6 @@ import com.sparta.devquiz.domain.user.service.command.UserService;
 import com.sparta.devquiz.global.annotation.AuthUser;
 import com.sparta.devquiz.global.response.CommonResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +27,6 @@ public class UserController {
 
   private final UserService userService;
 
-  @SecurityRequirement(name = "Bearer Authentication")
   @Operation(operationId = "USER-001", summary = "내 정보 수정")
   @PutMapping
   public ResponseEntity<CommonResponseDto> updateMyProfile(
@@ -40,7 +38,6 @@ public class UserController {
         .body(CommonResponseDto.of(UserResponseCode.UPDATE_MY_INFO));
   }
 
-  @SecurityRequirement(name = "Bearer Authentication")
   @Operation(operationId = "USER-002", summary = "회원탈퇴")
   @DeleteMapping
   public ResponseEntity<CommonResponseDto> deleteMyProfile(@AuthUser User authUser, @PathVariable Long userId) {
@@ -49,7 +46,6 @@ public class UserController {
         .body(CommonResponseDto.of(UserResponseCode.DELETE_USER));
   }
 
-  @SecurityRequirement(name = "Bearer Authentication")
   @Operation(operationId = "USER-003", summary = "그룹 초대 수락")
   @PostMapping("/teams/{teamId}/accept")
   public ResponseEntity<CommonResponseDto> acceptInvitation(@AuthUser User authUser, @PathVariable Long userId, @PathVariable Long teamId) {
@@ -58,7 +54,6 @@ public class UserController {
         .body(CommonResponseDto.of(UserResponseCode.ACCEPT_TEAM_INVITATION));
   }
 
-  @SecurityRequirement(name = "Bearer Authentication")
   @Operation(operationId = "USER-004", summary = "그룹 초대 거절")
   @DeleteMapping("/teams/{teamId}/reject")
   public ResponseEntity<CommonResponseDto> rejectInvitation(@AuthUser User authUser, @PathVariable Long userId, @PathVariable Long teamId) {

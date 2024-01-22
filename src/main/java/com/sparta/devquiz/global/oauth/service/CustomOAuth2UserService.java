@@ -60,6 +60,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
     User createdUser = attributes.toEntity(oauthType, attributes.getOauth2UserInfo(), makeUsername());
     return userRepository.save(createdUser);
   }
+  
   private String makeUsername() {
     String username = UUID.randomUUID().toString().substring(0, 27);
     while (userRepository.existsByUsername(username)) {
