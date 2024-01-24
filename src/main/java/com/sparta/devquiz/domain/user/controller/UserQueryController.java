@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/users/{userId}")
+@RequestMapping("/api/users")
 @Tag(name = "1-2. User 조회 API", description = "User 관련 API 입니다.")
 public class UserQueryController {
 
@@ -38,7 +38,7 @@ public class UserQueryController {
   }
 
   @Operation(operationId = "USER-006", summary = "내 스킬 조회")
-  @GetMapping("/skills")
+  @GetMapping("/{userId}/skills")
   public ResponseEntity<CommonResponseDto> getMySkills(@AuthUser User authUser, @PathVariable Long userId) {
     UserSkillResponse result = userQueryService.getMySkills(authUser, userId);
     return ResponseEntity.status(UserResponseCode.DELETE_USER.getHttpStatus())
@@ -46,7 +46,7 @@ public class UserQueryController {
   }
 
   @Operation(operationId = "USER-007",summary = "내가 속한 그룹 조회")
-  @GetMapping("/teams")
+  @GetMapping("/{userId}/teams")
   public ResponseEntity<CommonResponseDto> getMyGroups(@AuthUser User authUser, @PathVariable Long userId) {
     UserTeamsResponse result = userQueryService.getMyTeams(authUser, userId);
     return ResponseEntity.status(UserResponseCode.GET_MY_TEAM.getHttpStatus())
@@ -54,7 +54,7 @@ public class UserQueryController {
   }
 
   @Operation(operationId = "USER-008", summary = "내가 받은 초대 조회")
-  @GetMapping("/teams/invitations")
+  @GetMapping("/{userId}/teams/invitations")
   public ResponseEntity<CommonResponseDto> getMyInvitations(@AuthUser User authUser, @PathVariable Long userId) {
     UserInvitationsResponse result = userQueryService.getMyInvitations(authUser, userId);
     return ResponseEntity.status(UserResponseCode.GET_TEAM_INVITATION.getHttpStatus())
@@ -62,7 +62,7 @@ public class UserQueryController {
   }
 
   @Operation(operationId = "USER-009", summary = "내가 작성한 보드 조회")
-  @GetMapping("/boards")
+  @GetMapping("/{userId}/boards")
   public ResponseEntity<CommonResponseDto> getMyBoards(@AuthUser User authUser, @PathVariable Long userId) {
     UserBoardsResponse result = userQueryService.getMyBoards(authUser, userId);
     return ResponseEntity.status(UserResponseCode.GET_MY_BOARD.getHttpStatus())
@@ -70,7 +70,7 @@ public class UserQueryController {
   }
 
   @Operation(operationId = "USER-010", summary = "내가 작성한 댓글 조회")
-  @GetMapping("/comments")
+  @GetMapping("/{userId}/comments")
   public ResponseEntity<CommonResponseDto> getMyComments(@AuthUser User authUser, @PathVariable Long userId) {
     UserCommentsResponse result = userQueryService.getMyComments(authUser, userId);
     return ResponseEntity.status(UserResponseCode.GET_MY_COMMENT.getHttpStatus())
@@ -78,7 +78,7 @@ public class UserQueryController {
   }
 
   @Operation(operationId = "USER-011", summary = "내가 시도한 문제 조회")
-  @GetMapping("/quizzes")
+  @GetMapping("/{userId}/quizzes")
   public ResponseEntity<CommonResponseDto> getMyQuizzes(@AuthUser User authUser, @PathVariable Long userId) {
     UserQuizzesResponse result = userQueryService.getMyQuizzes(authUser, userId);
     return ResponseEntity.status(UserResponseCode.GET_MY_QUIZ.getHttpStatus())
@@ -86,7 +86,7 @@ public class UserQueryController {
   }
 
   @Operation(operationId = "USER-012", summary = "내가 맞은 문제 조회")
-  @GetMapping("/quizzes/correct")
+  @GetMapping("/{userId}/quizzes/correct")
   public ResponseEntity<CommonResponseDto> getMyCorrectQuizzes(@AuthUser User authUser, @PathVariable Long userId) {
     UserQuizzesResponse result = userQueryService.getMyCorrectQuizzes(authUser, userId);
     return ResponseEntity.status(UserResponseCode.GET_MY_CORRECT_QUIZ.getHttpStatus())
@@ -94,7 +94,7 @@ public class UserQueryController {
   }
 
   @Operation(operationId = "USER-013", summary = "내가 틀린 문제 조회")
-  @GetMapping("/quizzes/fail")
+  @GetMapping("/{userId}/quizzes/fail")
   public ResponseEntity<CommonResponseDto> getMyFailQuizzes(@AuthUser User authUser, @PathVariable Long userId) {
     UserQuizzesResponse result = userQueryService.getMyFailQuizzes(authUser, userId);
     return ResponseEntity.status(UserResponseCode.GET_MY_FAILED_QUIZ.getHttpStatus())
@@ -102,7 +102,7 @@ public class UserQueryController {
   }
 
   @Operation(operationId = "USER-014", summary = "내가 모르는 문제 조회")
-  @GetMapping("/quizzes/pass")
+  @GetMapping("/{userId}/quizzes/pass")
   public ResponseEntity<CommonResponseDto> getMyPassQuizzes(@AuthUser User authUser, @PathVariable Long userId) {
     UserQuizzesResponse result = userQueryService.getMyPassQuizzes(authUser, userId);
     return ResponseEntity.status(UserResponseCode.GET_MY_PASSED_QUIZ.getHttpStatus())
