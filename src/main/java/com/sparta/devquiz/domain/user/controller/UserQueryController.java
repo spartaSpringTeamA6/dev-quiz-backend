@@ -31,8 +31,8 @@ public class UserQueryController {
 
   @Operation(operationId = "USER-005", summary = "내 정보 조회")
   @GetMapping
-  public ResponseEntity<CommonResponseDto> getMyProfile(@AuthUser User authUser, @PathVariable Long userId) {
-    UserDetailResponse result = userQueryService.getMyProfile(authUser, userId);
+  public ResponseEntity<CommonResponseDto> getMyProfile(@AuthUser User authUser) {
+    UserDetailResponse result = userQueryService.getMyProfile(authUser);
     return ResponseEntity.status(UserResponseCode.GET_MY_INFO.getHttpStatus())
         .body(CommonResponseDto.of(UserResponseCode.GET_MY_INFO, result));
   }
