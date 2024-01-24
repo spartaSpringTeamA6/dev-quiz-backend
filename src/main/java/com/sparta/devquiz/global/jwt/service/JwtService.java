@@ -52,7 +52,9 @@ public class JwtService {
     Cookie cookie = new Cookie(name, value);
     cookie.setPath("/");
     cookie.setMaxAge(maxAge);
-    cookie.setHttpOnly(true);
+    if (name.equals(REFRESH_TOKEN_COOKIE)) {
+      cookie.setHttpOnly(true);
+    }
     res.addCookie(cookie);
   }
 
