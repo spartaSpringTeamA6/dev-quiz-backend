@@ -1,7 +1,7 @@
 package com.sparta.devquiz.domain.user.service.command;
 
 import static com.sparta.devquiz.global.jwt.service.JwtService.ACCESS_TOKEN_COOKIE;
-import static com.sparta.devquiz.global.jwt.service.JwtService.ACCESS_TOKEN_TIME;
+import static com.sparta.devquiz.global.jwt.service.JwtService.ACCESS_COOKIE_TIME;
 import static com.sparta.devquiz.global.jwt.service.JwtService.REFRESH_TOKEN_COOKIE;
 
 import com.sparta.devquiz.global.jwt.service.JwtService;
@@ -42,7 +42,7 @@ public class AuthService {
 
       if (redisService.hasValues(oauthId) && refreshToken.equals(redisService.getValues(oauthId))) {
         String newAccessToken = jwtService.createAccessToken(oauthId, userRole);
-        jwtService.addToCookie(response, ACCESS_TOKEN_COOKIE, newAccessToken, ACCESS_TOKEN_TIME);
+        jwtService.addToCookie(response, ACCESS_TOKEN_COOKIE, newAccessToken, ACCESS_COOKIE_TIME);
       }
     }
   }
