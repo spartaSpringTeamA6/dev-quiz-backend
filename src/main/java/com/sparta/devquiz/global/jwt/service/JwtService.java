@@ -29,10 +29,10 @@ public class JwtService {
 
   public static final String BEARER_PREFIX = "Bearer ";
   public static final String AUTHORIZATION_KEY = "auth";
-  public static final String ACCESS_TOKEN_COOKIE = "access_token";
+  public static final String ACCESS_COOKIE_NAME = "access_token";
   public static final int ACCESS_JWT_TIME  = 1 * 60 * 60 * 1000;
   public static final int ACCESS_COOKIE_TIME = 1 * 60 * 60;
-  public static final String REFRESH_TOKEN_COOKIE = "refresh_token";
+  public static final String REFRESH_COOKIE_NAME = "refresh_token";
   public static final int REFRESH_JWT_TIME = 7 * 24 * 60 * 60 * 1000;
   public static final int REFRESH_COOKIE_TIME = 7 * 24 * 60 * 60;
 
@@ -55,7 +55,7 @@ public class JwtService {
     Cookie cookie = new Cookie(name, value);
     cookie.setPath("/");
     cookie.setMaxAge(maxAge);
-    if (name.equals(REFRESH_TOKEN_COOKIE)) {
+    if (name.equals(REFRESH_COOKIE_NAME)) {
       cookie.setHttpOnly(true);
     }
     res.addCookie(cookie);

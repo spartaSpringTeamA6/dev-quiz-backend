@@ -1,8 +1,8 @@
 package com.sparta.devquiz.domain.user.service.command;
 
-import static com.sparta.devquiz.global.jwt.service.JwtService.ACCESS_TOKEN_COOKIE;
+import static com.sparta.devquiz.global.jwt.service.JwtService.ACCESS_COOKIE_NAME;
 import static com.sparta.devquiz.global.jwt.service.JwtService.ACCESS_COOKIE_TIME;
-import static com.sparta.devquiz.global.jwt.service.JwtService.REFRESH_TOKEN_COOKIE;
+import static com.sparta.devquiz.global.jwt.service.JwtService.REFRESH_COOKIE_NAME;
 
 import com.sparta.devquiz.global.jwt.service.JwtService;
 import com.sparta.devquiz.global.redis.RedisService;
@@ -21,7 +21,7 @@ public class AuthService {
   private final RedisService redisService;
 
   public void logout(HttpServletRequest request) {
-    String accessToken = jwtService.getTokenFromRequest(request, ACCESS_TOKEN_COOKIE);
+    String accessToken = jwtService.getTokenFromRequest(request, ACCESS_COOKIE_NAME);
 
     if (StringUtils.hasText(accessToken)) {
       String subject = jwtService.getClaimsFromToken(jwtService.subStringToken(accessToken)).getSubject();
@@ -30,7 +30,7 @@ public class AuthService {
   }
 
   public void reissue(HttpServletRequest request, HttpServletResponse response) {
-    String bearerToken = jwtService.getTokenFromRequest(request, REFRESH_TOKEN_COOKIE);
+    String bearerToken = jwtService.getTokenFromRequest(request, REFRESH_COOKIE_NAME);
 
 
     if (StringUtils.hasText(bearerToken)) {
@@ -42,7 +42,7 @@ public class AuthService {
 
       if (redisService.hasValues(oauthId) && refreshToken.equals(redisService.getValues(oauthId))) {
         String newAccessToken = jwtService.createAccessToken(oauthId, userRole);
-        jwtService.addToCookie(response, ACCESS_TOKEN_COOKIE, newAccessToken, ACCESS_COOKIE_TIME);
+        jwtService.addToCookie(response, ACCESS_COOKIE_NAME, newAccessToken, ACCESS_COOKIE_TIME);
       }
     }
   }
