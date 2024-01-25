@@ -1,5 +1,7 @@
 package com.sparta.devquiz.global.jwt.filter;
 
+import static com.sparta.devquiz.global.jwt.service.JwtService.ACCESS_COOKIE_NAME;
+
 import com.sparta.devquiz.global.jwt.service.JwtService;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
@@ -25,9 +27,9 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String accessToken = jwtService.resolveToken(request);
-        if(StringUtils.hasText(accessToken)) {
-            Claims info = jwtService.getClaimsFromToken(accessToken);
+        String bearerToken = jwtService.getTokenFromRequest(request, ACCESS_COOKIE_NAME);
+        if(StringUtils.hasText(bearerToken)) {
+            Claims info = jwtService.getClaimsFromToken(jwtService.subStringToken(bearerToken));
             setAuthentication(info.getSubject());
         }
         filterChain.doFilter(request, response);

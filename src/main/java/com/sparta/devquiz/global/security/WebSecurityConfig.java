@@ -3,12 +3,14 @@ package com.sparta.devquiz.global.security;
 import com.sparta.devquiz.global.jwt.filter.JwtAuthorizationFilter;
 import com.sparta.devquiz.global.jwt.filter.JwtExceptionHandlerFilter;
 import com.sparta.devquiz.global.jwt.service.JwtService;
+import com.sparta.devquiz.global.oauth.handler.OAuth2LoginFailureHandler;
 import com.sparta.devquiz.global.oauth.handler.OAuth2LoginSuccessHandler;
 import com.sparta.devquiz.global.oauth.repository.CookieOAuth2RequestRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -20,6 +22,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 @RequiredArgsConstructor
 public class WebSecurityConfig {
 
@@ -27,6 +30,7 @@ public class WebSecurityConfig {
   private final OAuth2UserService oAuth2UserService;
   private final UserDetailsService userDetailsService;
   private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
+  private final OAuth2LoginFailureHandler oAuth2LoginFailureHandler;
   private final JwtExceptionHandlerFilter jwtExceptionHandlerFilter;
   private final CookieOAuth2RequestRepository cookieOAuth2RequestRepository;
 
@@ -46,14 +50,17 @@ public class WebSecurityConfig {
           .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
           .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
           .requestMatchers("/api/quizzes/**").permitAll()
+          .requestMatchers("/api/auth/reissue").permitAll()
           .anyRequest().authenticated()
     );
 
     http.oauth2Login(
         login -> login
+            .loginPage("http://devquiz.pro/login")
             .authorizationEndpoint(endPoint -> endPoint.authorizationRequestRepository(cookieOAuth2RequestRepository))
             .userInfoEndpoint(userInfo -> userInfo.userService(oAuth2UserService))
             .successHandler(oAuth2LoginSuccessHandler)
+            .failureHandler(oAuth2LoginFailureHandler)
     );
 
     http.addFilterBefore(jwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);

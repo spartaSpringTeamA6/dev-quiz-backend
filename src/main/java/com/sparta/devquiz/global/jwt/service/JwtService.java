@@ -14,24 +14,27 @@ import io.jsonwebtoken.security.SignatureException;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 @Service
 public class JwtService {
 
   public static final String BEARER_PREFIX = "Bearer ";
   public static final String AUTHORIZATION_KEY = "auth";
-  public static final String ACCESS_TOKEN_HEADER = "Authorization";
-  public static final long ACCESS_TOKEN_TIME  = 1 * 60 * 60 * 1000L;
-  public static final String REFRESH_TOKEN_COOKIE = "refresh_token";
-  public static final long REFRESH_TOKEN_TIME  = 7 * 24 * 60 * 60 * 1000L;
+  public static final String ACCESS_COOKIE_NAME = "access_token";
+  public static final int ACCESS_JWT_TIME  = 1 * 60 * 60 * 1000;
+  public static final int ACCESS_COOKIE_TIME = 1 * 60 * 60;
+  public static final String REFRESH_COOKIE_NAME = "refresh_token";
+  public static final int REFRESH_JWT_TIME = 7 * 24 * 60 * 60 * 1000;
+  public static final int REFRESH_COOKIE_TIME = 7 * 24 * 60 * 60;
 
   @Value("${jwt.secret.key}")
   private String secretKey;
@@ -46,30 +49,35 @@ public class JwtService {
     key = Keys.hmacShaKeyFor(bytes);
   }
 
-  public String resolveToken(HttpServletRequest request) {
-    String accessToken = request.getHeader(ACCESS_TOKEN_HEADER);
-    if (StringUtils.hasText(accessToken) && accessToken.startsWith(BEARER_PREFIX)) {
-      return accessToken.substring(7);
+  //AuthorizationFilter -> AuthorizationRequestRepository을 타고 있으므로 null을 반환해야 함.
+  public void addToCookie(HttpServletResponse res, String name, String value, int maxAge) {
+    value = URLEncoder.encode(value, StandardCharsets.UTF_8).replaceAll("\\+", "%20");
+    Cookie cookie = new Cookie(name, value);
+    cookie.setPath("/");
+    cookie.setMaxAge(maxAge);
+    if (name.equals(REFRESH_COOKIE_NAME)) {
+      cookie.setHttpOnly(true);
+    }
+    res.addCookie(cookie);
+  }
+
+  public String getTokenFromRequest(HttpServletRequest req, String name) {
+    Cookie[] cookies = req.getCookies();
+    if(cookies != null) {
+      for (Cookie cookie : cookies) {
+        if (cookie.getName().equals(name)) {
+          return URLDecoder.decode(cookie.getValue(), StandardCharsets.UTF_8);
+        }
+      }
     }
     return null;
   }
 
-  public String resolveTokenFromHeader(HttpServletRequest request) {
-    String bearerToken = request.getHeader(ACCESS_TOKEN_HEADER);
-    return subStringToken(bearerToken);
-  }
-
-  public String resolveTokenFromCookie(HttpServletRequest request) {
-    Cookie[] cookies = request.getCookies();
-    String bearerToken = null;
-    if(cookies != null) {
-      for (Cookie cookie : cookies) {
-        if (cookie.getName().equals(REFRESH_TOKEN_COOKIE)) {
-          bearerToken = URLDecoder.decode(cookie.getValue(), StandardCharsets.UTF_8);
-        }
-      }
+  public String subStringToken(String bearerToken) {
+    if (bearerToken.startsWith(BEARER_PREFIX)) {
+      return bearerToken.substring(7);
     }
-    return subStringToken(bearerToken);
+    throw new JwtCustomException(JwtExceptionCode.BAD_REQUEST_TOKEN);
   }
 
   public TokenSet createTokenSet(String oauthId, String role) {
@@ -80,11 +88,11 @@ public class JwtService {
   }
 
   public String createAccessToken(String oauthId, String role) {
-    return this.createToken(oauthId, role, ACCESS_TOKEN_TIME);
+    return this.createToken(oauthId, role, ACCESS_JWT_TIME);
   }
 
   public String createRefreshToken(String oauthId, String role) {
-    return this.createToken(oauthId, role, REFRESH_TOKEN_TIME);
+    return this.createToken(oauthId, role, REFRESH_JWT_TIME);
   }
 
   public String getUserRole(Claims claims) {
@@ -105,14 +113,7 @@ public class JwtService {
     }
   }
 
-  private static String subStringToken(String bearerToken) {
-    if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER_PREFIX)) {
-      return bearerToken.substring(7);
-    }
-    throw new JwtCustomException(JwtExceptionCode.BAD_REQUEST_TOKEN);
-  }
-
-  private String createToken(String oauthId, String role, long expiration) {
+  private String createToken(String oauthId, String role, int expiration) {
     Date date = new Date();
 
     return BEARER_PREFIX +

@@ -38,8 +38,8 @@ public class UserQueryService {
   private final QuizService quizService;
   private final TeamUserService teamUserService;
 
-  public UserDetailResponse getMyProfile(User authUser, Long userId) {
-    User findUser = validateUser(authUser, userId);
+  public UserDetailResponse getMyProfile(User authUser) {
+    User findUser = getUserById(authUser.getId());
     return UserDetailResponse.of(findUser);
   }
 
