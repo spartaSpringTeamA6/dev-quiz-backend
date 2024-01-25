@@ -4,18 +4,14 @@ import com.sparta.devquiz.domain.quiz.enums.UserQuizStatus;
 import com.sparta.devquiz.domain.user.entity.User;
 import com.sparta.devquiz.global.entity.BaseTimeEntity;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class UserQuiz extends BaseTimeEntity {
+public class UserQuizzes extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,7 +31,5 @@ public class UserQuiz extends BaseTimeEntity {
 
     @Column(nullable = false)
     private int score;
-
-
 
 }
