@@ -25,7 +25,7 @@ public class JwtExceptionHandlerFilter extends OncePerRequestFilter {
       response.setContentType(MediaType.APPLICATION_JSON_VALUE);
       response.setCharacterEncoding(StandardCharsets.UTF_8.name());
 
-      CommonResponseDto result = new CommonResponseDto(e.getHttpStatus().value(), e.getMessage());
+      CommonResponseDto result = new CommonResponseDto(e.getHttpStatus().value(), e.getErrorCode());
       response.getWriter().write(new ObjectMapper().writeValueAsString(result));
     }
   }
