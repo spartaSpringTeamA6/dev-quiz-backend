@@ -1,9 +1,9 @@
 package com.sparta.devquiz.global.oauth.handler;
 
 import static com.sparta.devquiz.global.jwt.service.JwtService.ACCESS_TOKEN_COOKIE;
-import static com.sparta.devquiz.global.jwt.service.JwtService.ACCESS_TOKEN_TIME;
+import static com.sparta.devquiz.global.jwt.service.JwtService.ACCESS_COOKIE_TIME;
 import static com.sparta.devquiz.global.jwt.service.JwtService.REFRESH_TOKEN_COOKIE;
-import static com.sparta.devquiz.global.jwt.service.JwtService.REFRESH_TOKEN_TIME;
+import static com.sparta.devquiz.global.jwt.service.JwtService.REFRESH_COOKIE_TIME;
 import static com.sparta.devquiz.global.oauth.CookieUtil.REDIRECT_URI_COOKIE_NAME;
 
 import com.sparta.devquiz.global.jwt.dto.TokenSet;
@@ -36,8 +36,8 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
     String targetUrl = determineTargetUrl(request, response, authentication);
     TokenSet tokenSet = createTokenSet(authentication);
 
-    jwtService.addToCookie(response, ACCESS_TOKEN_COOKIE, tokenSet.getAccessToken(), ACCESS_TOKEN_TIME);
-    jwtService.addToCookie(response, REFRESH_TOKEN_COOKIE, tokenSet.getRefreshToken(), REFRESH_TOKEN_TIME);
+    jwtService.addToCookie(response, ACCESS_TOKEN_COOKIE, tokenSet.getAccessToken(), ACCESS_COOKIE_TIME);
+    jwtService.addToCookie(response, REFRESH_TOKEN_COOKIE, tokenSet.getRefreshToken(), REFRESH_COOKIE_TIME);
 
     getRedirectStrategy().sendRedirect(request, response, targetUrl);
   }
@@ -58,7 +58,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
 
     TokenSet tokenSet = jwtService.createTokenSet(oauthId, authority);
 
-    redisService.setValues(oAuth2User.getName(), tokenSet.getRefreshToken().substring(7), REFRESH_TOKEN_TIME);
+    redisService.setValues(oAuth2User.getName(), tokenSet.getRefreshToken().substring(7), REFRESH_COOKIE_TIME);
 
     return tokenSet;
   }
