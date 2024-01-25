@@ -30,9 +30,11 @@ public class JwtService {
   public static final String BEARER_PREFIX = "Bearer ";
   public static final String AUTHORIZATION_KEY = "auth";
   public static final String ACCESS_TOKEN_COOKIE = "access_token";
-  public static final int ACCESS_TOKEN_TIME  = 1 * 60 * 60 * 1000;
+  public static final int ACCESS_JWT_TIME  = 1 * 60 * 60 * 1000;
+  public static final int ACCESS_TOKEN_TIME  = 1 * 60 * 60;
   public static final String REFRESH_TOKEN_COOKIE = "refresh_token";
-  public static final int REFRESH_TOKEN_TIME = 7 * 24 * 60 * 60 * 1000;
+  public static final int REFRESH_JWT_TIME = 7 * 24 * 60 * 60 * 1000;
+  public static final int REFRESH_TOKEN_TIME = 7 * 24 * 60 * 60;
 
   @Value("${jwt.secret.key}")
   private String secretKey;
@@ -47,6 +49,7 @@ public class JwtService {
     key = Keys.hmacShaKeyFor(bytes);
   }
 
+  //AuthorizationFilter -> AuthorizationRequestRepository을 타고 있으므로 null을 반환해야 함.
   public void addToCookie(HttpServletResponse res, String name, String value, int maxAge) {
     value = URLEncoder.encode(value, StandardCharsets.UTF_8).replaceAll("\\+", "%20");
     Cookie cookie = new Cookie(name, value);
@@ -85,11 +88,11 @@ public class JwtService {
   }
 
   public String createAccessToken(String oauthId, String role) {
-    return this.createToken(oauthId, role, ACCESS_TOKEN_TIME);
+    return this.createToken(oauthId, role, ACCESS_JWT_TIME);
   }
 
   public String createRefreshToken(String oauthId, String role) {
-    return this.createToken(oauthId, role, REFRESH_TOKEN_TIME);
+    return this.createToken(oauthId, role, REFRESH_JWT_TIME);
   }
 
   public String getUserRole(Claims claims) {
