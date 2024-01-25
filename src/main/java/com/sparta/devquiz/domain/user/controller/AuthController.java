@@ -23,8 +23,8 @@ public class AuthController {
 
   @Operation(operationId = "AUTH-001", summary = "로그아웃")
   @PostMapping("/logout")
-  public ResponseEntity<CommonResponseDto> logout(HttpServletRequest request) {
-    authService.logout(request);
+  public ResponseEntity<CommonResponseDto> logout(HttpServletRequest request, HttpServletResponse response) {
+    authService.logout(request, response);
     return ResponseEntity.status(UserResponseCode.LOGOUT.getHttpStatus())
         .body(CommonResponseDto.of(UserResponseCode.LOGOUT));
   }

@@ -10,6 +10,7 @@ import com.sparta.devquiz.global.redis.RedisService;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -21,12 +22,13 @@ public class AuthService {
   private final JwtService jwtService;
   private final RedisService redisService;
 
-  public void logout(HttpServletRequest request) {
+  public void logout(HttpServletRequest request, HttpServletResponse response) {
     String accessToken = jwtService.getTokenFromRequest(request, ACCESS_COOKIE_NAME);
 
     if (StringUtils.hasText(accessToken)) {
       String subject = jwtService.getClaimsFromToken(jwtService.subStringToken(accessToken)).getSubject();
       redisService.deleteValues(subject);
+      deleteCookies(request, response);
     }
   }
 
@@ -49,5 +51,16 @@ public class AuthService {
         redisService.setValues(oauthId, newRefreshToken.substring(7), REFRESH_JWT_TIME);
       }
     }
+  }
+
+  private void deleteCookies(HttpServletRequest request, HttpServletResponse response) {
+    Arrays.stream(request.getCookies())
+        .filter(cookie -> ACCESS_COOKIE_NAME.equals(cookie.getName()) || REFRESH_COOKIE_NAME.equals(cookie.getName()))
+        .forEach(cookie -> {
+          cookie.setValue("");
+          cookie.setPath("/");
+          cookie.setMaxAge(0);
+          response.addCookie(cookie);
+        });
   }
 }
