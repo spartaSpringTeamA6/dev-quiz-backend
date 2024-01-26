@@ -11,6 +11,6 @@ import lombok.Getter;
 public class TeamInviteUserRequest {
 
     @Column
-    List<String> user = new LinkedList<>();
+    String username;
 
 }
