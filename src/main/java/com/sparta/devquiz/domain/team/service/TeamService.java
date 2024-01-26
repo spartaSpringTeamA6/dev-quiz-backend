@@ -124,13 +124,12 @@ public class TeamService {
     public void inviteTeamUser(User admin, Long teamId, TeamInviteUserRequest request) {
         Team team = getTeamAndCheckAuthAdmin(admin,teamId);
 
-        for(String username: request.getUser()){
-            User inviteUser = userService.getUserByUsername(username);
-            if(teamUserService.isExistedUser(team.getId(), inviteUser.getId())){
-                throw new TeamCustomException(TeamExceptionCode.CONFLICT_INVITE_USERNAME_IN_TEAM);
-            }
-            teamUserService.inviteTeamUser(team,inviteUser);
+        User inviteUser = userService.getUserByUsername(request.getUsername());
+        if(teamUserService.isExistedUser(team.getId(), inviteUser.getId())){
+            throw new TeamCustomException(TeamExceptionCode.CONFLICT_INVITE_USERNAME_IN_TEAM);
         }
+        teamUserService.inviteTeamUser(team,inviteUser);
+
     }
 
     @Transactional

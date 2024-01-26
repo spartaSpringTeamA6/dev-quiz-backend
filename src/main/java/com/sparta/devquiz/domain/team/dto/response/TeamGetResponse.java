@@ -28,7 +28,7 @@ public class TeamGetResponse {
 
     @Builder.Default
     @Schema(description = "팀 유저 닉네임", defaultValue = "용용선생")
-    private List<String> userList = new ArrayList<>();
+    private List<TeamUserResponse> userList = new ArrayList<>();
 
     public static TeamGetResponse of(Team team, TeamUser admin, List<TeamUser> userList) {
         return TeamGetResponse.builder()
@@ -36,9 +36,21 @@ public class TeamGetResponse {
                 .name(team.getName())
                 .admin(admin.getUser().getUsername())
                 .userList(userList.stream()
-                        .map(i -> i.getUser().getUsername())
+                        .map(i ->  TeamUserResponse.of(i.getUser().getUsername()))
                         .collect(Collectors.toList()))
                 .build();
+    }
+
+    @Builder
+    @Getter
+    public static class TeamUserResponse {
+        private String username;
+
+        public static TeamUserResponse of(String username) {
+            return TeamUserResponse.builder()
+                    .username(username)
+                    .build();
+        }
     }
 }
 
