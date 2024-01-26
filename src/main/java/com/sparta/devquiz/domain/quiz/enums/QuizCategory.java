@@ -18,41 +18,41 @@ public enum QuizCategory {
      */
     JAVA("JAVA"),
     SPRING("SPRING"),
-    Python("Python"),
-    Django("Django"),
+    PYTHON("PYTHON"),
+    DJANGO("DJANGO"),
     C("C"),
-    NestJS("NestJS"),
+    NEST_JS("NEST_JS"),
 
     /**
      *  프론트엔드 카테고리
      */
-    JavaScript("JavaScript"),
-    TypeScript("TypeScript"),
-    React("React"),
-    Vue("Vue"),
-    NextJS("NextJS"),
-    NodeJS("NodeJS"),
+    JAVASCRIPT("JAVASCRIPT"),
+    TYPESCRIPT("TYPESCRIPT"),
+    REACT("REACT"),
+    VUE("VUE"),
+    NEXT_JS("NEXT_JS"),
+    NODE_JS("NODE_JS"),
 
     /**
      *  데이터베이스 카테고리
      */
     JPA("JPA"),
     DATABASE("DATABASE"),
-    MySQL("MySQL"),
-    Oracle("Oracle"),
+    MY_SQL("MY_SQL"),
+    ORACLE("ORACLE"),
 
-    GraphQL("GraphQL"),
-    MongoDB("MongoDB"),
-    FireBase("FireBase"),
+    GRAPH_QL("GRAPH_QL"),
+    MONGO_DB("MONGO_DB"),
+    FIREBASE("FIREBASE"),
 
     /**
      * 네트워크 OR 데브옵스
      */
     AWS("AWS"),
-    Kubernetes("Kubernetes"),
-    Docker("Docker"),
-    Git("Git"),
-    Linux("Linux");
+    KUBERNETES("KUBERNETES"),
+    DOCKER("DOCKER"),
+    GIT("GIT"),
+    LINUX("LINUX");
 
 
     private final String major;
