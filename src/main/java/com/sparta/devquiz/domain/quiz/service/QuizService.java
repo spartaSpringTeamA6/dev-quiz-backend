@@ -78,7 +78,9 @@ public class QuizService {
                 randomQuizzes = quizRepository.findQuizzesByCategoryExcludingIds(category, correctQuizIds, pageable);
             }
         }
-
+        if (randomQuizzes.size()<10) {
+            throw new QuizCustomException(QuizExceptionCode.NOT_FOUND_QUIZ);
+        }
         return randomQuizzes.stream()
                 .map(QuizRandomResponse::of)
                 .toList();
