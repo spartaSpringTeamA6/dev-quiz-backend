@@ -26,16 +26,16 @@ public class CoinController {
     private final CoinService coinService;
 
 
-    @SecurityRequirement(name = "Bearer Authentication")
-    @Operation(operationId = "COIN-001", summary = "코인 적립   테스트용")
-    @PostMapping("/save")
-    public ResponseEntity<CommonResponseDto> saveCoin(@PathVariable Long userId, @RequestBody CoinContent coinContent,
-                                                      @AuthUser User authUser) {
-        coinService.saveCoin(userId, coinContent, authUser);
-
-        return ResponseEntity.status(CoinResponseCode.CREATED_SAVE_COIN.getHttpStatus())
-                .body(CommonResponseDto.of(CoinResponseCode.CREATED_SAVE_COIN));
-    }
+//    @SecurityRequirement(name = "Bearer Authentication")
+//    @Operation(operationId = "COIN-001", summary = "코인 적립   테스트용")
+//    @PostMapping("/save")
+//    public ResponseEntity<CommonResponseDto> saveCoin(@PathVariable Long userId, @RequestBody CoinContent coinContent,
+//                                                      @AuthUser User authUser) {
+//        coinService.saveCoin(userId, coinContent, authUser);
+//
+//        return ResponseEntity.status(CoinResponseCode.CREATED_SAVE_COIN.getHttpStatus())
+//                .body(CommonResponseDto.of(CoinResponseCode.CREATED_SAVE_COIN));
+//    }
 
     @SecurityRequirement(name = "Bearer Authentication")
     @Operation(operationId = "COIN-002", summary = "코인 사용")
