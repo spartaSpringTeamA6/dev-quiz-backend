@@ -27,6 +27,7 @@ public enum UserResponseCode implements ResponseCode {
     ACCEPT_TEAM_INVITATION(HttpStatus.OK, "ACCEPT INVITATION"),
     REJECT_TEAM_INVITATION(HttpStatus.OK, "REJECT INVITATION"),
     GET_MY_RANKING(HttpStatus.OK, "GET MY RANKING"),
+    GET_MY_SKILL(HttpStatus.OK, "GET MY SKILLS"),
 
     UPDATE_MY_INFO(HttpStatus.OK, "SUCCESS TO UPDATE MY INFORMATION"),
 

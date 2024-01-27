@@ -15,6 +15,7 @@ pipeline {
 		def dockerImage = docker.build("tkdtls/dev-quiz-backend:${gitTag}", "./")
                 withDockerRegistry([ credentialsId: "docker-access" ]) {
 		   dockerImage.push("${gitTag}")
+		   dockerImage.push("latest")
 		}
 	     }
 	   }

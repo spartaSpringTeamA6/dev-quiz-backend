@@ -97,5 +97,4 @@ public class BoardController {
                 .status(BoardResponseCode.OK_DELETE_BOARD.getHttpStatus())
                 .body(CommonResponseDto.of(BoardResponseCode.OK_DELETE_BOARD));
     }
-
 }

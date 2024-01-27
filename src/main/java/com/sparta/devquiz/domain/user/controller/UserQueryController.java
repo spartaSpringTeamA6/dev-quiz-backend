@@ -41,8 +41,8 @@ public class UserQueryController {
   @GetMapping("/{userId}/skills")
   public ResponseEntity<CommonResponseDto> getMySkills(@AuthUser User authUser, @PathVariable Long userId) {
     UserSkillResponse result = userQueryService.getMySkills(authUser, userId);
-    return ResponseEntity.status(UserResponseCode.DELETE_USER.getHttpStatus())
-        .body(CommonResponseDto.of(UserResponseCode.DELETE_USER, result));
+    return ResponseEntity.status(UserResponseCode.GET_MY_SKILL.getHttpStatus())
+        .body(CommonResponseDto.of(UserResponseCode.GET_MY_SKILL, result));
   }
 
   @Operation(operationId = "USER-007",summary = "내가 속한 그룹 조회")
