@@ -5,11 +5,12 @@ import com.sparta.devquiz.global.entity.BaseTimeEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -30,20 +31,18 @@ public class Quiz extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "quiz_id")
     private Long id;
 
-    @Column(nullable = false)
-    private String question;
+    @Column(nullable = false, name = "quiz_title")
+    private String quizTitle;
 
-    @Column(nullable = false)
-    private String example;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "category_id")
+    private Category category;
 
-    @Column(nullable = false)
-    @Enumerated(value = EnumType.STRING)
-    private QuizCategory category;
-
-    @Column(nullable = false)
-    private String answer;
+    @OneToMany(mappedBy = "quiz", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private List<QuizChoice> quizChoices = new ArrayList<>();
 
     @Column(nullable = false)
     private Long correctCount;
@@ -60,15 +59,41 @@ public class Quiz extends BaseTimeEntity {
     @Column
     private LocalDateTime deletedAt;
 
-    @Builder.Default
-    @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<UserQuiz> userQuizList = new ArrayList<>();
+    @Builder
+    public Quiz(String quizTitle) {
+        this.quizTitle = quizTitle;
+    }
 
-    public void updateQuiz(String question, String example, QuizCategory category, String answer){
-        this.question = question;
-        this.answer = answer;
+    public String findCategoryName() {
+        return this.category.getCategoryTitle();
+    }
+
+    public void addCategory(Category category) {
+        if (this.category == null) {
+            this.category = category;
+        }
+    }
+
+    public void addChoice(QuizChoice quizChoice) {
+        this.quizChoices.add(quizChoice);
+        if (quizChoice.getQuiz() != this) {
+            quizChoice.setQuiz(this);
+        }
+    }
+
+    public void addChoices(List<QuizChoice> quizChoices) {
+        this.quizChoices.addAll(quizChoices);
+    }
+
+
+    public void updateQuizTitle(final String updateTitle) {
+        this.quizTitle = updateTitle;
+    }
+
+    public void updateQuiz(QuizCategory quizCategory, String quizTitle, List<QuizChoice> quizChoices) {
         this.category = category;
-        this.example = example;
+        this.quizTitle = quizTitle;
+        this.quizChoices = quizChoices;
     }
 
     public void deleteQuiz(){
@@ -81,5 +106,4 @@ public class Quiz extends BaseTimeEntity {
         this.failCount = failCount;
         this.solveCount = solveCount;
     }
-
 }

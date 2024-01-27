@@ -28,4 +28,5 @@ public class QuizUpdateRequest {
     @Schema(description = "퀴즈의 id", defaultValue = "1")
     private Long id;
 
+
 }
