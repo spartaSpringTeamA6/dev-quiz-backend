@@ -1,6 +1,6 @@
-package com.sparta.devquiz.domain.user.repository;
+package com.sparta.devquiz.domain.skill.repository;
 
-import com.sparta.devquiz.domain.user.entity.Skill;
+import com.sparta.devquiz.domain.skill.entity.Skill;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

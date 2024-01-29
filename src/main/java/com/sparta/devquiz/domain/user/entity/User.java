@@ -4,6 +4,7 @@ import com.sparta.devquiz.domain.board.entity.Board;
 import com.sparta.devquiz.domain.coin.entity.Coin;
 import com.sparta.devquiz.domain.comment.entity.Comment;
 import com.sparta.devquiz.domain.quiz.entity.UserQuiz;
+import com.sparta.devquiz.domain.skill.entity.Skill;
 import com.sparta.devquiz.domain.team.entity.TeamUser;
 import com.sparta.devquiz.domain.user.enums.OauthType;
 import com.sparta.devquiz.domain.user.enums.UserRole;

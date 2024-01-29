@@ -1,6 +1,6 @@
 package com.sparta.devquiz.domain.user.dto.response;
 
-import com.sparta.devquiz.domain.user.entity.Skill;
+import com.sparta.devquiz.domain.skill.entity.Skill;
 import com.sparta.devquiz.domain.user.enums.UserSkill;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
