@@ -29,7 +29,7 @@ public class UserController {
   private final UserService userService;
 
   @Operation(operationId = "USER-001", summary = "내 정보 수정")
-  @PatchMapping
+  @PutMapping
   public ResponseEntity<CommonResponseDto> updateMyProfile(
       @AuthUser User authUser, @PathVariable Long userId,
       @RequestBody @Valid UserUpdateRequest request)
