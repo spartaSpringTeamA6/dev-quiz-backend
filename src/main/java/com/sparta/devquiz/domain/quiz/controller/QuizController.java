@@ -80,6 +80,7 @@ public class QuizController {
     public ResponseEntity<CommonResponseDto> updateQuiz(
             @AuthUser User user,
             @PathVariable Long quizId,
+//            @PathVariable Long categoryId,
             @RequestBody QuizUpdateRequest quizUpdateRequest
     ) {
         quizService.updateQuiz(quizId, quizUpdateRequest, user);

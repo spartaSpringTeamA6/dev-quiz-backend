@@ -9,12 +9,17 @@ import com.sparta.devquiz.domain.quiz.dto.quiz.response.QuizAnswerSubmitResponse
 import com.sparta.devquiz.domain.quiz.dto.quiz.response.QuizDetailInfoResponse;
 import com.sparta.devquiz.domain.quiz.dto.quiz.response.QuizGetByUserResponse;
 import com.sparta.devquiz.domain.quiz.dto.quiz.response.QuizRandomResponse;
+import com.sparta.devquiz.domain.quiz.entity.Category;
 import com.sparta.devquiz.domain.quiz.entity.Quiz;
+import com.sparta.devquiz.domain.quiz.entity.QuizChoice;
 import com.sparta.devquiz.domain.quiz.entity.UserQuiz;
 import com.sparta.devquiz.domain.quiz.enums.QuizCategory;
 import com.sparta.devquiz.domain.quiz.enums.UserQuizStatus;
+import com.sparta.devquiz.domain.quiz.exception.CategoryCustomException;
+import com.sparta.devquiz.domain.quiz.exception.CategoryExceptionCode;
 import com.sparta.devquiz.domain.quiz.exception.QuizCustomException;
 import com.sparta.devquiz.domain.quiz.exception.QuizExceptionCode;
+import com.sparta.devquiz.domain.quiz.repository.CategoryRepository;
 import com.sparta.devquiz.domain.quiz.repository.QuizRepository;
 import com.sparta.devquiz.domain.quiz.repository.QuizUserRepository;
 import com.sparta.devquiz.domain.user.entity.User;
@@ -29,6 +34,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -37,11 +43,12 @@ public class QuizService {
 
     private final UserService userService;
     private final QuizRepository quizRepository;
+    private final CategoryRepository categoryRepository;
     private final QuizUserRepository quizUserRepository;
     private final CoinService coinService;
 
     @Transactional
-    public void createQuiz(QuizCreateRequest createRequest, User User) {
+    public void createQuiz(QuizCreateRequest createRequest, User User, Long categoryId) {
 
         if (User == null) {
             throw new UserCustomException(UserExceptionCode.UNAUTHORIZED_USER);
@@ -49,17 +56,26 @@ public class QuizService {
         if (User.getRole() != UserRole.ROLE_ADMIN) {
             throw new UserCustomException(UserExceptionCode.UNAUTHORIZED_USER);
         }
-        String Example = String.join("\n", createRequest.getExample());
+
+        // 카테고리 조회
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new CategoryCustomException(CategoryExceptionCode.NOT_FOUND_CATEGORY));
+        // 퀴즈 생성
         Quiz quiz = Quiz.builder()
-                .category(createRequest.getCategory())
-                .question(createRequest.getQuestion())
-                .example(Example)
-                .answer(createRequest.getAnswer())
-                .correctCount(0L)
-                .failCount(0L)
-                .solveCount(0L)
-                .isDeleted(false)
+                .quizTitle(createRequest.getQuizTitle())
+                .category(category)
                 .build();
+
+        // 선택지 추가하기
+        List<QuizChoice> quizChoices = createRequest.getChoices().stream()
+                .map(choiceDto -> QuizChoice.builder()
+                        .quiz(quiz)
+                        .choiceContent(choiceDto.getChoiceContent())
+                        .isAnswer(choiceDto.isAnswer())
+                        .build())
+                .toList();
+
+        quiz.addChoices(quizChoices);
 
         quizRepository.save(quiz);
     }
@@ -93,7 +109,7 @@ public class QuizService {
     }
 
     @Transactional
-    public void updateQuiz(Long quizId, QuizUpdateRequest updateRequest, User User) {
+    public void updateQuiz(Long quizId, QuizUpdateRequest updateRequest, User User, Long categoryId) {
         if (User == null) {
             throw new UserCustomException(UserExceptionCode.UNAUTHORIZED_USER);
         }
@@ -101,9 +117,18 @@ public class QuizService {
             throw new UserCustomException(UserExceptionCode.UNAUTHORIZED_USER);
         }
         Quiz quiz = getQuizById(quizId);
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new CategoryCustomException(CategoryExceptionCode.NOT_FOUND_CATEGORY));
 
-        quiz.updateQuiz(updateRequest.getQuestion(), String.join("\n", updateRequest.getExample()),
-                updateRequest.getCategory(), updateRequest.getAnswer());
+        quiz.updateQuiz(updateRequest.getCategoryTitle(),
+                updateRequest.getQuizTitle(),
+                updateRequest.getChoices().stream()
+                        .map(choiceDto -> QuizChoice.builder()
+                                .quiz(quiz)
+                                .choiceContent(choiceDto.getChoiceContent())
+                                .isAnswer(choiceDto.isAnswer())
+                                .build())
+                                .toList());
     }
 
     @Transactional
