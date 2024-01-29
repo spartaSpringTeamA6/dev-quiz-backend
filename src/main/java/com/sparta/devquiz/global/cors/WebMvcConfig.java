@@ -1,6 +1,5 @@
 package com.sparta.devquiz.global.cors;
 
-import io.swagger.v3.oas.models.PathItem.HttpMethod;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
