@@ -6,7 +6,7 @@ import static com.sparta.devquiz.domain.quiz.entity.QUserQuiz.userQuiz;
 
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.sparta.devquiz.domain.quiz.dto.response.QuizGetByUserResponse;
+import com.sparta.devquiz.domain.quiz.dto.quiz.response.QuizGetByUserResponse;
 import com.sparta.devquiz.domain.quiz.entity.QUserQuiz;
 import com.sparta.devquiz.domain.quiz.entity.UserQuiz;
 import com.sparta.devquiz.domain.quiz.enums.UserQuizStatus;

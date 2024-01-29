@@ -1,11 +1,11 @@
 package com.sparta.devquiz.domain.quiz.controller;
 
-import com.sparta.devquiz.domain.quiz.dto.request.QuizAnswerSubmitRequest;
-import com.sparta.devquiz.domain.quiz.dto.request.QuizCreateRequest;
-import com.sparta.devquiz.domain.quiz.dto.request.QuizUpdateRequest;
-import com.sparta.devquiz.domain.quiz.dto.response.QuizAnswerSubmitResponse;
-import com.sparta.devquiz.domain.quiz.dto.response.QuizDetailInfoResponse;
-import com.sparta.devquiz.domain.quiz.dto.response.QuizRandomResponse;
+import com.sparta.devquiz.domain.quiz.dto.quiz.request.QuizAnswerSubmitRequest;
+import com.sparta.devquiz.domain.quiz.dto.quiz.request.QuizCreateRequest;
+import com.sparta.devquiz.domain.quiz.dto.quiz.request.QuizUpdateRequest;
+import com.sparta.devquiz.domain.quiz.dto.quiz.response.QuizAnswerSubmitResponse;
+import com.sparta.devquiz.domain.quiz.dto.quiz.response.QuizDetailInfoResponse;
+import com.sparta.devquiz.domain.quiz.dto.quiz.response.QuizRandomResponse;
 import com.sparta.devquiz.domain.quiz.enums.QuizCategory;
 import com.sparta.devquiz.domain.quiz.response.QuizResponseCode;
 import com.sparta.devquiz.domain.quiz.service.QuizService;
@@ -31,7 +31,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/quizzes")
+@RequestMapping("/api/categories/{categoryId}/quizzes")
 @Tag(name = "2. Quiz API", description = "Quiz 관련 API 입니다.")
 public class QuizController {
 
@@ -52,7 +52,7 @@ public class QuizController {
 
     @SecurityRequirement(name = "Bearer Authentication")
     @Operation(operationId = "QUIZ-002", summary = "퀴즈 카테고리 10개 랜덤 출제")
-    @GetMapping
+    @GetMapping("/random")
     public ResponseEntity<CommonResponseDto> getRandomQuiz(
             @RequestParam QuizCategory category,
             @AuthUser User user
@@ -111,4 +111,13 @@ public class QuizController {
         return ResponseEntity.status(QuizResponseCode.OK_SUBMIT_QUIZ_ANSWER.getHttpStatus())
                 .body(CommonResponseDto.of(QuizResponseCode.OK_SUBMIT_QUIZ_ANSWER, response));
     }
+
+    @SecurityRequirement(name = "Bearer Authentication")
+    @Operation(operationId = "QUIZ-007", summary = "각 카테고리 별 퀴즈 전체 조회")
+    @GetMapping
+    public ResponseEntity<CommonResponseDto> getQuizzes(
+            @PathVariable Long categoryId,
+            @RequestParam int page,
+            @AuthUser User user
+    )
 }

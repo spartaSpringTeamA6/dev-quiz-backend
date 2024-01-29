@@ -4,7 +4,7 @@ import com.sparta.devquiz.domain.board.dto.response.BoardDetailsResponse;
 import com.sparta.devquiz.domain.board.service.BoardService;
 import com.sparta.devquiz.domain.comment.dto.response.CommentInfoResponse;
 import com.sparta.devquiz.domain.comment.service.CommentService;
-import com.sparta.devquiz.domain.quiz.dto.response.QuizGetByUserResponse;
+import com.sparta.devquiz.domain.quiz.dto.quiz.response.QuizGetByUserResponse;
 import com.sparta.devquiz.domain.quiz.service.QuizService;
 import com.sparta.devquiz.domain.team.entity.TeamUser;
 import com.sparta.devquiz.domain.team.service.TeamUserService;

@@ -1,4 +1,4 @@
-package com.sparta.devquiz.domain.quiz.dto.response;
+package com.sparta.devquiz.domain.quiz.dto.quiz.response;
 
 import com.sparta.devquiz.domain.quiz.entity.Quiz;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -23,8 +23,10 @@ public class QuizRandomResponse {
     public static QuizRandomResponse of(Quiz quiz) {
         return QuizRandomResponse.builder()
                 .id(quiz.getId())
-                .question(quiz.getQuestion())
-                .example(quiz.getExample().split("\n"))
+                .question(quiz.getQuizTitle())
+                .example(quiz.getQuizChoices().stream()
+                        .map(quizChoice -> quizChoice.getChoiceTitle())
+                        .toArray(String[]::new))
                 .build();
     }
 
