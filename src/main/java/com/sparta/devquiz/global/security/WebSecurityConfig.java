@@ -56,7 +56,7 @@ public class WebSecurityConfig {
 
     http.oauth2Login(
         login -> login
-            .loginPage("http://devquiz.pro/login")
+            .loginPage("https://devquiz.pro/login")
             .authorizationEndpoint(endPoint -> endPoint.authorizationRequestRepository(cookieOAuth2RequestRepository))
             .userInfoEndpoint(userInfo -> userInfo.userService(oAuth2UserService))
             .successHandler(oAuth2LoginSuccessHandler)
