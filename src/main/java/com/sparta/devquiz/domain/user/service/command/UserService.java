@@ -2,7 +2,7 @@ package com.sparta.devquiz.domain.user.service.command;
 
 import com.sparta.devquiz.domain.team.service.TeamUserService;
 import com.sparta.devquiz.domain.user.dto.request.UserUpdateRequest;
-import com.sparta.devquiz.domain.user.entity.Skill;
+import com.sparta.devquiz.domain.skill.entity.Skill;
 import com.sparta.devquiz.domain.user.entity.User;
 import com.sparta.devquiz.domain.user.enums.UserSkill;
 import com.sparta.devquiz.domain.user.exception.UserCustomException;
