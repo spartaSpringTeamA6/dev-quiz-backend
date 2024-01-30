@@ -3,7 +3,8 @@ package com.sparta.devquiz.domain.quiz.controller;
 import com.sparta.devquiz.domain.quiz.dto.quiz.request.QuizAnswerSubmitRequest;
 import com.sparta.devquiz.domain.quiz.dto.quiz.request.QuizCreateRequest;
 import com.sparta.devquiz.domain.quiz.dto.quiz.request.QuizUpdateRequest;
-import com.sparta.devquiz.domain.quiz.dto.quiz.response.QuizAnswerSubmitResponse;
+import com.sparta.devquiz.domain.quiz.dto.quiz.response.QuizPassResponse;
+import com.sparta.devquiz.domain.quiz.dto.quiz.response.QuizResultResponse;
 import com.sparta.devquiz.domain.quiz.dto.quiz.response.QuizDetailInfoResponse;
 import com.sparta.devquiz.domain.quiz.dto.quiz.response.QuizRandomResponse;
 import com.sparta.devquiz.domain.quiz.enums.QuizCategory;
@@ -42,9 +43,10 @@ public class QuizController {
     @PostMapping
     public ResponseEntity<CommonResponseDto> createQuiz(
             @AuthUser User user,
+            @RequestParam Long categoryId,
             @RequestBody QuizCreateRequest request
     ) {
-        quizService.createQuiz(request, user);
+        quizService.createQuiz(request, user, categoryId);
 
         return ResponseEntity.status(QuizResponseCode.CREATED_QUIZ.getHttpStatus())
                 .body(CommonResponseDto.of(QuizResponseCode.CREATED_QUIZ));
@@ -80,10 +82,10 @@ public class QuizController {
     public ResponseEntity<CommonResponseDto> updateQuiz(
             @AuthUser User user,
             @PathVariable Long quizId,
-//            @PathVariable Long categoryId,
+            @RequestParam Long categoryId,
             @RequestBody QuizUpdateRequest quizUpdateRequest
     ) {
-        quizService.updateQuiz(quizId, quizUpdateRequest, user);
+        quizService.updateQuiz(quizUpdateRequest, user, quizId, categoryId);
         return ResponseEntity.status(QuizResponseCode.OK_UPDATE_QUIZ.getHttpStatus())
                 .body(CommonResponseDto.of(QuizResponseCode.OK_UPDATE_QUIZ));
     }
@@ -108,7 +110,7 @@ public class QuizController {
             @RequestBody QuizAnswerSubmitRequest request,
             @AuthUser User user
     ) {
-        QuizAnswerSubmitResponse response = quizService.submitQuizAnswer(quizId, user, request);
+        QuizResultResponse response = quizService.submitQuizAnswer(quizId, user, request);
         return ResponseEntity.status(QuizResponseCode.OK_SUBMIT_QUIZ_ANSWER.getHttpStatus())
                 .body(CommonResponseDto.of(QuizResponseCode.OK_SUBMIT_QUIZ_ANSWER, response));
     }
@@ -120,5 +122,18 @@ public class QuizController {
             @PathVariable Long categoryId,
             @RequestParam int page,
             @AuthUser User user
-    )
+    ){}
+    @SecurityRequirement(name = "Bearer Authentication")
+    @Operation(operationId = "QUIZ-008", summary = "퀴즈 패스")
+    @PostMapping("/{quizId}/pass")
+       public ResponseEntity<CommonResponseDto> passQuiz(
+            @PathVariable Long quizId,
+            @RequestBody QuizAnswerSubmitRequest request,
+            @AuthUser User user
+
+    ) {
+        QuizPassResponse response = quizService.passQuiz(quizId, user, request);
+        return ResponseEntity.status(QuizResponseCode.OK_SUBMIT_QUIZ_ANSWER.getHttpStatus())
+                .body(CommonResponseDto.of(QuizResponseCode.OK_SUBMIT_QUIZ_ANSWER, response));
+    }
 }

@@ -12,7 +12,7 @@ public class QuizAnswerSubmitRequest {
     @Schema(description = "퀴즈 ID", defaultValue = "1")
     private Long quizId;
 
-    @Schema(description = "선택한 답안의 보기 ID", defaultValue = "3")
+    @Schema(description = "선택된 답안의 ID")
     private Long choiceId;
-}
 
+}

@@ -1,6 +1,5 @@
 package com.sparta.devquiz.domain.quiz.entity;
 
-import com.sparta.devquiz.domain.quiz.enums.QuizCategory;
 import com.sparta.devquiz.global.entity.BaseTimeEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -90,7 +89,7 @@ public class Quiz extends BaseTimeEntity {
         this.quizTitle = updateTitle;
     }
 
-    public void updateQuiz(QuizCategory quizCategory, String quizTitle, List<QuizChoice> quizChoices) {
+    public void updateQuiz(String quizTitle, List<QuizChoice> quizChoices, Category category) {
         this.category = category;
         this.quizTitle = quizTitle;
         this.quizChoices = quizChoices;

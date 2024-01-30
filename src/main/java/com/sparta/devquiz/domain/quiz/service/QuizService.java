@@ -5,7 +5,8 @@ import com.sparta.devquiz.domain.coin.service.CoinService;
 import com.sparta.devquiz.domain.quiz.dto.quiz.request.QuizAnswerSubmitRequest;
 import com.sparta.devquiz.domain.quiz.dto.quiz.request.QuizCreateRequest;
 import com.sparta.devquiz.domain.quiz.dto.quiz.request.QuizUpdateRequest;
-import com.sparta.devquiz.domain.quiz.dto.quiz.response.QuizAnswerSubmitResponse;
+import com.sparta.devquiz.domain.quiz.dto.quiz.response.QuizPassResponse;
+import com.sparta.devquiz.domain.quiz.dto.quiz.response.QuizResultResponse;
 import com.sparta.devquiz.domain.quiz.dto.quiz.response.QuizDetailInfoResponse;
 import com.sparta.devquiz.domain.quiz.dto.quiz.response.QuizGetByUserResponse;
 import com.sparta.devquiz.domain.quiz.dto.quiz.response.QuizRandomResponse;
@@ -20,6 +21,7 @@ import com.sparta.devquiz.domain.quiz.exception.CategoryExceptionCode;
 import com.sparta.devquiz.domain.quiz.exception.QuizCustomException;
 import com.sparta.devquiz.domain.quiz.exception.QuizExceptionCode;
 import com.sparta.devquiz.domain.quiz.repository.CategoryRepository;
+import com.sparta.devquiz.domain.quiz.repository.QuizChoiceRepository;
 import com.sparta.devquiz.domain.quiz.repository.QuizRepository;
 import com.sparta.devquiz.domain.quiz.repository.QuizUserRepository;
 import com.sparta.devquiz.domain.user.entity.User;
@@ -33,8 +35,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -46,6 +48,7 @@ public class QuizService {
     private final CategoryRepository categoryRepository;
     private final QuizUserRepository quizUserRepository;
     private final CoinService coinService;
+    private final QuizChoiceRepository quizChoiceRepository;
 
     @Transactional
     public void createQuiz(QuizCreateRequest createRequest, User User, Long categoryId) {
@@ -65,19 +68,19 @@ public class QuizService {
                 .quizTitle(createRequest.getQuizTitle())
                 .category(category)
                 .build();
+        quiz = quizRepository.save(quiz);
 
         // 선택지 추가하기
         List<QuizChoice> quizChoices = createRequest.getChoices().stream()
                 .map(choiceDto -> QuizChoice.builder()
-                        .quiz(quiz)
                         .choiceContent(choiceDto.getChoiceContent())
                         .isAnswer(choiceDto.isAnswer())
+                        .quiz(quiz)
                         .build())
                 .toList();
 
         quiz.addChoices(quizChoices);
 
-        quizRepository.save(quiz);
     }
 
     public List<QuizRandomResponse> getRandomNonAttemptedQuizzes(QuizCategory category, User user) {
@@ -109,26 +112,31 @@ public class QuizService {
     }
 
     @Transactional
-    public void updateQuiz(Long quizId, QuizUpdateRequest updateRequest, User User, Long categoryId) {
+    public void updateQuiz(QuizUpdateRequest updateRequest, User User, Long quizId, Long categoryId) {
         if (User == null) {
             throw new UserCustomException(UserExceptionCode.UNAUTHORIZED_USER);
         }
         if (User.getRole() != UserRole.ROLE_ADMIN) {
             throw new UserCustomException(UserExceptionCode.UNAUTHORIZED_USER);
         }
-        Quiz quiz = getQuizById(quizId);
-        Category category = categoryRepository.findById(categoryId)
+        Category category = categoryRepository.findById(updateRequest.getCategoryId())
                 .orElseThrow(() -> new CategoryCustomException(CategoryExceptionCode.NOT_FOUND_CATEGORY));
+        Quiz quiz = getQuizById(updateRequest.getQuizId());
 
-        quiz.updateQuiz(updateRequest.getCategoryTitle(),
-                updateRequest.getQuizTitle(),
-                updateRequest.getChoices().stream()
-                        .map(choiceDto -> QuizChoice.builder()
-                                .quiz(quiz)
-                                .choiceContent(choiceDto.getChoiceContent())
-                                .isAnswer(choiceDto.isAnswer())
-                                .build())
-                                .toList());
+        quiz.updateQuiz(updateRequest.getQuizTitle(),new ArrayList<>(), category);
+
+        quizChoiceRepository.deleteAll(quiz.getQuizChoices());
+        quiz.getQuizChoices().clear();
+
+
+        List<QuizChoice> updatedChoices = updateRequest.getChoices().stream()
+                .map(choiceDto -> QuizChoice.builder()
+                        .choiceContent(choiceDto.getChoiceContent())
+                        .isAnswer(choiceDto.isAnswer())
+                        .build())
+                .toList();
+
+        updatedChoices.forEach(quiz::addChoice);
     }
 
     @Transactional
@@ -145,10 +153,12 @@ public class QuizService {
     }
 
     @Transactional
-    public QuizAnswerSubmitResponse submitQuizAnswer(Long quizId, User user, QuizAnswerSubmitRequest request) {
+    public QuizResultResponse submitQuizAnswer(Long quizId, User user, QuizAnswerSubmitRequest request) {
         Quiz quiz = getQuizById(quizId);
-
-        boolean isCorrect = quiz.getAnswer().equalsIgnoreCase(request.getAnswer());
+//        QuizChoice quizChoice = quizChoiceRepository.findById(request.getChoiceId())
+//                .orElseThrow(() -> new QuizCustomException(QuizExceptionCode.NOT_FOUND_QUIZ_CHOICE));
+//
+//        boolean isCorrect = quizChoice.getIsAnswer().equalsIgnoreCase(request.getAnswer());
         UserQuizStatus status;
 
         if ("0".equalsIgnoreCase(request.getAnswer())) {
@@ -180,9 +190,29 @@ public class QuizService {
             quizUserRepository.save(userQuiz);
         }
 
-        return QuizAnswerSubmitResponse.of(quiz, request.getAnswer(), status);
+        return QuizResultResponse.of(quiz, request.getAnswer(), status);
     }
+    public QuizPassResponse passQuiz(Long quizId, User user, QuizAnswerSubmitRequest request){
+        Quiz quiz = getQuizById(quizId);
+        UserQuizStatus status = UserQuizStatus.PASS;
+        QuizChoice quizChoice = quizChoiceRepository.findById(request.getChoiceId())
+                .orElseThrow(() -> new QuizCustomException(QuizExceptionCode.NOT_FOUND_QUIZ_CHOICE));
+        boolean isCorrect = quizChoice.getIsAnswer();
 
+
+        if (user != null) {
+            User findUser = userService.getUserById(user.getId());
+            UserQuiz userQuiz = UserQuiz.builder()
+                    .user(findUser)
+                    .quiz(quiz)
+                    .status(status)
+                    .build();
+
+            quizUserRepository.save(userQuiz);
+        }
+
+        return QuizPassResponse.of(quiz.getId());
+    }
     public List<QuizGetByUserResponse> getAllQuizzesForUser(User user) {
         return quizUserRepository.findCorrectQuizzesByUsers(user);
     }
