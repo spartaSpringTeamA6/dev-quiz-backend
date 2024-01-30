@@ -3,10 +3,8 @@ package com.sparta.devquiz.domain.quiz.repository;
 
 import static com.sparta.devquiz.domain.quiz.entity.QQuiz.quiz;
 import static com.sparta.devquiz.domain.quiz.entity.QUserQuiz.userQuiz;
-import static com.sparta.devquiz.domain.quiz.entity.QUserQuiz.userQuiz;
 
 import com.querydsl.core.Tuple;
-import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.DateTemplate;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPAExpressions;
@@ -17,10 +15,7 @@ import com.sparta.devquiz.domain.quiz.entity.QUserQuiz;
 import com.sparta.devquiz.domain.quiz.entity.UserQuiz;
 import com.sparta.devquiz.domain.quiz.enums.UserQuizStatus;
 import com.sparta.devquiz.domain.user.entity.User;
-import java.beans.Expression;
 import java.sql.Date;
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
