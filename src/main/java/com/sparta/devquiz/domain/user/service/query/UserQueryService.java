@@ -5,6 +5,7 @@ import com.sparta.devquiz.domain.board.service.BoardService;
 import com.sparta.devquiz.domain.comment.dto.response.CommentInfoResponse;
 import com.sparta.devquiz.domain.comment.service.CommentService;
 import com.sparta.devquiz.domain.quiz.dto.response.QuizGetByUserResponse;
+import com.sparta.devquiz.domain.quiz.dto.response.QuizSolvedGrassResponse;
 import com.sparta.devquiz.domain.quiz.service.QuizService;
 import com.sparta.devquiz.domain.skill.entity.Skill;
 import com.sparta.devquiz.domain.skill.service.SkillService;
@@ -110,4 +111,9 @@ public class UserQueryService {
         () -> new UserCustomException(UserExceptionCode.NOT_FOUND_USER)
     );
   }
+
+    public List<QuizSolvedGrassResponse> getMyGrasses(User authUser, Long userId) {
+      validateUser(authUser,userId);
+      return quizService.getSolvedGrassByUser(authUser);
+    }
 }
