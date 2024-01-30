@@ -22,8 +22,8 @@ public interface TeamUserRepository extends JpaRepository<TeamUser, TeamUserId> 
     @Query("select tu from TeamUser tu where tu.team.id = :teamId and tu.isAccepted = TRUE and tu.userRole = :userRole")
     Optional<TeamUser> findByTeamIdAndIsAcceptedTrueAndUserRole(Long teamId, TeamUserRole userRole);
 
-    @Query("select tu from TeamUser tu where tu.team.id = :teamId and tu.isAccepted = TRUE and tu.userRole = :userRole")
-    List<TeamUser> findAllByTeamIdAndIsAcceptedTrueAndUserRole(Long teamId, TeamUserRole userRole);
+    @Query("select tu from TeamUser tu where tu.team.id = :teamId and tu.isAccepted = TRUE")
+    List<TeamUser> findAllByTeamIdAndIsAcceptedTrue(Long teamId);
 
     @Query("select tu from TeamUser tu where tu.user.id = :userId and tu.isAccepted = TRUE")
     List<TeamUser> findAllByUserIdAndIsAcceptedTrue(Long userId);

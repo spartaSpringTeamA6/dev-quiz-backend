@@ -2,6 +2,7 @@ package com.sparta.devquiz.domain.team.dto.response;
 
 import com.sparta.devquiz.domain.team.entity.Team;
 import com.sparta.devquiz.domain.team.entity.TeamUser;
+import com.sparta.devquiz.domain.user.entity.User;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import java.util.ArrayList;
@@ -36,7 +37,7 @@ public class TeamGetResponse {
                 .name(team.getName())
                 .admin(admin.getUser().getUsername())
                 .userList(userList.stream()
-                        .map(i ->  TeamUserResponse.of(i.getUser().getUsername()))
+                        .map(i ->  TeamUserResponse.of(i.getUser()))
                         .collect(Collectors.toList()))
                 .build();
     }
@@ -45,10 +46,12 @@ public class TeamGetResponse {
     @Getter
     public static class TeamUserResponse {
         private String username;
+        private int totalCoin;
 
-        public static TeamUserResponse of(String username) {
+        public static TeamUserResponse of(User user) {
             return TeamUserResponse.builder()
-                    .username(username)
+                    .username(user.getUsername())
+                    .totalCoin(user.getTotalCoin())
                     .build();
         }
     }
