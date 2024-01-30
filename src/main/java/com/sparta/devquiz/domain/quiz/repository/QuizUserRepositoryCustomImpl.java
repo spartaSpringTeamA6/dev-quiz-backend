@@ -80,7 +80,7 @@ public class QuizUserRepositoryCustomImpl implements QuizUserRepositoryCustom {
         List<Tuple> tuples = jpaQueryFactory
                 .select(userQuiz.createdAt.count(), dateExpression)
                 .from(userQuiz)
-                .where(userQuiz.user.id.eq(1L))
+                .where(userQuiz.user.id.eq(loginUser.getId()))
                 .groupBy(dateExpression)
                 .orderBy(dateExpression.asc())
                 .fetch();
