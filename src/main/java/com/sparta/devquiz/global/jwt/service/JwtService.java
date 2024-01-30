@@ -48,11 +48,11 @@ public class JwtService {
     key = Keys.hmacShaKeyFor(bytes);
   }
 
-  //AuthorizationFilter -> AuthorizationRequestRepository을 타고 있으므로 null을 반환해야 함.
   public void addToCookie(HttpServletResponse res, String name, String value, int maxAge) {
     value = URLEncoder.encode(value, StandardCharsets.UTF_8).replaceAll("\\+", "%20");
     Cookie cookie = new Cookie(name, value);
     cookie.setPath("/");
+    cookie.setSecure(true);
     cookie.setMaxAge(maxAge);
     if (name.equals(REFRESH_COOKIE_NAME)) {
       cookie.setHttpOnly(true);
