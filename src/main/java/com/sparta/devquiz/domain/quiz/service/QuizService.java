@@ -9,6 +9,7 @@ import com.sparta.devquiz.domain.quiz.dto.response.QuizAnswerSubmitResponse;
 import com.sparta.devquiz.domain.quiz.dto.response.QuizDetailInfoResponse;
 import com.sparta.devquiz.domain.quiz.dto.response.QuizGetByUserResponse;
 import com.sparta.devquiz.domain.quiz.dto.response.QuizRandomResponse;
+import com.sparta.devquiz.domain.quiz.dto.response.QuizSolvedGrassResponse;
 import com.sparta.devquiz.domain.quiz.entity.Quiz;
 import com.sparta.devquiz.domain.quiz.entity.UserQuiz;
 import com.sparta.devquiz.domain.quiz.enums.QuizCategory;
@@ -156,6 +157,10 @@ public class QuizService {
         }
 
         return QuizAnswerSubmitResponse.of(quiz, request.getAnswer(), status);
+    }
+
+    public List<QuizSolvedGrassResponse> getSolvedGrassByUser(User user){
+        return quizUserRepository.findSolvedGrassByUser(user);
     }
 
     public List<QuizGetByUserResponse> getAllQuizzesForUser(User user) {
