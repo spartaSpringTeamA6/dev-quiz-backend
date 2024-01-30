@@ -1,12 +1,11 @@
 package com.sparta.devquiz.domain.quiz.dto.quiz.response;
 
-import com.sparta.devquiz.domain.quiz.entity.UserQuiz;
-import com.sparta.devquiz.domain.quiz.enums.QuizCategory;
 import com.sparta.devquiz.domain.quiz.enums.UserQuizStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
+
+import java.time.LocalDateTime;
 
 @Getter
 @Builder
@@ -20,25 +19,25 @@ public class QuizGetByUserResponse {
     private LocalDateTime solvedDate;
 
     @Schema(description = "카테고리", defaultValue = "JAVA")
-    private QuizCategory category;
+    private String categoryTitle;
 
     @Schema(description = "상태", defaultValue = "CORRECT")
     private UserQuizStatus status;
 
-    @Schema(description = "퀴즈 문제 내용", defaultValue = "Java의 주요 특징으로 올바르지 않은 것은?")
-    private String question;
+    @Schema(description = "퀴즈의 제목", defaultValue = "Java의 주요 특징으로 올바르지 않은 것은?")
+    private String quizTitle;
 
-    @Schema(description = "퀴즈 보기 내용", defaultValue = "1. 객체지향 프로그래밍\n2. JVM 위에서 실행\n3. 포인터를 직접 다룰 수 있음\n4. 가비지 컬렉션 제공")
-    private String example;
+    @Schema(description = "퀴즈 보기 내용", defaultValue = "객체지향 프로그래밍\nJVM 위에서 실행\n포인터를 직접 다룰 수 있음\n가비지 컬렉션 제공")
+    private String quizContent;
 
-    public static QuizGetByUserResponse of (UserQuiz userQuiz){
+    public static QuizGetByUserResponse of(Long id, LocalDateTime solvedDate, String categoryTitle, UserQuizStatus status, String quizTitle, String quizContent) {
         return QuizGetByUserResponse.builder()
-                .id(userQuiz.getQuiz().getId())
-                .solvedDate(userQuiz.getCreatedAt())
-                .category(userQuiz.getQuiz().getCategory())
-                .question(userQuiz.getQuiz().getQuestion())
-                .example(userQuiz.getQuiz().getExample())
-                .status(userQuiz.getStatus())
+                .id(id)
+                .solvedDate(solvedDate)
+                .categoryTitle(categoryTitle)
+                .status(status)
+                .quizTitle(quizTitle)
+                .quizContent(quizContent)
                 .build();
     }
 }

@@ -15,4 +15,6 @@ public class QuizAnswerSubmitRequest {
     @Schema(description = "선택된 답안의 ID")
     private Long choiceId;
 
+    @Schema(description = "선택된 답안의 내용")
+    private String content;
 }

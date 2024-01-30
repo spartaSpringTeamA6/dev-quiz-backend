@@ -5,11 +5,11 @@ import com.sparta.devquiz.domain.coin.service.CoinService;
 import com.sparta.devquiz.domain.quiz.dto.quiz.request.QuizAnswerSubmitRequest;
 import com.sparta.devquiz.domain.quiz.dto.quiz.request.QuizCreateRequest;
 import com.sparta.devquiz.domain.quiz.dto.quiz.request.QuizUpdateRequest;
-import com.sparta.devquiz.domain.quiz.dto.quiz.response.QuizPassResponse;
-import com.sparta.devquiz.domain.quiz.dto.quiz.response.QuizResultResponse;
 import com.sparta.devquiz.domain.quiz.dto.quiz.response.QuizDetailInfoResponse;
 import com.sparta.devquiz.domain.quiz.dto.quiz.response.QuizGetByUserResponse;
+import com.sparta.devquiz.domain.quiz.dto.quiz.response.QuizPassResponse;
 import com.sparta.devquiz.domain.quiz.dto.quiz.response.QuizRandomResponse;
+import com.sparta.devquiz.domain.quiz.dto.quiz.response.QuizResultResponse;
 import com.sparta.devquiz.domain.quiz.entity.Category;
 import com.sparta.devquiz.domain.quiz.entity.Quiz;
 import com.sparta.devquiz.domain.quiz.entity.QuizChoice;
@@ -60,17 +60,15 @@ public class QuizService {
             throw new UserCustomException(UserExceptionCode.UNAUTHORIZED_USER);
         }
 
-        // 카테고리 조회
+
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new CategoryCustomException(CategoryExceptionCode.NOT_FOUND_CATEGORY));
-        // 퀴즈 생성
-        Quiz quiz = Quiz.builder()
+
+        Quiz quiz = quizRepository.save(Quiz.builder()
                 .quizTitle(createRequest.getQuizTitle())
                 .category(category)
-                .build();
-        quiz = quizRepository.save(quiz);
+                .build());
 
-        // 선택지 추가하기
         List<QuizChoice> quizChoices = createRequest.getChoices().stream()
                 .map(choiceDto -> QuizChoice.builder()
                         .choiceContent(choiceDto.getChoiceContent())
@@ -78,9 +76,10 @@ public class QuizService {
                         .quiz(quiz)
                         .build())
                 .toList();
-
-        quiz.addChoices(quizChoices);
-
+        for (QuizChoice choice : quizChoices) {
+            quiz.addChoice(choice);
+        }
+        quizRepository.save(quiz);
     }
 
     public List<QuizRandomResponse> getRandomNonAttemptedQuizzes(QuizCategory category, User user) {
@@ -107,8 +106,10 @@ public class QuizService {
 
     public QuizDetailInfoResponse getQuiz(Long quizId) {
         Quiz quiz = getQuizById(quizId);
+        QuizChoice quizChoice = quizChoiceRepository.findQuizChoiceByQuiz(quiz)
+                .orElseThrow(() -> new QuizCustomException(QuizExceptionCode.NOT_FOUND_QUIZ_CHOICE));
 
-        return QuizDetailInfoResponse.of(quiz);
+        return QuizDetailInfoResponse.of(quiz, quizChoice);
     }
 
     @Transactional
@@ -155,15 +156,19 @@ public class QuizService {
     @Transactional
     public QuizResultResponse submitQuizAnswer(Long quizId, User user, QuizAnswerSubmitRequest request) {
         Quiz quiz = getQuizById(quizId);
-//        QuizChoice quizChoice = quizChoiceRepository.findById(request.getChoiceId())
-//                .orElseThrow(() -> new QuizCustomException(QuizExceptionCode.NOT_FOUND_QUIZ_CHOICE));
-//
-//        boolean isCorrect = quizChoice.getIsAnswer().equalsIgnoreCase(request.getAnswer());
         UserQuizStatus status;
 
-        if ("0".equalsIgnoreCase(request.getAnswer())) {
-            status = UserQuizStatus.PASS;
-        } else if (isCorrect) {
+        QuizChoice quizChoice = quizChoiceRepository.findById(request.getChoiceId())
+                .orElseThrow(() -> new QuizCustomException(QuizExceptionCode.NOT_FOUND_QUIZ_CHOICE));
+
+        QuizChoice submittedChoice = quiz.getQuizChoices().stream()
+                .filter(choice -> quizChoice.getChoiceContent().equals(request.getChoiceId()))
+                .findFirst()
+                .orElseThrow(() -> new QuizCustomException(QuizExceptionCode.NOT_FOUND_QUIZ_CHOICE));
+
+        boolean isCorrect = quizChoice.getIsAnswer();
+
+        if (isCorrect) {
             status = UserQuizStatus.CORRECT;
             quiz.updateCount(quiz.getCorrectCount() + 1, quiz.getFailCount(),
                     quiz.getSolveCount() + 1);
@@ -190,7 +195,7 @@ public class QuizService {
             quizUserRepository.save(userQuiz);
         }
 
-        return QuizResultResponse.of(quiz, request.getAnswer(), status);
+        return QuizResultResponse.of(quiz, submittedChoice.getChoiceContent(), status, isCorrect);
     }
     public QuizPassResponse passQuiz(Long quizId, User user, QuizAnswerSubmitRequest request){
         Quiz quiz = getQuizById(quizId);

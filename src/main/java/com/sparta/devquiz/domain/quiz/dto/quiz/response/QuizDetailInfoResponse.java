@@ -1,5 +1,7 @@
 package com.sparta.devquiz.domain.quiz.dto.quiz.response;
 
+import com.sparta.devquiz.domain.quiz.entity.Quiz;
+import com.sparta.devquiz.domain.quiz.entity.QuizChoice;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,16 +20,16 @@ public class QuizDetailInfoResponse {
     @Schema(description = "퀴즈의 제목", defaultValue = "Java의 주요 특징으로 올바르지 않은 것은?")
     private String quizTitle;
 
-    @Schema(description = "퀴즈의 보기")
+    @Schema(description = "퀴즈의 보기", defaultValue = "객체지향 프로그래밍\nJVM 위에서 실행\n포인터를 직접 다룰 수 있음\n가비지 컬렉션 제공")
+    private String quizContent;
 
 
-//    public static QuizDetailInfoResponse of(Quiz quiz) {
-//        return QuizDetailInfoResponse.builder()
-//                .id(quiz.getId())
-//                .category(quiz.getCategory())
-//                .question(quiz.getQuestion())
-//                .example(quiz.getExample().split("\n"))
-//                .answer(quiz.getAnswer())
-//                .build();
-//    }
+    public static QuizDetailInfoResponse of(Quiz quiz, QuizChoice quizChoice) {
+        return QuizDetailInfoResponse.builder()
+                .id(quiz.getId())
+                .categoryTitle(quiz.findCategoryName())
+                .quizTitle(quiz.getQuizTitle())
+                .quizContent(quizChoice.getChoiceContent())
+                .build();
+    }
 }
