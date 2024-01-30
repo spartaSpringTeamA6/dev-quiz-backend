@@ -94,11 +94,15 @@ public class User extends BaseTimeEntity {
     @OneToMany(mappedBy = "user")
     private List<Comment> commentList = new ArrayList<>();
 
-    public void updateUsernameAndSkill(String username, Set<Skill> skillList) {
+    public void updateUsername(String username) {
         this.username = username;
+    }
+
+    public void updateSkills(Set<Skill> skillList) {
         this.skillList.clear();
         this.skillList.addAll(skillList);
     }
+
     public void deleteUser() {
         this.isDeleted = true;
         this.deletedAt = LocalDateTime.now();
