@@ -57,4 +57,10 @@ public enum QuizCategory {
 
     private final String major;
 
+    QuizCategory(String major) {
+        this.major = major;
+    }
+    public String get() {
+        return major;
+    }
 }
