@@ -6,8 +6,7 @@ import lombok.Getter;
 @Getter
 @Schema(description = "퀴즈 답안 패스 요청 dto")
 public class QuizPassRequest {
-
-        @Schema(description = "퀴즈 ID", defaultValue = "1")
-        private Long quizId;
+    @Schema(description = "퀴즈 ID", defaultValue = "1")
+    private Long quizId;
 
 }

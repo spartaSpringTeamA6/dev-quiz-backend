@@ -4,6 +4,7 @@ import com.sparta.devquiz.domain.quiz.dto.quiz.request.QuizAnswerSubmitRequest;
 import com.sparta.devquiz.domain.quiz.dto.quiz.request.QuizCreateRequest;
 import com.sparta.devquiz.domain.quiz.dto.quiz.request.QuizUpdateRequest;
 import com.sparta.devquiz.domain.quiz.dto.quiz.response.QuizPassResponse;
+import com.sparta.devquiz.domain.quiz.dto.quiz.response.QuizQueryResponse;
 import com.sparta.devquiz.domain.quiz.dto.quiz.response.QuizResultResponse;
 import com.sparta.devquiz.domain.quiz.dto.quiz.response.QuizDetailInfoResponse;
 import com.sparta.devquiz.domain.quiz.dto.quiz.response.QuizRandomResponse;
@@ -39,21 +40,7 @@ public class QuizController {
     private final QuizService quizService;
 
     @SecurityRequirement(name = "Bearer Authentication")
-    @Operation(operationId = "QUIZ-001", summary = "퀴즈 생성")
-    @PostMapping
-    public ResponseEntity<CommonResponseDto> createQuiz(
-            @AuthUser User user,
-            @RequestParam Long categoryId,
-            @RequestBody QuizCreateRequest request
-    ) {
-        quizService.createQuiz(request, user, categoryId);
-
-        return ResponseEntity.status(QuizResponseCode.CREATED_QUIZ.getHttpStatus())
-                .body(CommonResponseDto.of(QuizResponseCode.CREATED_QUIZ));
-    }
-
-    @SecurityRequirement(name = "Bearer Authentication")
-    @Operation(operationId = "QUIZ-002", summary = "퀴즈 카테고리 10개 랜덤 출제")
+    @Operation(operationId = "QUIZ-002", summary = "카테고리 별 퀴즈 랜덤 출제")
     @GetMapping("/random")
     public ResponseEntity<CommonResponseDto> getRandomQuiz(
             @RequestParam QuizCategory category,
@@ -75,9 +62,59 @@ public class QuizController {
         return ResponseEntity.status(QuizResponseCode.OK_GET_QUIZ.getHttpStatus())
                 .body(CommonResponseDto.of(QuizResponseCode.OK_GET_QUIZ, response));
     }
+    @SecurityRequirement(name = "Bearer Authentication")
+    @Operation(operationId = "QUIZ-004", summary = "퀴즈 정답 제출")
+    @PostMapping("/{quizId}")
+    public ResponseEntity<CommonResponseDto> submitQuiz(
+            @PathVariable Long quizId,
+            @RequestBody QuizAnswerSubmitRequest request,
+            @AuthUser User user
+    ) {
+        QuizResultResponse response = quizService.submitQuizAnswer(quizId, user, request);
+        return ResponseEntity.status(QuizResponseCode.OK_SUBMIT_QUIZ_ANSWER.getHttpStatus())
+                .body(CommonResponseDto.of(QuizResponseCode.OK_SUBMIT_QUIZ_ANSWER, response));
+    }
+    @SecurityRequirement(name = "Bearer Authentication")
+    @Operation(operationId = "QUIZ-005", summary = "퀴즈 패스")
+    @PostMapping("/{quizId}/pass")
+    public ResponseEntity<CommonResponseDto> passQuiz(
+            @PathVariable Long quizId,
+            @RequestBody QuizAnswerSubmitRequest request,
+            @AuthUser User user
+
+    ) {
+        QuizPassResponse response = quizService.passQuiz(quizId, user, request);
+        return ResponseEntity.status(QuizResponseCode.OK_SUBMIT_QUIZ_ANSWER.getHttpStatus())
+                .body(CommonResponseDto.of(QuizResponseCode.OK_SUBMIT_QUIZ_ANSWER, response));
+    }
+
+
+    @Operation(operationId = "ADMIN-001", summary = "각 카테고리 별 퀴즈 전체 조회")
+    @GetMapping("/{categoryId}/quizzes")
+    public ResponseEntity<CommonResponseDto> getQuizzesByCategory(
+            @RequestParam QuizCategory category,
+            @AuthUser User user
+    ) {
+        List<QuizQueryResponse> quizQueryResponseList = quizService.getQuizzesByCategory(category, user);
+        return ResponseEntity.status(QuizResponseCode.OK_GET_TOTAL_QUIZZES.getHttpStatus())
+                .body(CommonResponseDto.of(QuizResponseCode.OK_GET_TOTAL_QUIZZES, quizQueryResponseList));
+    }
+    @SecurityRequirement(name = "Bearer Authentication")
+    @Operation(operationId = "ADMIN-002", summary = "관리자 퀴즈 생성")
+    @PostMapping
+    public ResponseEntity<CommonResponseDto> createQuiz(
+            @AuthUser User user,
+            @RequestParam Long categoryId,
+            @RequestBody QuizCreateRequest request
+    ) {
+        quizService.createQuiz(request, user, categoryId);
+
+        return ResponseEntity.status(QuizResponseCode.CREATED_QUIZ.getHttpStatus())
+                .body(CommonResponseDto.of(QuizResponseCode.CREATED_QUIZ));
+    }
 
     @SecurityRequirement(name = "Bearer Authentication")
-    @Operation(operationId = "QUIZ-004", summary = "퀴즈 수정: 카테고리, 문제, 예시, 정답을 수정할 수 있습니다.")
+    @Operation(operationId = "ADMIN-003", summary = "퀴즈 수정")
     @PatchMapping("/{quizId}")
     public ResponseEntity<CommonResponseDto> updateQuiz(
             @AuthUser User user,
@@ -91,7 +128,7 @@ public class QuizController {
     }
 
     @SecurityRequirement(name = "Bearer Authentication")
-    @Operation(operationId = "QUIZ-005", summary = "퀴즈 삭제")
+    @Operation(operationId = "ADMIN-004", summary = "퀴즈 삭제")
     @DeleteMapping("/{quizId}")
     public ResponseEntity<CommonResponseDto> deleteQuiz(
             @AuthUser User user,
@@ -100,40 +137,5 @@ public class QuizController {
         quizService.deleteQuiz(quizId, user);
         return ResponseEntity.status(QuizResponseCode.OK_DELETE_QUIZ.getHttpStatus())
                 .body(CommonResponseDto.of(QuizResponseCode.OK_DELETE_QUIZ));
-    }
-
-    @SecurityRequirement(name = "Bearer Authentication")
-    @Operation(operationId = "QUIZ-006", summary = "퀴즈 정답 제출")
-    @PostMapping("/{quizId}")
-    public ResponseEntity<CommonResponseDto> submitQuiz(
-            @PathVariable Long quizId,
-            @RequestBody QuizAnswerSubmitRequest request,
-            @AuthUser User user
-    ) {
-        QuizResultResponse response = quizService.submitQuizAnswer(quizId, user, request);
-        return ResponseEntity.status(QuizResponseCode.OK_SUBMIT_QUIZ_ANSWER.getHttpStatus())
-                .body(CommonResponseDto.of(QuizResponseCode.OK_SUBMIT_QUIZ_ANSWER, response));
-    }
-
-    @SecurityRequirement(name = "Bearer Authentication")
-    @Operation(operationId = "QUIZ-007", summary = "각 카테고리 별 퀴즈 전체 조회")
-    @GetMapping
-    public ResponseEntity<CommonResponseDto> getQuizzes(
-            @PathVariable Long categoryId,
-            @RequestParam int page,
-            @AuthUser User user
-    ){}
-    @SecurityRequirement(name = "Bearer Authentication")
-    @Operation(operationId = "QUIZ-008", summary = "퀴즈 패스")
-    @PostMapping("/{quizId}/pass")
-       public ResponseEntity<CommonResponseDto> passQuiz(
-            @PathVariable Long quizId,
-            @RequestBody QuizAnswerSubmitRequest request,
-            @AuthUser User user
-
-    ) {
-        QuizPassResponse response = quizService.passQuiz(quizId, user, request);
-        return ResponseEntity.status(QuizResponseCode.OK_SUBMIT_QUIZ_ANSWER.getHttpStatus())
-                .body(CommonResponseDto.of(QuizResponseCode.OK_SUBMIT_QUIZ_ANSWER, response));
     }
 }

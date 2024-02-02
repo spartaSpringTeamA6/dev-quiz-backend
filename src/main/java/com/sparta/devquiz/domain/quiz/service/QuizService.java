@@ -8,6 +8,7 @@ import com.sparta.devquiz.domain.quiz.dto.quiz.request.QuizUpdateRequest;
 import com.sparta.devquiz.domain.quiz.dto.quiz.response.QuizDetailInfoResponse;
 import com.sparta.devquiz.domain.quiz.dto.quiz.response.QuizGetByUserResponse;
 import com.sparta.devquiz.domain.quiz.dto.quiz.response.QuizPassResponse;
+import com.sparta.devquiz.domain.quiz.dto.quiz.response.QuizQueryResponse;
 import com.sparta.devquiz.domain.quiz.dto.quiz.response.QuizRandomResponse;
 import com.sparta.devquiz.domain.quiz.dto.quiz.response.QuizResultResponse;
 import com.sparta.devquiz.domain.quiz.entity.Category;
@@ -51,12 +52,12 @@ public class QuizService {
     private final QuizChoiceRepository quizChoiceRepository;
 
     @Transactional
-    public void createQuiz(QuizCreateRequest createRequest, User User, Long categoryId) {
+    public void createQuiz(QuizCreateRequest createRequest, User user, Long categoryId) {
 
-        if (User == null) {
+        if (user == null) {
             throw new UserCustomException(UserExceptionCode.UNAUTHORIZED_USER);
         }
-        if (User.getRole() != UserRole.ROLE_ADMIN) {
+        if (user.getRole() != UserRole.ROLE_ADMIN) {
             throw new UserCustomException(UserExceptionCode.UNAUTHORIZED_USER);
         }
 
@@ -112,6 +113,23 @@ public class QuizService {
         return QuizDetailInfoResponse.of(quiz, quizChoice);
     }
 
+    public List<QuizQueryResponse> getQuizzesByCategory(QuizCategory category, User user) {
+        List<Quiz> CategoryQuizzes;
+        Pageable pageable = PageRequest.of(1, 30);
+
+        if (user == null) {
+            throw new UserCustomException(UserExceptionCode.UNAUTHORIZED_USER);
+        }
+        if (user.getRole() != UserRole.ROLE_ADMIN) {
+            throw new UserCustomException(UserExceptionCode.UNAUTHORIZED_USER);
+        }
+
+        CategoryQuizzes = quizRepository.findQuizzesByCategoryExcludingIds(category, pageable);
+
+        return CategoryQuizzes.stream()
+                .map(QuizQueryResponse::of)
+                .toList();
+    }
     @Transactional
     public void updateQuiz(QuizUpdateRequest updateRequest, User User, Long quizId, Long categoryId) {
         if (User == null) {

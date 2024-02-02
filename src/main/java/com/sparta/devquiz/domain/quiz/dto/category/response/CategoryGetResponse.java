@@ -16,4 +16,7 @@ public class CategoryGetResponse {
 
     @Schema(description = "카테고리 설명", defaultValue = "자바에 대한 퀴즈입니다.")
     private final String categoryDescription;
+
+    @Schema(description = "카테고리별 퀴즈 개수", defaultValue = "10")
+    private final Long quizCount;
 }

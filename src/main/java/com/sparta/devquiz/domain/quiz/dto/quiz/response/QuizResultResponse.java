@@ -35,5 +35,4 @@ public class QuizResultResponse {
                 .resultMessage(userQuizStatus.getMessage())
                 .build();
     }
-
 }

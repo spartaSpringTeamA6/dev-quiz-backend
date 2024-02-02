@@ -20,4 +20,6 @@ public interface QuizRepository extends JpaRepository<Quiz, Long> {
 
     @Query("SELECT q FROM Quiz q WHERE q.category = :category ORDER BY FUNCTION('RAND')")
     List<Quiz> findQuizzesByCategoryExcludingIds(QuizCategory category, Pageable pageable);
+
+    Long countByCategory(QuizCategory category);
 }

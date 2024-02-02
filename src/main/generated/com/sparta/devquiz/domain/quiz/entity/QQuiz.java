@@ -48,8 +48,6 @@ public class QQuiz extends EntityPathBase<Quiz> {
 
     public final NumberPath<Long> solveCount = createNumber("solveCount", Long.class);
 
-    public final ListPath<UserQuiz, QUserQuiz> userQuizList = this.<UserQuiz, QUserQuiz>createList("userQuizList", UserQuiz.class, QUserQuiz.class, PathInits.DIRECT2);
-
     public QQuiz(String variable) {
         this(Quiz.class, forVariable(variable), INITS);
     }
