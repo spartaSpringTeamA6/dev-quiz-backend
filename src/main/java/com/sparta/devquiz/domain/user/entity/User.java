@@ -4,6 +4,7 @@ import com.sparta.devquiz.domain.board.entity.Board;
 import com.sparta.devquiz.domain.coin.entity.Coin;
 import com.sparta.devquiz.domain.comment.entity.Comment;
 import com.sparta.devquiz.domain.quiz.entity.UserQuiz;
+import com.sparta.devquiz.domain.skill.entity.Skill;
 import com.sparta.devquiz.domain.team.entity.TeamUser;
 import com.sparta.devquiz.domain.user.enums.OauthType;
 import com.sparta.devquiz.domain.user.enums.UserRole;
@@ -93,11 +94,15 @@ public class User extends BaseTimeEntity {
     @OneToMany(mappedBy = "user")
     private List<Comment> commentList = new ArrayList<>();
 
-    public void updateUsernameAndSkill(String username, Set<Skill> skillList) {
+    public void updateUsername(String username) {
         this.username = username;
+    }
+
+    public void updateSkills(Set<Skill> skillList) {
         this.skillList.clear();
         this.skillList.addAll(skillList);
     }
+
     public void deleteUser() {
         this.isDeleted = true;
         this.deletedAt = LocalDateTime.now();

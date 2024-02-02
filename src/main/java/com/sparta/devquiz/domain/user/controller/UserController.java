@@ -1,6 +1,7 @@
 package com.sparta.devquiz.domain.user.controller;
 
-import com.sparta.devquiz.domain.user.dto.request.UserUpdateRequest;
+import com.sparta.devquiz.domain.user.dto.request.UserSkillsUpdateRequest;
+import com.sparta.devquiz.domain.user.dto.request.UsernameUpdateRequest;
 import com.sparta.devquiz.domain.user.entity.User;
 import com.sparta.devquiz.domain.user.response.UserResponseCode;
 import com.sparta.devquiz.domain.user.service.command.UserService;
@@ -15,7 +16,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,13 +28,24 @@ public class UserController {
 
   private final UserService userService;
 
-  @Operation(operationId = "USER-001", summary = "내 정보 수정")
-  @PatchMapping
-  public ResponseEntity<CommonResponseDto> updateMyProfile(
+  @Operation(operationId = "USER-001", summary = "내 이름 수정")
+  @PatchMapping("/username")
+  public ResponseEntity<CommonResponseDto> updateMyUsername(
       @AuthUser User authUser, @PathVariable Long userId,
-      @RequestBody @Valid UserUpdateRequest request)
+      @RequestBody @Valid UsernameUpdateRequest request)
   {
-    userService.updateMyProfile(authUser, userId, request);
+    userService.updateMyUsername(authUser, userId, request);
+    return ResponseEntity.status(UserResponseCode.UPDATE_MY_INFO.getHttpStatus())
+        .body(CommonResponseDto.of(UserResponseCode.UPDATE_MY_INFO));
+  }
+
+  @Operation(operationId = "USER-0016", summary = "내 스킬 수정")
+  @PatchMapping("/skills")
+  public ResponseEntity<CommonResponseDto> updateMySkills(
+      @AuthUser User authUser, @PathVariable Long userId,
+      @RequestBody @Valid UserSkillsUpdateRequest request)
+  {
+    userService.updateMySkills(authUser, userId, request);
     return ResponseEntity.status(UserResponseCode.UPDATE_MY_INFO.getHttpStatus())
         .body(CommonResponseDto.of(UserResponseCode.UPDATE_MY_INFO));
   }

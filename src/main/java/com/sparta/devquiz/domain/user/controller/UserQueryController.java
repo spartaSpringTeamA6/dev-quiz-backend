@@ -1,5 +1,6 @@
 package com.sparta.devquiz.domain.user.controller;
 
+import com.sparta.devquiz.domain.quiz.dto.response.QuizSolvedGrassResponse;
 import com.sparta.devquiz.domain.user.dto.response.UserBoardsResponse;
 import com.sparta.devquiz.domain.user.dto.response.UserCommentsResponse;
 import com.sparta.devquiz.domain.user.dto.response.UserDetailResponse;
@@ -14,6 +15,7 @@ import com.sparta.devquiz.global.annotation.AuthUser;
 import com.sparta.devquiz.global.response.CommonResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -107,5 +109,13 @@ public class UserQueryController {
     UserQuizzesResponse result = userQueryService.getMyPassQuizzes(authUser, userId);
     return ResponseEntity.status(UserResponseCode.GET_MY_PASSED_QUIZ.getHttpStatus())
         .body(CommonResponseDto.of(UserResponseCode.GET_MY_PASSED_QUIZ, result));
+  }
+
+  @Operation(operationId="USER-015", summary = "잔디 조회")
+  @GetMapping("/{userId}/grasses")
+  public ResponseEntity<CommonResponseDto> getMyGrasses(@AuthUser User authUser, @PathVariable Long userId) {
+    List<QuizSolvedGrassResponse> result = userQueryService.getMyGrasses(authUser, userId);
+    return ResponseEntity.status(UserResponseCode.GET_MY_GRASSES.getHttpStatus())
+            .body(CommonResponseDto.of(UserResponseCode.GET_MY_GRASSES, result));
   }
 }

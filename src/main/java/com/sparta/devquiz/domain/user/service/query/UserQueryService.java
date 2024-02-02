@@ -4,8 +4,12 @@ import com.sparta.devquiz.domain.board.dto.response.BoardDetailsResponse;
 import com.sparta.devquiz.domain.board.service.BoardService;
 import com.sparta.devquiz.domain.comment.dto.response.CommentInfoResponse;
 import com.sparta.devquiz.domain.comment.service.CommentService;
+import com.sparta.devquiz.domain.quiz.dto.response.QuizGetByUserResponse;
+import com.sparta.devquiz.domain.quiz.dto.response.QuizSolvedGrassResponse;
 import com.sparta.devquiz.domain.quiz.dto.quiz.response.QuizGetByUserResponse;
 import com.sparta.devquiz.domain.quiz.service.QuizService;
+import com.sparta.devquiz.domain.skill.entity.Skill;
+import com.sparta.devquiz.domain.skill.service.SkillService;
 import com.sparta.devquiz.domain.team.entity.TeamUser;
 import com.sparta.devquiz.domain.team.service.TeamUserService;
 import com.sparta.devquiz.domain.user.dto.response.UserBoardsResponse;
@@ -15,11 +19,9 @@ import com.sparta.devquiz.domain.user.dto.response.UserInvitationsResponse;
 import com.sparta.devquiz.domain.user.dto.response.UserQuizzesResponse;
 import com.sparta.devquiz.domain.user.dto.response.UserSkillResponse;
 import com.sparta.devquiz.domain.user.dto.response.UserTeamsResponse;
-import com.sparta.devquiz.domain.user.entity.Skill;
 import com.sparta.devquiz.domain.user.entity.User;
 import com.sparta.devquiz.domain.user.exception.UserCustomException;
 import com.sparta.devquiz.domain.user.exception.UserExceptionCode;
-import com.sparta.devquiz.domain.user.repository.SkillRepository;
 import com.sparta.devquiz.domain.user.repository.UserRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +36,7 @@ public class UserQueryService {
   private final BoardService boardService;
   private final CommentService commentService;
   private final UserRepository userRepository;
-  private final SkillRepository skillRepository;
+  private final SkillService skillService;
   private final QuizService quizService;
   private final TeamUserService teamUserService;
 
@@ -45,7 +47,7 @@ public class UserQueryService {
 
   public UserSkillResponse getMySkills(User authUser, Long userId) {
     User findUser = validateUser(authUser, userId);
-    List<Skill> skillList = skillRepository.findAllByUserId(userId);
+    List<Skill> skillList = skillService.getMySkills(userId);
     return UserSkillResponse.of(findUser, skillList);
   }
 
@@ -110,4 +112,9 @@ public class UserQueryService {
         () -> new UserCustomException(UserExceptionCode.NOT_FOUND_USER)
     );
   }
+
+    public List<QuizSolvedGrassResponse> getMyGrasses(User authUser, Long userId) {
+      validateUser(authUser,userId);
+      return quizService.getSolvedGrassByUser(authUser);
+    }
 }

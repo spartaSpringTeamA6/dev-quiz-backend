@@ -48,7 +48,7 @@ public class QUser extends EntityPathBase<User> {
 
     public final EnumPath<com.sparta.devquiz.domain.user.enums.UserRole> role = createEnum("role", com.sparta.devquiz.domain.user.enums.UserRole.class);
 
-    public final ListPath<Skill, QSkill> skillList = this.<Skill, QSkill>createList("skillList", Skill.class, QSkill.class, PathInits.DIRECT2);
+    public final ListPath<com.sparta.devquiz.domain.skill.entity.Skill, com.sparta.devquiz.domain.skill.entity.QSkill> skillList = this.<com.sparta.devquiz.domain.skill.entity.Skill, com.sparta.devquiz.domain.skill.entity.QSkill>createList("skillList", com.sparta.devquiz.domain.skill.entity.Skill.class, com.sparta.devquiz.domain.skill.entity.QSkill.class, PathInits.DIRECT2);
 
     public final ListPath<com.sparta.devquiz.domain.team.entity.TeamUser, com.sparta.devquiz.domain.team.entity.QTeamUser> teamUserList = this.<com.sparta.devquiz.domain.team.entity.TeamUser, com.sparta.devquiz.domain.team.entity.QTeamUser>createList("teamUserList", com.sparta.devquiz.domain.team.entity.TeamUser.class, com.sparta.devquiz.domain.team.entity.QTeamUser.class, PathInits.DIRECT2);
 

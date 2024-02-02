@@ -1,8 +1,9 @@
 package com.sparta.devquiz.domain.user.service.command;
 
 import com.sparta.devquiz.domain.team.service.TeamUserService;
-import com.sparta.devquiz.domain.user.dto.request.UserUpdateRequest;
-import com.sparta.devquiz.domain.user.entity.Skill;
+import com.sparta.devquiz.domain.skill.entity.Skill;
+import com.sparta.devquiz.domain.user.dto.request.UserSkillsUpdateRequest;
+import com.sparta.devquiz.domain.user.dto.request.UsernameUpdateRequest;
 import com.sparta.devquiz.domain.user.entity.User;
 import com.sparta.devquiz.domain.user.enums.UserSkill;
 import com.sparta.devquiz.domain.user.exception.UserCustomException;
@@ -23,13 +24,19 @@ public class UserService {
   private final UserRepository userRepository;
   private final TeamUserService teamUserService;
 
-  public void updateMyProfile(User authUser, Long userId, UserUpdateRequest request) {
+  public void updateMyUsername(User authUser, Long userId, UsernameUpdateRequest request) {
     User findUser = validateUser(authUser, userId);
 
     String newUsername = request.getUsername();
     if (!findUser.getUsername().equals(newUsername) && isExistedUsername(newUsername)) {
       throw new UserCustomException(UserExceptionCode.CONFLICT_USERNAME);
     }
+
+    findUser.updateUsername(newUsername);
+  }
+
+  public void updateMySkills(User authUser, Long userId, UserSkillsUpdateRequest request) {
+    User findUser = validateUser(authUser, userId);
 
     LinkedHashSet<String> skillSet = new LinkedHashSet<>(request.getSkillList());
     Set<UserSkill> userSkills = skillSet.stream()
@@ -44,7 +51,7 @@ public class UserService {
             .build())
         .collect(Collectors.toUnmodifiableSet());
 
-    findUser.updateUsernameAndSkill(newUsername, skills);
+    findUser.updateSkills(skills);
   }
 
   public void deleteMyProfile(User authUser, Long userId) {

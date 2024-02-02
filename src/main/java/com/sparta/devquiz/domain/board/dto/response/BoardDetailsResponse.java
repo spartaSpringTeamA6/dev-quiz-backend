@@ -29,6 +29,10 @@ public class BoardDetailsResponse {
     @Schema(description = "댓글 수", defaultValue = "1")
     private int countComment;
 
+    @Column
+    @Schema(description = "작성자", defaultValue = "작성자")
+    private String username;
+
     public static BoardDetailsResponse of(Board board) {
         return BoardDetailsResponse
                 .builder()
@@ -36,6 +40,7 @@ public class BoardDetailsResponse {
                 .title(board.getTitle())
                 .content(board.getContent())
                 .countComment(board.getComments().size())
+                .username(board.getUser().getUsername())
                 .build();
     }
 

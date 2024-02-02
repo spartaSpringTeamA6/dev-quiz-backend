@@ -47,7 +47,7 @@ public class TeamUserService {
     }
 
     public List<TeamUser> getTeamUser(Long teamId){
-        return teamUserRepository.findAllByTeamIdAndIsAcceptedTrueAndUserRole(teamId, TeamUserRole.USER);
+        return teamUserRepository.findAllByTeamIdAndIsAcceptedTrue(teamId);
     }
 
     public void updateTeamUserRole(Long teamId, Long userId, TeamUserRole teamUserRole){

@@ -24,8 +24,8 @@ public enum CoinContent {
 
 
     // 아이템
-    ITEM_CAT("USE", "CAT", 25),
-    ITEM_DOG("USE", "DOG", 45);
+    ITEM_GRASS_PICKUP("USE", "GRASS_PICKUP", 35),
+    ITEM_SOMETHING("USE", "UNKNOWN_ITEM", 55);
 
     private String status;
     private String content;

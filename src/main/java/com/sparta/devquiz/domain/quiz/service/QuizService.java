@@ -236,6 +236,11 @@ public class QuizService {
 
         return QuizPassResponse.of(quiz.getId());
     }
+
+    public List<QuizSolvedGrassResponse> getSolvedGrassByUser(User user){
+        return quizUserRepository.findSolvedGrassByUser(user);
+    }
+
     public List<QuizGetByUserResponse> getAllQuizzesForUser(User user) {
         return quizUserRepository.findCorrectQuizzesByUsers(user);
     }

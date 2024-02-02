@@ -49,14 +49,15 @@ public class WebSecurityConfig {
     http.authorizeHttpRequests(authReq -> authReq
           .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
           .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
-          .requestMatchers("/api/quizzes/**").permitAll()
+          .requestMatchers("/api/boards/{boardId}", "/api/boards/{boardId}/comments").permitAll()
+          .requestMatchers("/api/quizzes", "/api/quizzes/{quizId}","/api/quizzes/{quizId}/boards").permitAll()
           .requestMatchers("/api/auth/reissue").permitAll()
           .anyRequest().authenticated()
     );
 
     http.oauth2Login(
         login -> login
-            .loginPage("http://devquiz.pro/login")
+            .loginPage("https://devquiz.pro/login")
             .authorizationEndpoint(endPoint -> endPoint.authorizationRequestRepository(cookieOAuth2RequestRepository))
             .userInfoEndpoint(userInfo -> userInfo.userService(oAuth2UserService))
             .successHandler(oAuth2LoginSuccessHandler)
