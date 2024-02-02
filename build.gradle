@@ -49,6 +49,41 @@ dependencies {
     // Spring Doc
     implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.3.0'
 
+    // Mockito
+    testImplementation 'org.mockito:mockito-core:4.8.0'
+
+    // H2 - TEST ONLY
+    runtimeOnly 'com.h2database:h2'
+
+    // QueryDSL 의존성 적용
+    implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
+    annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jakarta"
+    annotationProcessor "jakarta.annotation:jakarta.annotation-api"
+    annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+
+}
+
+// Querydsl 설정
+def generated = 'src/main/generated'
+
+// querydsl QClass 파일 생성 위치를 지정
+tasks.withType(JavaCompile).configureEach {
+    options.getGeneratedSourceOutputDirectory().set(file(generated))
+}
+
+// java source set 에 querydsl QClass 위치 추가
+sourceSets {
+    main.java.srcDirs += [generated]
+}
+
+// gradle clean 시에 QClass 디렉토리 삭제
+clean {
+    delete file(generated)
+}
+
+// gradle clean 시에 QClass Dir 삭제
+clean {
+    delete file(generated)
 }
 
 tasks.named('test') {

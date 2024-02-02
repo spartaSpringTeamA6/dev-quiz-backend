@@ -20,13 +20,27 @@ spring:
         format_sql: 'true'
         show_sql: 'true'
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
 
 # swagger
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
 
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_SECRET}
+            scope:
+              - profile
+              - email
+          github:
+            client-id: ${GITHUB_CLIENT_ID}
+            client-secret: ${GITHUB_SECRET}
+            redirect-uri: "https://devquiz.pro/login/oauth2/code/github"
 jwt:
   secret:
     key: ${JWT_KEY}
@@ -34,6 +48,8 @@ jwt:
 springdoc:
   swagger-ui:
     path: /swagger-ui.html
+    display-operation-id: true
     tags-sorter: alpha
 #    operations-sorter: method
 #    doc-expansion: none
+
