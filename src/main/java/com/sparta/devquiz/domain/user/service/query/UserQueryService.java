@@ -40,7 +40,7 @@ public class UserQueryService {
   private final TeamUserService teamUserService;
 
   public UserDetailResponse getMyProfile(User authUser) {
-    User findUser = getUserById(authUser.getId());
+    User findUser = userRepository.findByIdOrElseThrow(authUser.getId());
     return UserDetailResponse.of(findUser);
   }
 
@@ -98,22 +98,15 @@ public class UserQueryService {
     return UserQuizzesResponse.of(findUser, passQuizList);
   }
 
-  public User validateUser(User authUser, Long userId) {
-    //OSIV 끄고 테스트 필요 user와 findUser == 비교가 안 된다.
+  public List<QuizSolvedGrassResponse> getMyGrasses(User authUser, Long userId) {
+    validateUser(authUser,userId);
+    return quizService.getSolvedGrassByUser(authUser);
+  }
+
+  private User validateUser(User authUser, Long userId) {
     if (!authUser.getId().equals(userId)) {
       throw new UserCustomException(UserExceptionCode.BAD_REQUEST_USER_ID);
     }
-    return getUserById(userId);
+    return userRepository.findByIdOrElseThrow(userId);
   }
-
-  public User getUserById(Long userId) {
-    return userRepository.findByIdAndIsDeletedFalse(userId).orElseThrow(
-        () -> new UserCustomException(UserExceptionCode.NOT_FOUND_USER)
-    );
-  }
-
-    public List<QuizSolvedGrassResponse> getMyGrasses(User authUser, Long userId) {
-      validateUser(authUser,userId);
-      return quizService.getSolvedGrassByUser(authUser);
-    }
 }
