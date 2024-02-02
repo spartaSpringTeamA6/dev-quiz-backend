@@ -21,36 +21,5 @@ pipeline {
 	   }
 	}
 	
-	stage('Start') {
-	   steps {
-	     echo "여러분 반갑습니다!"
-	   }
-	}
-   }
-
-   post {
-	success {
-	   discordSend (
-		description: "젠킨스 알람",
-		footer: "성공!",
-		link: env.BUILD_URL,
-		result: currentBuild.currentResult,
-		title: env.JOB_NAME,
-		successful: currentBuild.resultIsBetterOrEqualTo('SUCCESS'),
-		webhookURL: credentials('discord_notify')
-	   )
-	}
-
-	failure {
-	   discordSend (
-		description: "젠킨스 알람",
-		footer: "실패 ㅠ",
-		link: env.BUILD_URL,
-		result: currentBuild.currentResult,
-		title: env.JOB_NAME,
-		successful: currentBuild.resultIsBetterOrEqualTo('SUCCESS'),
-		webhookURL: credentials('discord_notify')
-	   )
-	}
    }
 }
