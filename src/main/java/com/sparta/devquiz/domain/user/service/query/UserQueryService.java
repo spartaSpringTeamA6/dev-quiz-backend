@@ -10,6 +10,7 @@ import com.sparta.devquiz.domain.quiz.service.QuizService;
 import com.sparta.devquiz.domain.skill.entity.Skill;
 import com.sparta.devquiz.domain.skill.service.SkillService;
 import com.sparta.devquiz.domain.team.entity.TeamUser;
+import com.sparta.devquiz.domain.team.repository.TeamUserRepository;
 import com.sparta.devquiz.domain.team.service.TeamUserService;
 import com.sparta.devquiz.domain.user.dto.response.UserBoardsResponse;
 import com.sparta.devquiz.domain.user.dto.response.UserCommentsResponse;
@@ -37,7 +38,7 @@ public class UserQueryService {
   private final UserRepository userRepository;
   private final SkillService skillService;
   private final QuizService quizService;
-  private final TeamUserService teamUserService;
+  private final TeamUserRepository teamUserRepository;
 
   public UserDetailResponse getMyProfile(User authUser) {
     User findUser = userRepository.findByIdOrElseThrow(authUser.getId());
@@ -52,13 +53,13 @@ public class UserQueryService {
 
   public UserTeamsResponse getMyTeams(User authUser, Long userId) {
     User findUser = validateUser(authUser, userId);
-    List<TeamUser> findTeamUserList = teamUserService.getTeamUserByUser(findUser.getId());
+    List<TeamUser> findTeamUserList = teamUserRepository.getTeamUserByUser(findUser.getId());
     return UserTeamsResponse.of(findUser, findTeamUserList);
   }
 
   public UserInvitationsResponse getMyInvitations(User authUser, Long userId) {
     User findUser = validateUser(authUser, userId);
-    List<TeamUser> findTeamUserList = teamUserService.getTeamUserByUserAndWait(findUser.getId());
+    List<TeamUser> findTeamUserList = teamUserRepository.getTeamUserByUserAndWait(findUser.getId());
     return UserInvitationsResponse.of(findUser, findTeamUserList);
   }
 

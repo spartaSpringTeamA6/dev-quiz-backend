@@ -36,7 +36,7 @@ public class TeamService {
     public TeamCreateResponse createTeam(User user, TeamCreateRequest request) {
         User createdBy = userRepository.findByIdOrElseThrow(user.getId());
 
-        if(teamRepository.existsByName(request.getName())){
+        if(teamRepository.existsTeamByName(request.getName())){
             throw new TeamCustomException(TeamExceptionCode.CONFLICT_TEAM_NAME_IN_USE);
         }
 
@@ -53,7 +53,7 @@ public class TeamService {
     public TeamGetResponse getTeam(User user, Long teamId) {
         Team team = getTeamAndCheckAuthUser(user,teamId);
         TeamUser admin= teamUserRepository.findByTeamAdminOrElseThrow(team.getId());
-        List<TeamUser> userList = teamUserService.getTeamUser(team.getId());
+        List<TeamUser> userList = teamUserRepository.getTeamUserByTeam(team.getId());
 
         return TeamGetResponse.of(team,admin,userList);
     }
@@ -62,7 +62,7 @@ public class TeamService {
     public void updateTeamName(User user, Long teamId, TeamUpdateNameRequest request) {
         Team team = getTeamAndCheckAuthUser(user,teamId);
 
-        if(teamRepository.existsByName(request.getName())){
+        if(teamRepository.existsTeamByName(request.getName())){
             throw new TeamCustomException(TeamExceptionCode.CONFLICT_TEAM_NAME_IN_USE);
         }
 
@@ -137,13 +137,13 @@ public class TeamService {
 
     @Transactional
     public void acceptInvitationTeamUser(User user, Long teamId) {
-        Team team = getTeamById(teamId);
+        Team team = teamRepository.findTeamByIdOrElseThrow(teamId);
         teamUserService.acceptInvitation(teamId,user.getId());
     }
 
     @Transactional
     public void rejectInvitationTeamUser(User user, Long teamId) {
-        Team team = getTeamById(teamId);
+        Team team = teamRepository.findTeamByIdOrElseThrow(teamId);
         teamUserService.rejectInvitation(teamId,user.getId());
     }
 
@@ -157,7 +157,7 @@ public class TeamService {
 //    }
 
     public Team getTeamAndCheckAuthUser(User user, Long teamId){
-        Team team = getTeamById(teamId);
+        Team team = teamRepository.findTeamByIdOrElseThrow(teamId);
         User loginUser = userRepository.findByIdOrElseThrow(user.getId());
 
         if(!teamUserRepository.existsByTeamUser(team.getId(), loginUser.getId())){
@@ -168,7 +168,7 @@ public class TeamService {
     }
 
     public Team getTeamAndCheckAuthAdmin(User user, Long teamId){
-        Team team = getTeamById(teamId);
+        Team team = teamRepository.findTeamByIdOrElseThrow(teamId);
         User admin = userRepository.findByIdOrElseThrow(user.getId());
 
         if(!teamUserRepository.existsByTeamAdmin(team.getId(), admin.getId())){
@@ -176,12 +176,6 @@ public class TeamService {
         }
 
         return team;
-    }
-
-    public Team getTeamById(Long id) {
-        return teamRepository.findByIdAndIsDeletedFalse(id).orElseThrow(
-                () -> new TeamCustomException(TeamExceptionCode.NOT_FOUND_TEAM)
-        );
     }
 
 }
