@@ -1,5 +1,6 @@
 package com.sparta.devquiz.domain.quiz.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -22,6 +23,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "quiz_choice")
 public class QuizChoice{
 
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "quiz_id")
     private Quiz quiz;

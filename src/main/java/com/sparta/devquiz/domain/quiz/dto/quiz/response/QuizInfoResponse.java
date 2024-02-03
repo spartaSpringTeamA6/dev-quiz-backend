@@ -16,6 +16,6 @@ public class QuizInfoResponse {
     private final QuizCategory category;
 
     @Schema(description = "퀴즈 문제 내용", defaultValue = "Java의 주요 특징으로 올바르지 않은 것은?")
-    private final String question;
+    private final String quizTitle;
 
 }

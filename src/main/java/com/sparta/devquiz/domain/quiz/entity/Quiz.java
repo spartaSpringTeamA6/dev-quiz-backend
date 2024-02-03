@@ -1,5 +1,6 @@
 package com.sparta.devquiz.domain.quiz.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.sparta.devquiz.global.entity.BaseTimeEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -40,6 +41,7 @@ public class Quiz extends BaseTimeEntity {
     @Column(nullable = false, name = "quiz_title")
     private String quizTitle;
 
+    @JsonManagedReference
     @Builder.Default
     @OneToMany(mappedBy = "quiz", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<QuizChoice> quizChoices = new ArrayList<>();

@@ -1,10 +1,11 @@
 package com.sparta.devquiz.domain.quiz.dto.quiz.response;
 
-import com.sparta.devquiz.domain.quiz.entity.Quiz;
 import com.sparta.devquiz.domain.quiz.entity.QuizChoice;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
+
+import java.util.List;
 
 @Getter
 @Builder
@@ -21,15 +22,5 @@ public class QuizDetailInfoResponse {
     private String quizTitle;
 
     @Schema(description = "퀴즈의 보기", defaultValue = "객체지향 프로그래밍\nJVM 위에서 실행\n포인터를 직접 다룰 수 있음\n가비지 컬렉션 제공")
-    private String quizContent;
-
-
-    public static QuizDetailInfoResponse of(Quiz quiz, QuizChoice quizChoice) {
-        return QuizDetailInfoResponse.builder()
-                .id(quiz.getId())
-                .categoryTitle(quiz.findCategoryName())
-                .quizTitle(quiz.getQuizTitle())
-                .quizContent(quizChoice.getChoiceContent())
-                .build();
-    }
+    private List<QuizChoice> quizChoices;
 }

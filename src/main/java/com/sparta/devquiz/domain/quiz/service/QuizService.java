@@ -114,11 +114,17 @@ public class QuizService {
     }
 
     public QuizDetailInfoResponse getQuiz(Long quizId) {
-        Quiz quiz = getQuizById(quizId);
-        QuizChoice quizChoice = quizChoiceRepository.findQuizChoiceByQuiz(quiz)
-                .orElseThrow(() -> new QuizCustomException(QuizExceptionCode.NOT_FOUND_QUIZ_CHOICE));
 
-        return QuizDetailInfoResponse.of(quiz, quizChoice);
+        Quiz quiz = getQuizById(quizId);
+        Category category = quiz.getCategory();
+        List<QuizChoice> quizChoices = quizChoiceRepository.findQuizChoicesByQuiz(quiz);
+
+        return QuizDetailInfoResponse.builder()
+                .id(quiz.getId())
+                .categoryTitle(category.getCategoryTitle())
+                .quizTitle(quiz.getQuizTitle())
+                .quizChoices(quizChoices)
+                .build();
     }
 
     public List<QuizQueryResponse> getQuizzesByCategory(QuizCategory category, User user) {
