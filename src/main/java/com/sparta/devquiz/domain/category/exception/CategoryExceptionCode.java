@@ -1,4 +1,4 @@
-package com.sparta.devquiz.domain.quiz.exception;
+package com.sparta.devquiz.domain.category.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

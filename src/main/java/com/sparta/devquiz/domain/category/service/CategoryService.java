@@ -1,11 +1,11 @@
-package com.sparta.devquiz.domain.quiz.service;
+package com.sparta.devquiz.domain.category.service;
 
-import com.sparta.devquiz.domain.quiz.dto.category.request.CategoryCreateRequest;
-import com.sparta.devquiz.domain.quiz.dto.category.response.CategoryGetResponse;
-import com.sparta.devquiz.domain.quiz.entity.Category;
-import com.sparta.devquiz.domain.quiz.exception.CategoryCustomException;
-import com.sparta.devquiz.domain.quiz.exception.CategoryExceptionCode;
-import com.sparta.devquiz.domain.quiz.repository.CategoryRepository;
+import com.sparta.devquiz.domain.category.dto.request.CategoryCreateRequest;
+import com.sparta.devquiz.domain.category.dto.response.CategoryGetResponse;
+import com.sparta.devquiz.domain.category.entity.Category;
+import com.sparta.devquiz.domain.category.exception.CategoryCustomException;
+import com.sparta.devquiz.domain.category.exception.CategoryExceptionCode;
+import com.sparta.devquiz.domain.category.repository.CategoryRepository;
 import com.sparta.devquiz.domain.quiz.repository.QuizRepository;
 import com.sparta.devquiz.domain.user.entity.User;
 import com.sparta.devquiz.domain.user.enums.UserRole;
@@ -25,7 +25,7 @@ import java.util.List;
 public class CategoryService {
     private final CategoryRepository categoryRepository;
     private final QuizRepository quizRepository;
-    private com.sparta.devquiz.domain.quiz.enums.QuizCategory QuizCategory;
+    private com.sparta.devquiz.domain.category.enums.QuizCategory QuizCategory;
 
     @Transactional(readOnly = true)
     public List<CategoryGetResponse> getCategories() {
@@ -48,7 +48,7 @@ public class CategoryService {
 
         String categoryTitle = request.getCategoryTitle().toUpperCase();
 
-        if (!EnumUtils.isValidEnum(com.sparta.devquiz.domain.quiz.enums.QuizCategory.class, categoryTitle)) {
+        if (!EnumUtils.isValidEnum(com.sparta.devquiz.domain.category.enums.QuizCategory.class, categoryTitle)) {
             throw new CategoryCustomException(CategoryExceptionCode.INVALID_CATEGORY_TITLE);
         }
 

@@ -1,5 +1,6 @@
-package com.sparta.devquiz.domain.quiz.entity;
+package com.sparta.devquiz.domain.category.entity;
 
+import com.sparta.devquiz.domain.quiz.entity.Quiz;
 import com.sparta.devquiz.global.entity.BaseTimeEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;

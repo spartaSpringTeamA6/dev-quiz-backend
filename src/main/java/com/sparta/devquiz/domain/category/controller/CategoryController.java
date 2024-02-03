@@ -1,9 +1,9 @@
-package com.sparta.devquiz.domain.quiz.controller;
+package com.sparta.devquiz.domain.category.controller;
 
-import com.sparta.devquiz.domain.quiz.dto.category.request.CategoryCreateRequest;
-import com.sparta.devquiz.domain.quiz.dto.category.response.CategoryGetResponse;
-import com.sparta.devquiz.domain.quiz.response.CategoryResponseCode;
-import com.sparta.devquiz.domain.quiz.service.CategoryService;
+import com.sparta.devquiz.domain.category.dto.request.CategoryCreateRequest;
+import com.sparta.devquiz.domain.category.dto.response.CategoryGetResponse;
+import com.sparta.devquiz.domain.category.response.CategoryResponseCode;
+import com.sparta.devquiz.domain.category.service.CategoryService;
 import com.sparta.devquiz.domain.user.entity.User;
 import com.sparta.devquiz.global.annotation.AuthUser;
 import com.sparta.devquiz.global.response.CommonResponseDto;

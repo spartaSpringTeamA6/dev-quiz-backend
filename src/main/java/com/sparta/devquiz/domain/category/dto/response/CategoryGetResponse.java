@@ -1,4 +1,4 @@
-package com.sparta.devquiz.domain.quiz.dto.category.response;
+package com.sparta.devquiz.domain.category.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;

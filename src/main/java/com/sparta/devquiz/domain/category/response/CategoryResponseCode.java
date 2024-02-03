@@ -1,4 +1,4 @@
-package com.sparta.devquiz.domain.quiz.response;
+package com.sparta.devquiz.domain.category.response;
 
 import com.sparta.devquiz.global.response.ResponseCode;
 import lombok.AllArgsConstructor;

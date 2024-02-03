@@ -1,4 +1,4 @@
-package com.sparta.devquiz.domain.quiz.entity;
+package com.sparta.devquiz.domain.category.entity;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
@@ -16,7 +16,7 @@ import com.querydsl.core.types.dsl.PathInits;
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
 public class QCategory extends EntityPathBase<Category> {
 
-    private static final long serialVersionUID = -1760252816L;
+    private static final long serialVersionUID = -1196149479L;
 
     public static final QCategory category = new QCategory("category");
 
@@ -34,7 +34,7 @@ public class QCategory extends EntityPathBase<Category> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> modifiedAt = _super.modifiedAt;
 
-    public final ListPath<Quiz, QQuiz> quizzes = this.<Quiz, QQuiz>createList("quizzes", Quiz.class, QQuiz.class, PathInits.DIRECT2);
+    public final ListPath<com.sparta.devquiz.domain.quiz.entity.Quiz, com.sparta.devquiz.domain.quiz.entity.QQuiz> quizzes = this.<com.sparta.devquiz.domain.quiz.entity.Quiz, com.sparta.devquiz.domain.quiz.entity.QQuiz>createList("quizzes", com.sparta.devquiz.domain.quiz.entity.Quiz.class, com.sparta.devquiz.domain.quiz.entity.QQuiz.class, PathInits.DIRECT2);
 
     public QCategory(String variable) {
         super(Category.class, forVariable(variable));
