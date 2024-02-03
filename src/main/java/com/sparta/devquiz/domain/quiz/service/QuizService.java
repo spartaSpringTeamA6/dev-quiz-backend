@@ -168,15 +168,4 @@ public class QuizService {
         return quizUserRepository.findCorrectQuizzesByUsers(user);
     }
 
-    public List<QuizGetByUserResponse> getCorrectQuizzesForUser(User user) {
-        return quizUserRepository.findCorrectQuizzesByUsers(user, UserQuizStatus.CORRECT);
-    }
-
-    public List<QuizGetByUserResponse> getFailQuizzesForUser(User user) {
-        return quizUserRepository.findCorrectQuizzesByUsers(user, UserQuizStatus.FAIL);
-    }
-
-    public List<QuizGetByUserResponse> getPassQuizzesForUser(User user) {
-        return quizUserRepository.findCorrectQuizzesByUsers(user, UserQuizStatus.PASS);
-    }
 }
