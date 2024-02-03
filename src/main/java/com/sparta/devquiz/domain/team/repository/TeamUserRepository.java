@@ -3,6 +3,11 @@ package com.sparta.devquiz.domain.team.repository;
 import com.sparta.devquiz.domain.team.entity.TeamUser;
 import com.sparta.devquiz.domain.team.entity.TeamUserId;
 import com.sparta.devquiz.domain.team.enums.TeamUserRole;
+import com.sparta.devquiz.domain.team.exception.TeamCustomException;
+import com.sparta.devquiz.domain.team.exception.TeamExceptionCode;
+import com.sparta.devquiz.domain.user.entity.User;
+import com.sparta.devquiz.domain.user.exception.UserCustomException;
+import com.sparta.devquiz.domain.user.exception.UserExceptionCode;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -33,4 +38,27 @@ public interface TeamUserRepository extends JpaRepository<TeamUser, TeamUserId> 
 
     @Query("select tu from TeamUser tu where tu.team.id = :teamId and tu.user.id = :userId and tu.isAccepted = FALSE")
     Optional<TeamUser> findByTeamIdAndUserIdAndIsAcceptedFalse(Long teamId, Long userId);
+
+
+    default TeamUser findByTeamUserOrElseThrow(Long teamId, Long userId){
+        return findByTeamIdAndUserId(teamId, userId).orElseThrow(
+                () -> new TeamCustomException(TeamExceptionCode.NOT_FOUND_TEAM_USER)
+        );
+    }
+
+    default boolean existsByTeamUser(Long teamId, Long userId){
+        return existsByTeamIdAndUserIdAndIsAcceptedTrue(teamId, userId);
+    }
+
+    default boolean existsByTeamAdmin(Long teamId, Long userId){
+        return existsByTeamIdAndUserIdAndIsAcceptedTrueAndUserRole(teamId, userId, TeamUserRole.ADMIN);
+    }
+
+    default TeamUser findByTeamAdminOrElseThrow(Long teamId){
+        return findByTeamIdAndIsAcceptedTrueAndUserRole(teamId, TeamUserRole.ADMIN)
+                .orElseThrow(()-> new TeamCustomException(TeamExceptionCode.NOT_FOUND_TEAM_ADMIN));
+    }
+
+
+
 }
