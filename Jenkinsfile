@@ -28,22 +28,5 @@ pipeline {
 	}
 	
    }
-
-   post {
-	success {
-		discordSend (
-			description: "성공!",
-			webhookURL: credentials('discord_notify')
-		)
-	}
-
-	failure {
-		discordSend (
-			description: "실패 ㅠ",
-			webhookURL: credentials('discord_notify')
-		)
-	}
-  }
 }
 
- 
