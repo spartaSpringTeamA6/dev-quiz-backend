@@ -50,7 +50,7 @@ pipeline {
 			result: currentBuild.currentResult,
 			title: env.JOB_NAME,
 			successful: currentBuild.resultIsBetterOrEqualsTo('SUCCESS'),
-			webhookURL: credentials('discord_notify)
+			webhookURL: credentials('discord_notify')
 		)
 	}
   }
