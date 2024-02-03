@@ -32,24 +32,14 @@ pipeline {
    post {
 	success {
 		discordSend (
-			description: "젠킨스 알람",
-			footer: "성공!",
-			link: env.BUILD_URL,
-			result: currentBuild.currentResult,
-			title: env.JOB_NAME,
-			successful: currentBuild.resultIsBetterOrEqualTo('SUCCESS'),
+			description: "성공!",
 			webhookURL: credentials('discord_notify')
 		)
 	}
 
 	failure {
 		discordSend (
-			description: "젠킨스 알람",
-			footer: "실패 ㅠ",
-			link: env.BUILD_URL,
-			result: currentBuild.currentResult,
-			title: env.JOB_NAME,
-			successful: currentBuild.resultIsBetterOrEqualTo('SUCCESS'),
+			description: "실패 ㅠ",
 			webhookURL: credentials('discord_notify')
 		)
 	}
