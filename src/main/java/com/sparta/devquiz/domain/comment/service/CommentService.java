@@ -33,7 +33,7 @@ public class CommentService {
 
     @Transactional
     public CommentCreateResponse createComment(Long boardId,CommentCreateRequest commentCreateResponseDto, User user) {
-        Board board = getBoardById(boardId);
+        Board board = boardRepository.findBoardByIdOrElseThrow(boardId);
         isExistsBoard(board);
 
         Comment comment = Comment.builder()
@@ -48,7 +48,7 @@ public class CommentService {
     }
 
     public List<CommentDetailsResponse> getCommentList(Long boardId) {
-        Board board = getBoardById(boardId);
+        Board board = boardRepository.findBoardByIdOrElseThrow(boardId);
         isExistsBoard(board);
 
         List<Comment> comments = commentRepository.findAllByBoardIdAndIsDeletedFalse(boardId);
@@ -62,7 +62,7 @@ public class CommentService {
 
     @Transactional
     public void updateComment(Long commentId, CommentUpdateRequest commentUpdateRequest, User user) {
-        Comment comment = getCommentById(commentId);
+        Comment comment = commentRepository.findCommentByIdOrElseThrow(commentId);
         isCommentUser(comment,user);
 
         comment.updateContent(commentUpdateRequest.getContent());
@@ -70,7 +70,7 @@ public class CommentService {
 
     @Transactional
     public void deleteComment(Long commentId, User user) {
-        Comment comment = getCommentById(commentId);
+        Comment comment = commentRepository.findCommentByIdOrElseThrow(commentId);
         isCommentUser(comment,user);
         isExistsComment(comment);
 
@@ -79,7 +79,7 @@ public class CommentService {
 
     @Transactional
     public void likeComment(Long commentId, User user) {
-        Comment comment = getCommentById(commentId);
+        Comment comment = commentRepository.findCommentByIdOrElseThrow(commentId);
         isExistsComment(comment);
 
         CommentLikeId commentLikeId = new CommentLikeId(user.getId(), commentId);
@@ -100,7 +100,7 @@ public class CommentService {
     @Transactional
     public void unlikeComment(Long commentId, User user) {
 
-        Comment comment = getCommentById(commentId);
+        Comment comment = commentRepository.findCommentByIdOrElseThrow(commentId);
         CommentLikeId commentLikeId = new CommentLikeId(user.getId(), commentId);
 
         isExistsComment(comment);
@@ -110,16 +110,6 @@ public class CommentService {
         } else {
             throw new CommentCustomException(CommentExceptionCode.NOT_LIKED);
         }
-    }
-
-    private Board getBoardById(Long boardId) {
-        return boardRepository.findById(boardId)
-                .orElseThrow(() -> new CommentCustomException(CommentExceptionCode.NOT_FOUND_BOARD));
-    }
-
-    private Comment getCommentById(Long commentId) {
-        return commentRepository.findById(commentId)
-                .orElseThrow(() -> new CommentCustomException(CommentExceptionCode.NOT_FOUND_COMMENT));
     }
 
     public void isCommentUser(Comment comment, User user){
