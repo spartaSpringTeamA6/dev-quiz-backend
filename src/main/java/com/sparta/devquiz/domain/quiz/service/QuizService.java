@@ -22,6 +22,7 @@ import com.sparta.devquiz.domain.user.entity.User;
 import com.sparta.devquiz.domain.user.enums.UserRole;
 import com.sparta.devquiz.domain.user.exception.UserCustomException;
 import com.sparta.devquiz.domain.user.exception.UserExceptionCode;
+import com.sparta.devquiz.domain.user.repository.UserRepository;
 import com.sparta.devquiz.domain.user.service.command.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -36,7 +37,7 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class QuizService {
 
-    private final UserService userService;
+    private final UserRepository userRepository;
     private final QuizRepository quizRepository;
     private final QuizUserRepository quizUserRepository;
     private final CoinService coinService;
@@ -88,7 +89,7 @@ public class QuizService {
     }
 
     public QuizDetailInfoResponse getQuiz(Long quizId) {
-        Quiz quiz = getQuizById(quizId);
+        Quiz quiz = quizRepository.findQuizByIdOrElseThrow(quizId);
 
         return QuizDetailInfoResponse.of(quiz);
     }
@@ -101,7 +102,7 @@ public class QuizService {
         if (User.getRole() != UserRole.ROLE_ADMIN) {
             throw new UserCustomException(UserExceptionCode.UNAUTHORIZED_USER);
         }
-        Quiz quiz = getQuizById(quizId);
+        Quiz quiz = quizRepository.findQuizByIdOrElseThrow(quizId);
 
         quiz.updateQuiz(updateRequest.getQuestion(), String.join("\n", updateRequest.getExample()),
                 updateRequest.getCategory(), updateRequest.getAnswer());
@@ -115,14 +116,14 @@ public class QuizService {
         if (User.getRole() != UserRole.ROLE_ADMIN) {
             throw new UserCustomException(UserExceptionCode.UNAUTHORIZED_USER);
         }
-        Quiz quiz = getQuizById(quizId);
+        Quiz quiz = quizRepository.findQuizByIdOrElseThrow(quizId);
 
         quiz.deleteQuiz();
     }
 
     @Transactional
     public QuizAnswerSubmitResponse submitQuizAnswer(Long quizId, User user, QuizAnswerSubmitRequest request) {
-        Quiz quiz = getQuizById(quizId);
+        Quiz quiz = quizRepository.findQuizByIdOrElseThrow(quizId);
 
         boolean isCorrect = quiz.getAnswer().equalsIgnoreCase(request.getAnswer());
         UserQuizStatus status;
@@ -140,7 +141,7 @@ public class QuizService {
         }
 
         if (user != null) {
-            User findUser = userService.getUserById(user.getId());
+            User findUser = userRepository.findByIdOrElseThrow(user.getId());
             int score = status.getScore();
             UserQuiz userQuiz = UserQuiz.builder()
                     .user(findUser)
@@ -159,28 +160,4 @@ public class QuizService {
         return QuizAnswerSubmitResponse.of(quiz, request.getAnswer(), status);
     }
 
-    public List<QuizSolvedGrassResponse> getSolvedGrassByUser(User user){
-        return quizUserRepository.findSolvedGrassByUser(user);
-    }
-
-    public List<QuizGetByUserResponse> getAllQuizzesForUser(User user) {
-        return quizUserRepository.findCorrectQuizzesByUsers(user);
-    }
-
-    public List<QuizGetByUserResponse> getCorrectQuizzesForUser(User user) {
-        return quizUserRepository.findCorrectQuizzesByUsers(user, UserQuizStatus.CORRECT);
-    }
-
-    public List<QuizGetByUserResponse> getFailQuizzesForUser(User user) {
-        return quizUserRepository.findCorrectQuizzesByUsers(user, UserQuizStatus.FAIL);
-    }
-
-    public List<QuizGetByUserResponse> getPassQuizzesForUser(User user) {
-        return quizUserRepository.findCorrectQuizzesByUsers(user, UserQuizStatus.PASS);
-    }
-
-    public Quiz getQuizById(Long id) {
-        return quizRepository.findById(id)
-                .orElseThrow(() -> new QuizCustomException(QuizExceptionCode.NOT_FOUND_QUIZ));
-    }
 }

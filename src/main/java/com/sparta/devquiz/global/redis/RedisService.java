@@ -20,6 +20,16 @@ public class RedisService {
         return redisTemplate.opsForValue().get(key);
     }
 
+
+    public void setBlacklist(String key, String value, long timeout) {
+        redisTemplate.opsForValue().set("blacklist: " + key, value, timeout, TimeUnit.MILLISECONDS);
+    }
+
+    public boolean hasBlacklist(String key, String accessToken) {
+        String blacklistKey = "blacklist: " + key;
+        return redisTemplate.hasKey(blacklistKey) && (redisTemplate.opsForValue().get(blacklistKey)).equals(accessToken);
+    }
+
     public void deleteValues(String key) {
         redisTemplate.delete(key);
     }

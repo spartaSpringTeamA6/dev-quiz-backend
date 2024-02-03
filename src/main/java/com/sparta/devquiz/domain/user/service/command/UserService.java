@@ -28,7 +28,7 @@ public class UserService {
     User findUser = validateUser(authUser, userId);
 
     String newUsername = request.getUsername();
-    if (!findUser.getUsername().equals(newUsername) && isExistedUsername(newUsername)) {
+    if (!findUser.getUsername().equals(newUsername) && userRepository.existsByUsername(newUsername)) {
       throw new UserCustomException(UserExceptionCode.CONFLICT_USERNAME);
     }
 
@@ -73,32 +73,24 @@ public class UserService {
   }
 
   public User validateUser(User authUser, Long userId) {
-    //OSIV 끄고 테스트 필요 user와 findUser == 비교가 안 된다.
     if (!authUser.getId().equals(userId)) {
       throw new UserCustomException(UserExceptionCode.BAD_REQUEST_USER_ID);
     }
-    return getUserById(userId);
+    return userRepository.findByIdOrElseThrow(userId);
   }
 
-  public User getUserById(Long userId) {
-    return userRepository.findByIdAndIsDeletedFalse(userId).orElseThrow(
-        () -> new UserCustomException(UserExceptionCode.NOT_FOUND_USER)
-    );
-  }
+  //userRepository.findByIdOrElseThrow(userId)로 변경되었습니다.
+//  public User getUserById(Long userId) {
+//    return userRepository.findByIdAndIsDeletedFalse(userId).orElseThrow(
+//        () -> new UserCustomException(UserExceptionCode.NOT_FOUND_USER)
+//    );
+//  }
 
-  public User getOptUserByOauthId(String oauthId) {
-    return userRepository.findByOauthIdAndIsDeletedFalse(oauthId).orElseThrow(
-        () -> new UserCustomException(UserExceptionCode.NOT_FOUND_USER)
-    );
-  }
+  //userRepository.findByUsernameOrElseThrow(username)로 변경되었습니다.
+//  public User getUserByUsername(String username){
+//    return userRepository.findByUsernameAndIsDeletedFalse(username).orElseThrow(
+//            () -> new UserCustomException(UserExceptionCode.NOT_FOUND_USER)
+//    );
+//  }
 
-  public User getUserByUsername(String username){
-    return userRepository.findByUsernameAndIsDeletedFalse(username).orElseThrow(
-            () -> new UserCustomException(UserExceptionCode.NOT_FOUND_USER)
-    );
-  }
-
-  public boolean isExistedUsername(String username){
-    return userRepository.existsByUsername(username);
-  }
 }
