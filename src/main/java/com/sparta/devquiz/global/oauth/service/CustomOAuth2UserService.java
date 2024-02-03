@@ -4,6 +4,7 @@ import com.sparta.devquiz.domain.user.entity.User;
 import com.sparta.devquiz.domain.user.enums.OauthType;
 import com.sparta.devquiz.domain.user.repository.UserRepository;
 import com.sparta.devquiz.global.oauth.OAuth2Attributes;
+import com.sparta.devquiz.global.oauth.userinfo.OAuth2UserInfo;
 import java.util.Collections;
 import java.util.Map;
 import java.util.UUID;
@@ -57,15 +58,16 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
   }
 
   private User createUser(OAuth2Attributes attributes, OauthType oauthType) {
-    User createdUser = attributes.toEntity(oauthType, attributes.getOauth2UserInfo(), makeUsername());
+    OAuth2UserInfo oauth2UserInfo = attributes.getOauth2UserInfo();
+    String username = makeUsername(oauth2UserInfo.getUsername());
+    User createdUser = attributes.toEntity(oauthType, oauth2UserInfo, username);
     return userRepository.save(createdUser);
   }
   
-  private String makeUsername() {
-    String username = UUID.randomUUID().toString().substring(0, 27);
+  private String makeUsername(String username) {
     while (userRepository.existsByUsername(username)) {
-      username = UUID.randomUUID().toString().substring(0, 27);
+      username = UUID.randomUUID().toString().substring(0, 30);
     }
-    return "tmp" + username;
+    return username;
   }
 }

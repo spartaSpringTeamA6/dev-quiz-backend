@@ -56,5 +56,4 @@ public class Board extends BaseTimeEntity {
     public void setDeleted(boolean isDeleted) {
         this.isDeleted = isDeleted;
     }
-
 }

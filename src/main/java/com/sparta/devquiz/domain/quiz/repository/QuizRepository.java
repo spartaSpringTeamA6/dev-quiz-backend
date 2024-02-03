@@ -2,12 +2,13 @@ package com.sparta.devquiz.domain.quiz.repository;
 
 import com.sparta.devquiz.domain.quiz.entity.Quiz;
 import com.sparta.devquiz.domain.quiz.enums.QuizCategory;
+import com.sparta.devquiz.domain.quiz.exception.QuizCustomException;
+import com.sparta.devquiz.domain.quiz.exception.QuizExceptionCode;
+import java.util.List;
+import java.util.Optional;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-
-import java.util.List;
-import java.util.Optional;
 
 public interface QuizRepository extends JpaRepository<Quiz, Long> {
 
@@ -22,5 +23,10 @@ public interface QuizRepository extends JpaRepository<Quiz, Long> {
     List<Quiz> findQuizzesByCategoryExcludingIds(QuizCategory category, Pageable pageable);
 
     Long countByCategory(QuizCategory category);
-    
+
+
+    default Quiz findQuizByIdOrElseThrow(Long quizId) {
+        return findById(quizId)
+                .orElseThrow(() -> new QuizCustomException(QuizExceptionCode.NOT_FOUND_QUIZ));
+    }
 }
