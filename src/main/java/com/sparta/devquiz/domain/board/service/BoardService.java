@@ -43,11 +43,8 @@ public class BoardService {
     }
 
     public BoardDetailsResponse getBoard(Long boardId) {
-        Board board = getBoardById(boardId);
-
-        if(Boolean.TRUE.equals(board.getIsDeleted())) {
-            throw new BoardCustomException(BoardExceptionCode.ALREADY_DELETED_BOARD);
-        }
+        Board board = boardRepository.findBoardByIdOrElseThrow(boardId);
+        isExistsBoard(board);
 
         return BoardDetailsResponse.of(board);
     }
@@ -66,11 +63,8 @@ public class BoardService {
 
     @Transactional
     public void updateBoard(Long boardId, BoardUpdateRequest request, User user) {
-        Board board = getBoardById(boardId);
-
-        if (!board.getUser().getId().equals(user.getId())) {
-            throw new BoardCustomException(BoardExceptionCode.UNAUTHORIZED_USER);
-        }
+        Board board = boardRepository.findBoardByIdOrElseThrow(boardId);
+        isExistsBoardCreatedAt(board,user);
 
         board.updateTitleAndContent(request.getTitle(), request.getContent());
     }
@@ -80,24 +74,25 @@ public class BoardService {
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new BoardCustomException(BoardExceptionCode.NOT_FOUND_BOARD));
 
-        if(Boolean.TRUE.equals(board.getIsDeleted())) {
-            throw new BoardCustomException(BoardExceptionCode.ALREADY_DELETED_BOARD);
-        }
-
-        if (!board.getUser().getId().equals(user.getId())) {
-            throw new BoardCustomException(BoardExceptionCode.UNAUTHORIZED_USER);
-        }
+        isExistsBoard(board);
+        isExistsBoardCreatedAt(board,user);
 
         for (Comment comment : board.getComments()) {
             comment.setDeleted(true);
         }
-
         board.setDeleted(true);
     }
 
-    private Board getBoardById(Long boardId) {
-        return boardRepository.findById(boardId)
-                .orElseThrow(() -> new BoardCustomException(BoardExceptionCode.NOT_FOUND_BOARD));
+    public void isExistsBoardCreatedAt(Board board, User user){
+        if (!board.getUser().getId().equals(user.getId())) {
+            throw new BoardCustomException(BoardExceptionCode.UNAUTHORIZED_USER);
+        }
+    }
+
+    public void isExistsBoard(Board board){
+        if(Boolean.TRUE.equals(board.getIsDeleted())) {
+            throw new BoardCustomException(BoardExceptionCode.ALREADY_DELETED_BOARD);
+        }
     }
 
 }
