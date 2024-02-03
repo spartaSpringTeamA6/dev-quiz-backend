@@ -20,12 +20,6 @@ pipeline {
 	     }
 	   }
 	}
-
-	stage('Start') {
-	   steps {
-		echo "여러분 반갑습니다!"
-	   }
-	}
 	
    }
 }
