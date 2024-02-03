@@ -28,7 +28,7 @@ public class BoardService {
 
     @Transactional
     public BoardCreateResponse createBoard(Long quizId, BoardCreateRequest request, User user) {
-        Quiz quiz = getQuizById(quizId);
+        Quiz quiz = quizRepository.findQuizByIdOrElseThrow(quizId);
 
         Board board = Board.builder()
                 .user(user)
@@ -98,11 +98,6 @@ public class BoardService {
     private Board getBoardById(Long boardId) {
         return boardRepository.findById(boardId)
                 .orElseThrow(() -> new BoardCustomException(BoardExceptionCode.NOT_FOUND_BOARD));
-    }
-
-    private Quiz getQuizById(Long quizId) {
-        return quizRepository.findById(quizId)
-                .orElseThrow(() -> new BoardCustomException(BoardExceptionCode.NOT_FOUND_QUIZ));
     }
 
 }
