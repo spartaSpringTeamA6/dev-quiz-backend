@@ -6,7 +6,7 @@ import com.querydsl.core.types.dsl.DateTemplate;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.sparta.devquiz.domain.quiz.dto.quiz.response.QuizGetByUserResponse;
+import com.sparta.devquiz.domain.quiz.dto.response.QuizGetByUserResponse;
 import com.sparta.devquiz.domain.quiz.dto.response.QuizSolvedGrassResponse;
 import com.sparta.devquiz.domain.quiz.entity.QUserQuiz;
 import com.sparta.devquiz.domain.quiz.entity.UserQuiz;

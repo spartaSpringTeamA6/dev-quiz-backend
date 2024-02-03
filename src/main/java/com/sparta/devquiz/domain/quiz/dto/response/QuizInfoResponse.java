@@ -1,6 +1,6 @@
-package com.sparta.devquiz.domain.quiz.dto.quiz.response;
+package com.sparta.devquiz.domain.quiz.dto.response;
 
-import com.sparta.devquiz.domain.quiz.enums.QuizCategory;
+import com.sparta.devquiz.domain.category.enums.QuizCategory;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;

@@ -1,4 +1,4 @@
-package com.sparta.devquiz.domain.quiz.dto.quiz.response;
+package com.sparta.devquiz.domain.quiz.dto.response;
 
 import com.sparta.devquiz.domain.quiz.entity.QuizChoice;
 import com.sparta.devquiz.domain.quiz.entity.UserQuiz;

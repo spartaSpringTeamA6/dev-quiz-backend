@@ -1,6 +1,6 @@
 package com.sparta.devquiz.domain.user.dto.response;
 
-import com.sparta.devquiz.domain.quiz.dto.quiz.response.QuizGetByUserResponse;
+import com.sparta.devquiz.domain.quiz.dto.response.QuizGetByUserResponse;
 import com.sparta.devquiz.domain.user.entity.User;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;

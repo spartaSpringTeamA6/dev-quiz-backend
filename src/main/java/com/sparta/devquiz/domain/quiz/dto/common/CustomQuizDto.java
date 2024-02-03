@@ -1,4 +1,4 @@
-package com.sparta.devquiz.domain.quiz.dto.quiz.common;
+package com.sparta.devquiz.domain.quiz.dto.common;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,6 +1,6 @@
-package com.sparta.devquiz.domain.quiz.dto.quiz.request;
+package com.sparta.devquiz.domain.quiz.dto.request;
 
-import com.sparta.devquiz.domain.quiz.enums.QuizCategory;
+import com.sparta.devquiz.domain.category.enums.QuizCategory;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;

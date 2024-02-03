@@ -1,4 +1,4 @@
-package com.sparta.devquiz.domain.quiz.dto.quiz.response;
+package com.sparta.devquiz.domain.quiz.dto.response;
 
 import com.sparta.devquiz.domain.quiz.entity.Quiz;
 import com.sparta.devquiz.domain.quiz.enums.UserQuizStatus;
@@ -12,9 +12,12 @@ import lombok.Getter;
 public class QuizResultResponse {
 
     @Schema(description = "퀴즈 ID", defaultValue = "1")
-    private final Long id;
+    private final Long quizId;
+    
+    @Schema(description = "제출된 보기 번호", defaultValue = "1")
+    private final int choiceSequence;
 
-    @Schema(description = "제출된 답안", defaultValue = "1")
+    @Schema(description = "제출된 보기 내용", defaultValue = "1")
     private final String choiceContent;
 
     @Schema(description = "상태", defaultValue = "CORRECT")
@@ -26,9 +29,10 @@ public class QuizResultResponse {
     @Schema(description = "답안에 대한 결과 메시지", defaultValue = "정답입니다!")
     private final String resultMessage;
 
-    public static QuizResultResponse of(Quiz quiz, String choiceContent, UserQuizStatus userQuizStatus, Boolean correctAnswer ) {
+    public static QuizResultResponse of(Quiz quiz, int choiceSequence, String choiceContent, UserQuizStatus userQuizStatus, Boolean correctAnswer ) {
         return QuizResultResponse.builder()
-                .id(quiz.getId())
+                .quizId(quiz.getId())
+                .choiceSequence(choiceSequence)
                 .choiceContent(choiceContent)
                 .correctAnswer(correctAnswer)
                 .status(userQuizStatus.getStatus())

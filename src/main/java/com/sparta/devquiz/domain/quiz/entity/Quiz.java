@@ -1,6 +1,7 @@
 package com.sparta.devquiz.domain.quiz.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.sparta.devquiz.domain.category.entity.Category;
 import com.sparta.devquiz.global.entity.BaseTimeEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -29,7 +30,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Quiz extends BaseTimeEntity {
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
 

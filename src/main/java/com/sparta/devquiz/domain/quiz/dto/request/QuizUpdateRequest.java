@@ -1,4 +1,4 @@
-package com.sparta.devquiz.domain.quiz.dto.quiz.request;
+package com.sparta.devquiz.domain.quiz.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;

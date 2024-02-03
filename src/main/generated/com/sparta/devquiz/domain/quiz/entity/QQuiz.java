@@ -24,7 +24,7 @@ public class QQuiz extends EntityPathBase<Quiz> {
 
     public final com.sparta.devquiz.global.entity.QBaseTimeEntity _super = new com.sparta.devquiz.global.entity.QBaseTimeEntity(this);
 
-    public final QCategory category;
+    public final com.sparta.devquiz.domain.category.entity.QCategory category;
 
     public final NumberPath<Long> correctCount = createNumber("correctCount", Long.class);
 
@@ -66,7 +66,7 @@ public class QQuiz extends EntityPathBase<Quiz> {
 
     public QQuiz(Class<? extends Quiz> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.category = inits.isInitialized("category") ? new QCategory(forProperty("category")) : null;
+        this.category = inits.isInitialized("category") ? new com.sparta.devquiz.domain.category.entity.QCategory(forProperty("category")) : null;
     }
 
 }
