@@ -37,7 +37,7 @@ pipeline {
 			link: env.BUILD_URL,
 			result: currentBuild.currentResult,
 			title: env.JOB_NAME,
-			successful: currentBuild.resultIsBetterOrEqualsTo('SUCCESS'),
+			successful: currentBuild.resultIsBetterOrEqualTo('SUCCESS'),
 			webhookURL: credentials('discord_notify')
 		)
 	}
@@ -49,9 +49,11 @@ pipeline {
 			link: env.BUILD_URL,
 			result: currentBuild.currentResult,
 			title: env.JOB_NAME,
-			successful: currentBuild.resultIsBetterOrEqualsTo('SUCCESS'),
+			successful: currentBuild.resultIsBetterOrEqualTo('SUCCESS'),
 			webhookURL: credentials('discord_notify')
 		)
 	}
   }
 }
+
+ 
