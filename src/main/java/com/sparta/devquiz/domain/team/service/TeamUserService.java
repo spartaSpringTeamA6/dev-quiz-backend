@@ -41,16 +41,6 @@ public class TeamUserService {
         teamUserRepository.save(teamUser);
     }
 
-    //teamUserRepository.findByTeamAdminOrElseThrow(teamId)로 변경되었습니다.
-//    public TeamUser getTeamAdmin(Long teamId){
-//        return teamUserRepository.findByTeamIdAndIsAcceptedTrueAndUserRole(teamId, TeamUserRole.ADMIN)
-//                .orElseThrow(()-> new TeamCustomException(TeamExceptionCode.NOT_FOUND_TEAM_ADMIN));
-//    }
-
-    public List<TeamUser> getTeamUser(Long teamId){
-        return teamUserRepository.findAllByTeamIdAndIsAcceptedTrue(teamId);
-    }
-
     public void updateTeamUserRole(Long teamId, Long userId, TeamUserRole teamUserRole){
         TeamUser teamUser = teamUserRepository.findByTeamUserOrElseThrow(teamId,userId);
         teamUser.updateTeamUserRole(teamUserRole);
@@ -63,44 +53,13 @@ public class TeamUserService {
     }
 
     public void acceptInvitation(Long teamId, Long userId) {
-        TeamUser findTeamUser = getTeamUserByTeamAndUserAndWait(teamId, userId);
+        TeamUser findTeamUser = teamUserRepository.getTeamUserWaitOrElseThrow(teamId, userId);
         findTeamUser.acceptInvitation();
     }
 
     public void rejectInvitation(Long teamId, Long userId) {
-        TeamUser findTeamUser = getTeamUserByTeamAndUserAndWait(teamId, userId);
+        TeamUser findTeamUser = teamUserRepository.getTeamUserWaitOrElseThrow(teamId, userId);
         teamUserRepository.delete(findTeamUser);
-    }
-
-    //teamUserRepository.findByTeamUserOrElseThrow(teamId,userId)로 변경되었습니다.
-//    public TeamUser getTeamUserByTeamIdAndUserId(Long teamId, Long userId){
-//        return teamUserRepository.findByTeamIdAndUserId(teamId, userId).orElseThrow(
-//                () -> new TeamCustomException(TeamExceptionCode.NOT_FOUND_TEAM_USER)
-//        );
-//    }
-
-    //teamUserRepository.existsByTeamUser(teamId,userId)로 변경되었습니다.
-//    public Boolean isExistedUser(Long teamId, Long userId){
-//        return teamUserRepository.existsByTeamIdAndUserIdAndIsAcceptedTrue(teamId, userId);
-//    }
-
-    //teamUserRepository.existsByTeamAdmin(teamId,userId)로 변경되었습니다.
-//    public Boolean isExistedAdmin(Long teamId, Long userId){
-//        return teamUserRepository.existsByTeamIdAndUserIdAndIsAcceptedTrueAndUserRole(teamId, userId, TeamUserRole.ADMIN);
-//    }
-
-    public List<TeamUser> getTeamUserByUser(Long userId) {
-        return teamUserRepository.findAllByUserIdAndIsAcceptedTrue(userId);
-    }
-
-    public List<TeamUser> getTeamUserByUserAndWait(Long userId) {
-        return teamUserRepository.findAllByUserIdAndIsAcceptedFalse(userId);
-    }
-
-    public TeamUser getTeamUserByTeamAndUserAndWait(Long teamId, Long userId) {
-        return teamUserRepository.findByTeamIdAndUserIdAndIsAcceptedFalse(teamId, userId).orElseThrow(
-            () -> new TeamCustomException(TeamExceptionCode.NOT_FOUND_TEAM_USER_WAIT)
-        );
     }
 
 }
