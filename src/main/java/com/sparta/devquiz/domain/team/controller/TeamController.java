@@ -15,6 +15,7 @@ import com.sparta.devquiz.global.response.CommonResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -39,7 +40,7 @@ public class TeamController {
     @PostMapping("")
     public ResponseEntity<CommonResponseDto> createTeam(
             @AuthUser User user,
-            @RequestBody TeamCreateRequest request
+            @RequestBody @Valid TeamCreateRequest request
     ) {
         TeamCreateResponse response = teamService.createTeam(user, request);
 
@@ -68,7 +69,7 @@ public class TeamController {
     public ResponseEntity<CommonResponseDto> updateTeamName(
             @AuthUser User user,
             @PathVariable Long teamId,
-            @RequestBody TeamUpdateNameRequest request
+            @RequestBody @Valid TeamUpdateNameRequest request
     ) {
         teamService.updateTeamName(user, teamId, request);
 
@@ -82,7 +83,7 @@ public class TeamController {
     public ResponseEntity<CommonResponseDto> updateTeamAdmin(
             @AuthUser User user,
             @PathVariable Long teamId,
-            @RequestBody TeamUpdateAdminRequest request
+            @RequestBody @Valid TeamUpdateAdminRequest request
     ) {
         teamService.updateTeamAdmin(user, teamId, request);
 
@@ -96,7 +97,7 @@ public class TeamController {
     public ResponseEntity<CommonResponseDto> deleteTeamUser(
             @AuthUser User user,
             @PathVariable Long teamId,
-            @RequestBody TeamDeleteUserRequest request
+            @RequestBody @Valid TeamDeleteUserRequest request
     ) {
          teamService.deleteTeamUser(user, teamId, request);
 
@@ -136,7 +137,7 @@ public class TeamController {
     public ResponseEntity<CommonResponseDto> inviteTeamUser(
             @AuthUser User user,
             @PathVariable Long teamId,
-            @RequestBody TeamInviteUserRequest request
+            @RequestBody @Valid TeamInviteUserRequest request
     ) {
         teamService.inviteTeamUser(user, teamId, request);
 

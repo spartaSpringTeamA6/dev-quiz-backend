@@ -1,8 +1,8 @@
 package com.sparta.devquiz.domain.user.service.command;
 
 import static com.sparta.devquiz.global.jwt.service.JwtService.ACCESS_COOKIE_NAME;
-import static com.sparta.devquiz.global.jwt.service.JwtService.REFRESH_COOKIE_NAME;
 import static com.sparta.devquiz.global.jwt.service.JwtService.COOKIE_TIME;
+import static com.sparta.devquiz.global.jwt.service.JwtService.REFRESH_COOKIE_NAME;
 import static com.sparta.devquiz.global.jwt.service.JwtService.REFRESH_JWT_TIME;
 
 import com.sparta.devquiz.global.jwt.service.JwtService;
@@ -11,6 +11,7 @@ import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.Arrays;
+import java.util.Date;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -23,13 +24,22 @@ public class AuthService {
   private final RedisService redisService;
 
   public void logout(HttpServletRequest request, HttpServletResponse response) {
-    String accessToken = jwtService.getTokenFromRequest(request, ACCESS_COOKIE_NAME);
+    String bearerToken = jwtService.getTokenFromRequest(request, ACCESS_COOKIE_NAME);
+    String accessToken = jwtService.subStringToken(bearerToken);
+    Claims claims = jwtService.getClaimsFromToken(accessToken);
 
-    if (StringUtils.hasText(accessToken)) {
-      String subject = jwtService.getClaimsFromToken(jwtService.subStringToken(accessToken)).getSubject();
-      redisService.deleteValues(subject);
-      deleteCookies(request, response);
+    String subject = claims.getSubject();
+    redisService.deleteValues(subject);
+
+    long issuedAt = claims.getExpiration().getTime();
+    long curTime = new Date().getTime();
+    long diff = issuedAt - curTime;
+    if (diff > 0) {
+      long extra = 2000;
+      redisService.setBlacklist(subject, accessToken, diff + extra);
     }
+
+    deleteCookies(request, response);
   }
 
   public void reissue(HttpServletRequest request, HttpServletResponse response) {

@@ -6,10 +6,13 @@ import com.sparta.devquiz.domain.comment.dto.response.CommentInfoResponse;
 import com.sparta.devquiz.domain.comment.service.CommentService;
 import com.sparta.devquiz.domain.quiz.dto.response.QuizGetByUserResponse;
 import com.sparta.devquiz.domain.quiz.dto.response.QuizSolvedGrassResponse;
+import com.sparta.devquiz.domain.quiz.repository.QuizRepository;
+import com.sparta.devquiz.domain.quiz.repository.QuizUserRepository;
 import com.sparta.devquiz.domain.quiz.service.QuizService;
 import com.sparta.devquiz.domain.skill.entity.Skill;
 import com.sparta.devquiz.domain.skill.service.SkillService;
 import com.sparta.devquiz.domain.team.entity.TeamUser;
+import com.sparta.devquiz.domain.team.repository.TeamUserRepository;
 import com.sparta.devquiz.domain.team.service.TeamUserService;
 import com.sparta.devquiz.domain.user.dto.response.UserBoardsResponse;
 import com.sparta.devquiz.domain.user.dto.response.UserCommentsResponse;
@@ -37,10 +40,11 @@ public class UserQueryService {
   private final UserRepository userRepository;
   private final SkillService skillService;
   private final QuizService quizService;
-  private final TeamUserService teamUserService;
+  private final QuizUserRepository quizUserRepository;
+  private final TeamUserRepository teamUserRepository;
 
   public UserDetailResponse getMyProfile(User authUser) {
-    User findUser = getUserById(authUser.getId());
+    User findUser = userRepository.findByIdOrElseThrow(authUser.getId());
     return UserDetailResponse.of(findUser);
   }
 
@@ -52,13 +56,13 @@ public class UserQueryService {
 
   public UserTeamsResponse getMyTeams(User authUser, Long userId) {
     User findUser = validateUser(authUser, userId);
-    List<TeamUser> findTeamUserList = teamUserService.getTeamUserByUser(findUser.getId());
+    List<TeamUser> findTeamUserList = teamUserRepository.getTeamUserByUser(findUser.getId());
     return UserTeamsResponse.of(findUser, findTeamUserList);
   }
 
   public UserInvitationsResponse getMyInvitations(User authUser, Long userId) {
     User findUser = validateUser(authUser, userId);
-    List<TeamUser> findTeamUserList = teamUserService.getTeamUserByUserAndWait(findUser.getId());
+    List<TeamUser> findTeamUserList = teamUserRepository.getTeamUserByUserAndWait(findUser.getId());
     return UserInvitationsResponse.of(findUser, findTeamUserList);
   }
 
@@ -76,44 +80,37 @@ public class UserQueryService {
 
   public UserQuizzesResponse getMyQuizzes(User authUser, Long userId) {
     User findUser = validateUser(authUser, userId);
-    List<QuizGetByUserResponse> quizList = quizService.getAllQuizzesForUser(findUser);
+    List<QuizGetByUserResponse> quizList = quizUserRepository.getAllQuizzesForUser(findUser);
     return UserQuizzesResponse.of(findUser, quizList);
   }
 
   public UserQuizzesResponse getMyCorrectQuizzes(User authUser, Long userId) {
     User findUser = validateUser(authUser, userId);
-    List<QuizGetByUserResponse> correctQuizList = quizService.getCorrectQuizzesForUser(findUser);
+    List<QuizGetByUserResponse> correctQuizList = quizUserRepository.getCorrectQuizzesForUser(findUser);
     return UserQuizzesResponse.of(findUser, correctQuizList);
   }
 
   public UserQuizzesResponse getMyFailQuizzes(User authUser, Long userId) {
     User findUser = validateUser(authUser, userId);
-    List<QuizGetByUserResponse> failQuizList = quizService.getFailQuizzesForUser(findUser);
+    List<QuizGetByUserResponse> failQuizList = quizUserRepository.getFailQuizzesForUser(findUser);
     return UserQuizzesResponse.of(findUser, failQuizList);
   }
 
   public UserQuizzesResponse getMyPassQuizzes(User authUser, Long userId) {
     User findUser = validateUser(authUser, userId);
-    List<QuizGetByUserResponse> passQuizList = quizService.getPassQuizzesForUser(findUser);
+    List<QuizGetByUserResponse> passQuizList = quizUserRepository.getPassQuizzesForUser(findUser);
     return UserQuizzesResponse.of(findUser, passQuizList);
   }
 
-  public User validateUser(User authUser, Long userId) {
-    //OSIV 끄고 테스트 필요 user와 findUser == 비교가 안 된다.
+  public List<QuizSolvedGrassResponse> getMyGrasses(User authUser, Long userId) {
+    validateUser(authUser,userId);
+    return quizUserRepository.getSolvedGrassByUser(authUser);
+  }
+
+  private User validateUser(User authUser, Long userId) {
     if (!authUser.getId().equals(userId)) {
       throw new UserCustomException(UserExceptionCode.BAD_REQUEST_USER_ID);
     }
-    return getUserById(userId);
+    return userRepository.findByIdOrElseThrow(userId);
   }
-
-  public User getUserById(Long userId) {
-    return userRepository.findByIdAndIsDeletedFalse(userId).orElseThrow(
-        () -> new UserCustomException(UserExceptionCode.NOT_FOUND_USER)
-    );
-  }
-
-    public List<QuizSolvedGrassResponse> getMyGrasses(User authUser, Long userId) {
-      validateUser(authUser,userId);
-      return quizService.getSolvedGrassByUser(authUser);
-    }
 }

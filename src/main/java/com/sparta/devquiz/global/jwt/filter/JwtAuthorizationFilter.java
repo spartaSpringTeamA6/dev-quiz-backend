@@ -3,7 +3,7 @@ package com.sparta.devquiz.global.jwt.filter;
 import static com.sparta.devquiz.global.jwt.service.JwtService.ACCESS_COOKIE_NAME;
 
 import com.sparta.devquiz.global.jwt.service.JwtService;
-import io.jsonwebtoken.Claims;
+import com.sparta.devquiz.global.redis.RedisService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,27 +23,32 @@ import org.springframework.web.filter.OncePerRequestFilter;
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
+    private final RedisService redisService;
     private final UserDetailsService userDetailsService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String bearerToken = jwtService.getTokenFromRequest(request, ACCESS_COOKIE_NAME);
-        if(StringUtils.hasText(bearerToken)) {
-            Claims info = jwtService.getClaimsFromToken(jwtService.subStringToken(bearerToken));
-            setAuthentication(info.getSubject());
+        if (StringUtils.hasText(bearerToken)) {
+            String accessToken = jwtService.subStringToken(bearerToken);
+            String subject = jwtService.getClaimsFromToken(accessToken).getSubject();
+
+            if (!redisService.hasBlacklist(subject, accessToken)) {
+                setAuthentication(subject);
+            }
         }
         filterChain.doFilter(request, response);
     }
 
-    private void setAuthentication(String oauthId) {
+    private void setAuthentication(String subject) {
         SecurityContext context = SecurityContextHolder.createEmptyContext();
-        Authentication authentication = createAuthentication(oauthId);
+        Authentication authentication = createAuthentication(subject);
         context.setAuthentication(authentication);
         SecurityContextHolder.setContext(context);
     }
 
-    private Authentication createAuthentication(String oauthId) {
-        UserDetails userDetails = userDetailsService.loadUserByUsername(oauthId);
+    private Authentication createAuthentication(String subject) {
+        UserDetails userDetails = userDetailsService.loadUserByUsername(subject);
         return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     }
 }
