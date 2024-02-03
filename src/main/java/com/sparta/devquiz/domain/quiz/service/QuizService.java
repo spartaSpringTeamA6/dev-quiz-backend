@@ -204,7 +204,7 @@ public class QuizService {
                     quiz.addChoice(choice);
                     return choice;
                 })
-                .toList();
+                .collect(Collectors.toList());
     }
 
     public void updateQuiz(QuizUpdateRequest updateRequest, User User, Long quizId) {
