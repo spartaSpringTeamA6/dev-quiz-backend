@@ -119,10 +119,9 @@ public class QuizController {
     public ResponseEntity<CommonResponseDto> updateQuiz(
             @AuthUser User user,
             @PathVariable Long quizId,
-            @RequestParam Long categoryId,
             @RequestBody QuizUpdateRequest quizUpdateRequest
     ) {
-        quizService.updateQuiz(quizUpdateRequest, user, quizId, categoryId);
+        quizService.updateQuiz(quizUpdateRequest, user, quizId);
         return ResponseEntity.status(QuizResponseCode.OK_UPDATE_QUIZ.getHttpStatus())
                 .body(CommonResponseDto.of(QuizResponseCode.OK_UPDATE_QUIZ));
     }

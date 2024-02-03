@@ -36,8 +36,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Service
 @RequiredArgsConstructor
@@ -73,19 +74,21 @@ public class QuizService {
                 .isDeleted(false)
                 .build());
 
-        createRequest.getChoices().stream()
-                .map(choiceDto -> {
+        IntStream.range(0, createRequest.getChoices().size())
+                .mapToObj(index -> {
+                    QuizCreateRequest.Choice choiceDto = createRequest.getChoices().get(index);
                     if (choiceDto.getContent() == null || choiceDto.getContent().isEmpty()) {
                         throw new QuizCustomException(QuizExceptionCode.NOT_FOUND_QUIZ_CHOICE);
                     }
                     QuizChoice choice = QuizChoice.builder()
                             .choiceContent(choiceDto.getContent())
+                            .choiceSequence(index+1)
                             .isAnswer(choiceDto.getIsAnswer())
                             .build();
                     quiz.addChoice(choice);
                     return choice;
                 })
-                .toList();
+                .collect(Collectors.toList());
     }
 
     public List<QuizRandomResponse> getRandomNonAttemptedQuizzes(QuizCategory category, User user) {
@@ -136,31 +139,42 @@ public class QuizService {
                 .toList();
     }
     @Transactional
-    public void updateQuiz(QuizUpdateRequest updateRequest, User User, Long quizId, Long categoryId) {
+    public void updateQuiz(QuizUpdateRequest updateRequest, User User, Long quizId) {
         if (User == null) {
             throw new UserCustomException(UserExceptionCode.UNAUTHORIZED_USER);
         }
         if (User.getRole() != UserRole.ROLE_ADMIN) {
             throw new UserCustomException(UserExceptionCode.UNAUTHORIZED_USER);
         }
+        Quiz quiz = quizRepository.findById(quizId)
+                .orElseThrow(() -> new QuizCustomException(QuizExceptionCode.NOT_FOUND_QUIZ));
+
         Category category = categoryRepository.findById(updateRequest.getCategoryId())
                 .orElseThrow(() -> new CategoryCustomException(CategoryExceptionCode.NOT_FOUND_CATEGORY));
-        Quiz quiz = getQuizById(updateRequest.getQuizId());
 
-        quiz.updateQuiz(updateRequest.getQuizTitle(),new ArrayList<>(), category);
+        quiz.updateQuizTitle(updateRequest.getTitle());
 
-        quizChoiceRepository.deleteAll(quiz.getQuizChoices());
-        quiz.getQuizChoices().clear();
+        if (!quiz.getCategory().equals(category)) {
+            quiz.addCategory(category);
+        }
 
+        quizChoiceRepository.deleteAllInBatch(quiz.getQuizChoices());
 
-        List<QuizChoice> updatedChoices = updateRequest.getChoices().stream()
-                .map(choiceDto -> QuizChoice.builder()
-                        .choiceContent(choiceDto.getChoiceContent())
-                        .isAnswer(choiceDto.isAnswer())
-                        .build())
-                .toList();
+        List<QuizChoice> updatedChoices = IntStream.range(0, updateRequest.getChoices().size())
+                .mapToObj(index -> {
+                    QuizUpdateRequest.ChoiceUpdate choiceDto = updateRequest.getChoices().get(index);
+                    return QuizChoice.builder()
+                            .choiceContent(choiceDto.getContent())
+                            .choiceSequence(index + 1)
+                            .isAnswer(choiceDto.updateIsAnswer())
+                            .quiz(quiz)
+                            .build();
+                })
+                .collect(Collectors.toList());
 
-        updatedChoices.forEach(quiz::addChoice);
+        quizChoiceRepository.saveAll(updatedChoices);
+
+        quizRepository.save(quiz);
     }
 
     @Transactional

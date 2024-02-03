@@ -22,4 +22,5 @@ public interface QuizRepository extends JpaRepository<Quiz, Long> {
     List<Quiz> findQuizzesByCategoryExcludingIds(QuizCategory category, Pageable pageable);
 
     Long countByCategory(QuizCategory category);
+    
 }

@@ -35,6 +35,4 @@ public class QuizCreateRequest {
             return this.isAnswer;
         }
     }
-
-
 }

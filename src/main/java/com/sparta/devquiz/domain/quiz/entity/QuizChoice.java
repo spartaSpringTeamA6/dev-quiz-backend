@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "quiz_choice")
-public class QuizChoice {
+public class QuizChoice{
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "quiz_id")
@@ -34,6 +34,9 @@ public class QuizChoice {
     @Column(nullable = false, name = "choice_content")
     private String choiceContent;
 
+    @Column(nullable = false, name = "choice_sequence")
+    private int choiceSequence;
+
     @Column(nullable = false, name = "is_answer")
     private boolean isAnswer;
 
@@ -45,7 +48,6 @@ public class QuizChoice {
         this.quiz = quiz;
         quiz.addChoice(this);
     }
-
 
     public void updateContent(final String updateContent) {
         this.choiceContent = updateContent;

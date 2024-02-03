@@ -26,6 +26,8 @@ public class QQuizChoice extends EntityPathBase<QuizChoice> {
 
     public final NumberPath<Long> choiceId = createNumber("choiceId", Long.class);
 
+    public final NumberPath<Integer> choiceSequence = createNumber("choiceSequence", Integer.class);
+
     public final BooleanPath isAnswer = createBoolean("isAnswer");
 
     public final QQuiz quiz;
