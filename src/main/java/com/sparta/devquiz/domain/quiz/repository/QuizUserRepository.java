@@ -1,6 +1,7 @@
 package com.sparta.devquiz.domain.quiz.repository;
 
 import com.sparta.devquiz.domain.quiz.dto.response.QuizGetByUserResponse;
+import com.sparta.devquiz.domain.quiz.dto.response.QuizSolvedGrassResponse;
 import com.sparta.devquiz.domain.quiz.entity.Quiz;
 import com.sparta.devquiz.domain.quiz.entity.UserQuiz;
 import com.sparta.devquiz.domain.quiz.enums.UserQuizStatus;
@@ -14,6 +15,14 @@ import java.util.List;
 public interface QuizUserRepository extends JpaRepository<UserQuiz, Long>, QuizUserRepositoryCustom {
     @Query("SELECT uq.quiz.id FROM UserQuiz uq WHERE uq.user = :user AND uq.status = 'CORRECT' AND uq.quiz.isDeleted = false")
     List<Long> findCorrectQuizIdsByUser(@Param("user") User user);
+
+    default List<QuizSolvedGrassResponse> getSolvedGrassByUser(User user){
+        return findSolvedGrassByUser(user);
+    }
+
+    default List<QuizGetByUserResponse> getAllQuizzesForUser(User user) {
+        return findCorrectQuizzesByUsers(user);
+    }
 
     default List<QuizGetByUserResponse> getCorrectQuizzesForUser(User user) {
         return findCorrectQuizzesByUsers(user, UserQuizStatus.CORRECT);

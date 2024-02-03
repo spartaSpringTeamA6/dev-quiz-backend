@@ -80,7 +80,7 @@ public class UserQueryService {
 
   public UserQuizzesResponse getMyQuizzes(User authUser, Long userId) {
     User findUser = validateUser(authUser, userId);
-    List<QuizGetByUserResponse> quizList = quizService.getAllQuizzesForUser(findUser);
+    List<QuizGetByUserResponse> quizList = quizUserRepository.getAllQuizzesForUser(findUser);
     return UserQuizzesResponse.of(findUser, quizList);
   }
 
@@ -104,7 +104,7 @@ public class UserQueryService {
 
   public List<QuizSolvedGrassResponse> getMyGrasses(User authUser, Long userId) {
     validateUser(authUser,userId);
-    return quizService.getSolvedGrassByUser(authUser);
+    return quizUserRepository.getSolvedGrassByUser(authUser);
   }
 
   private User validateUser(User authUser, Long userId) {

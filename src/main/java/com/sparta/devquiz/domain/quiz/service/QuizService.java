@@ -160,12 +160,4 @@ public class QuizService {
         return QuizAnswerSubmitResponse.of(quiz, request.getAnswer(), status);
     }
 
-    public List<QuizSolvedGrassResponse> getSolvedGrassByUser(User user){
-        return quizUserRepository.findSolvedGrassByUser(user);
-    }
-
-    public List<QuizGetByUserResponse> getAllQuizzesForUser(User user) {
-        return quizUserRepository.findCorrectQuizzesByUsers(user);
-    }
-
 }
