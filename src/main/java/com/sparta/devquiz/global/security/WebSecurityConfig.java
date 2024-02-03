@@ -50,7 +50,6 @@ public class WebSecurityConfig {
 
     http.authorizeHttpRequests(authReq -> authReq
             .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-            //비회원 문제 풀기, reissue url 추가 필요
             .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
             .requestMatchers("/api/quizzes/{quizId}/boards", "/api/boards/{boardId}", "/api/boards/{boardId}/comments").permitAll()
             .requestMatchers("/api/categories/{categoryId}/quizzes", "/api/quizzes/{quizId}", "/api/quizzes/{quizId}/pass").permitAll()
@@ -60,8 +59,7 @@ public class WebSecurityConfig {
 
     http.oauth2Login(
             login -> login
-//            .loginPage("http://localhost:3000/login")
-//            .loginPage("https://devquiz.pro/login")
+            .loginPage("https://devquiz.pro/login")
                     .authorizationEndpoint(endPoint -> endPoint.authorizationRequestRepository(cookieOAuth2RequestRepository))
                     .userInfoEndpoint(userInfo -> userInfo.userService(oAuth2UserService))
                     .successHandler(oAuth2LoginSuccessHandler)
