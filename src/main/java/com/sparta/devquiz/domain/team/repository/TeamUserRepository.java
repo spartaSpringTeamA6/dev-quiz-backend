@@ -39,7 +39,6 @@ public interface TeamUserRepository extends JpaRepository<TeamUser, TeamUserId> 
     @Query("SELECT CASE WHEN COUNT(tu) > 0 THEN true ELSE false END FROM TeamUser tu WHERE tu.team.id = :teamId AND tu.user.id = :userId AND tu.isAccepted = TRUE and tu.userRole = :userRole")
     boolean existsByTeamIdAndUserIdAndIsAcceptedTrueAndUserRole(Long teamId, Long userId, TeamUserRole userRole);
 
-
     default TeamUser findByTeamUserOrElseThrow(Long teamId, Long userId){
         return findByTeamIdAndUserId(teamId, userId).orElseThrow(
                 () -> new TeamCustomException(TeamExceptionCode.NOT_FOUND_TEAM_USER)
