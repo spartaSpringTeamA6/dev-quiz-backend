@@ -14,6 +14,7 @@ import com.sparta.devquiz.domain.team.exception.TeamCustomException;
 import com.sparta.devquiz.domain.team.exception.TeamExceptionCode;
 import com.sparta.devquiz.domain.team.repository.TeamRepository;
 import com.sparta.devquiz.domain.user.entity.User;
+import com.sparta.devquiz.domain.user.repository.UserRepository;
 import com.sparta.devquiz.domain.user.service.command.UserService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -26,12 +27,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class TeamService {
 
     private final TeamRepository teamRepository;
-    private final UserService userService;
+    private final UserRepository userRepository;
     private final TeamUserService teamUserService;
 
     @Transactional
     public TeamCreateResponse createTeam(User user, TeamCreateRequest request) {
-        User createdBy = userService.getUserById(user.getId());
+        User createdBy = userRepository.findByIdOrElseThrow(user.getId());
 
         if(teamRepository.existsByName(request.getName())){
             throw new TeamCustomException(TeamExceptionCode.CONFLICT_TEAM_NAME_IN_USE);
@@ -75,7 +76,7 @@ public class TeamService {
 
         Team team = getTeamAndCheckAuthAdmin(admin, teamId);
 
-        User newAdmin = userService.getUserByUsername(request.getUsername());
+        User newAdmin = userRepository.findByUsernameOrElseThrow(request.getUsername());
         if(!teamUserService.isExistedUser(team.getId(), newAdmin.getId())){
             throw new TeamCustomException(TeamExceptionCode.NOT_FOUND_TEAM_USER);
         }
@@ -88,7 +89,7 @@ public class TeamService {
     public void deleteTeamUser(User admin, Long teamId, TeamDeleteUserRequest request) {
         Team team = getTeamAndCheckAuthAdmin(admin,teamId);
 
-        User deleteUser = userService.getUserByUsername(request.getUsername());
+        User deleteUser = userRepository.findByUsernameOrElseThrow(request.getUsername());
         if(!teamUserService.isExistedUser(team.getId(), deleteUser.getId())){
             throw new TeamCustomException(TeamExceptionCode.NOT_FOUND_TEAM_USER);
         }
@@ -124,7 +125,7 @@ public class TeamService {
     public void inviteTeamUser(User admin, Long teamId, TeamInviteUserRequest request) {
         Team team = getTeamAndCheckAuthAdmin(admin,teamId);
 
-        User inviteUser = userService.getUserByUsername(request.getUsername());
+        User inviteUser = userRepository.findByUsernameOrElseThrow(request.getUsername());
         if(teamUserService.isExistedUser(team.getId(), inviteUser.getId())){
             throw new TeamCustomException(TeamExceptionCode.CONFLICT_INVITE_USERNAME_IN_TEAM);
         }
@@ -155,7 +156,7 @@ public class TeamService {
 
     public Team getTeamAndCheckAuthUser(User user, Long teamId){
         Team team = getTeamById(teamId);
-        User loginUser = userService.getUserById(user.getId());
+        User loginUser = userRepository.findByIdOrElseThrow(user.getId());
 
         if(!teamUserService.isExistedUser(team.getId(), loginUser.getId())){
             throw new TeamCustomException(TeamExceptionCode.FORBIDDEN_TEAM_USER);
@@ -166,7 +167,7 @@ public class TeamService {
 
     public Team getTeamAndCheckAuthAdmin(User user, Long teamId){
         Team team = getTeamById(teamId);
-        User admin = userService.getUserById(user.getId());
+        User admin = userRepository.findByIdOrElseThrow(user.getId());
 
         if(!teamUserService.isExistedAdmin(team.getId(), admin.getId())){
             throw new TeamCustomException(TeamExceptionCode.FORBIDDEN_TEAM_ADMIN);

@@ -22,6 +22,7 @@ import com.sparta.devquiz.domain.user.entity.User;
 import com.sparta.devquiz.domain.user.enums.UserRole;
 import com.sparta.devquiz.domain.user.exception.UserCustomException;
 import com.sparta.devquiz.domain.user.exception.UserExceptionCode;
+import com.sparta.devquiz.domain.user.repository.UserRepository;
 import com.sparta.devquiz.domain.user.service.command.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -36,7 +37,7 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class QuizService {
 
-    private final UserService userService;
+    private final UserRepository userRepository;
     private final QuizRepository quizRepository;
     private final QuizUserRepository quizUserRepository;
     private final CoinService coinService;
@@ -140,7 +141,7 @@ public class QuizService {
         }
 
         if (user != null) {
-            User findUser = userService.getUserById(user.getId());
+            User findUser = userRepository.findByIdOrElseThrow(user.getId());
             int score = status.getScore();
             UserQuiz userQuiz = UserQuiz.builder()
                     .user(findUser)
