@@ -40,11 +40,7 @@ public class CustomQuizDto {
                 .filter(CustomQuizDto.Choice::getIsAnswer)
                 .count();
 
-        if (correctAnswerCount != 1) {
-            throw new NotCorrectAnswerException(
-                    "정확히 하나의 답만 선택해야 합니다. 퀴즈의 현재 선택된 답안 수 : " + correctAnswerCount
-            );
-        }
+
     }
 
     @AllArgsConstructor

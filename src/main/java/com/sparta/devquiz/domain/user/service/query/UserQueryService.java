@@ -4,9 +4,8 @@ import com.sparta.devquiz.domain.board.dto.response.BoardDetailsResponse;
 import com.sparta.devquiz.domain.board.service.BoardService;
 import com.sparta.devquiz.domain.comment.dto.response.CommentInfoResponse;
 import com.sparta.devquiz.domain.comment.service.CommentService;
-import com.sparta.devquiz.domain.quiz.dto.response.QuizGetByUserResponse;
-import com.sparta.devquiz.domain.quiz.dto.response.QuizSolvedGrassResponse;
 import com.sparta.devquiz.domain.quiz.dto.quiz.response.QuizGetByUserResponse;
+import com.sparta.devquiz.domain.quiz.dto.response.QuizSolvedGrassResponse;
 import com.sparta.devquiz.domain.quiz.service.QuizService;
 import com.sparta.devquiz.domain.skill.entity.Skill;
 import com.sparta.devquiz.domain.skill.service.SkillService;
@@ -23,10 +22,11 @@ import com.sparta.devquiz.domain.user.entity.User;
 import com.sparta.devquiz.domain.user.exception.UserCustomException;
 import com.sparta.devquiz.domain.user.exception.UserExceptionCode;
 import com.sparta.devquiz.domain.user.repository.UserRepository;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor

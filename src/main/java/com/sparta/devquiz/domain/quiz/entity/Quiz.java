@@ -40,7 +40,8 @@ public class Quiz extends BaseTimeEntity {
     @Column(nullable = false, name = "quiz_title")
     private String quizTitle;
 
-    @OneToMany(mappedBy = "quiz", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @Builder.Default
+    @OneToMany(mappedBy = "quiz", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<QuizChoice> quizChoices = new ArrayList<>();
 
     @Column(nullable = false)

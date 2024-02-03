@@ -1,11 +1,14 @@
 package com.sparta.devquiz.domain.quiz.dto.quiz.response;
 
+import com.sparta.devquiz.domain.quiz.entity.QuizChoice;
+import com.sparta.devquiz.domain.quiz.entity.UserQuiz;
 import com.sparta.devquiz.domain.quiz.enums.UserQuizStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Builder
@@ -28,16 +31,22 @@ public class QuizGetByUserResponse {
     private String quizTitle;
 
     @Schema(description = "퀴즈 보기 내용", defaultValue = "객체지향 프로그래밍\nJVM 위에서 실행\n포인터를 직접 다룰 수 있음\n가비지 컬렉션 제공")
-    private String quizContent;
+    private List<QuizChoice> quizChoices;
 
-    public static QuizGetByUserResponse of(Long id, LocalDateTime solvedDate, String categoryTitle, UserQuizStatus status, String quizTitle, String quizContent) {
+    public static QuizGetByUserResponse of (UserQuiz userQuiz){
         return QuizGetByUserResponse.builder()
-                .id(id)
-                .solvedDate(solvedDate)
-                .categoryTitle(categoryTitle)
-                .status(status)
-                .quizTitle(quizTitle)
-                .quizContent(quizContent)
+                .id(userQuiz.getQuiz().getId())
+                .solvedDate(userQuiz.getCreatedAt())
+                .categoryTitle(userQuiz.getQuiz().getCategory().getCategoryTitle())
+                .quizTitle(userQuiz.getQuiz().getQuizTitle())
+                .quizChoices(userQuiz.getQuiz().getQuizChoices())
+                .status(userQuiz.getStatus())
                 .build();
+    }
+
+    public static List<QuizGetByUserResponse> of(List<UserQuiz> userQuizzes){
+        return userQuizzes.stream()
+                .map(QuizGetByUserResponse::of)
+                .toList();
     }
 }

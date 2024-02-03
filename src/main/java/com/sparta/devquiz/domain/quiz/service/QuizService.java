@@ -61,26 +61,31 @@ public class QuizService {
             throw new UserCustomException(UserExceptionCode.UNAUTHORIZED_USER);
         }
 
-
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new CategoryCustomException(CategoryExceptionCode.NOT_FOUND_CATEGORY));
 
         Quiz quiz = quizRepository.save(Quiz.builder()
-                .quizTitle(createRequest.getQuizTitle())
+                .quizTitle(createRequest.getTitle())
                 .category(category)
+                .correctCount(0L)
+                .failCount(0L)
+                .solveCount(0L)
+                .isDeleted(false)
                 .build());
 
-        List<QuizChoice> quizChoices = createRequest.getChoices().stream()
-                .map(choiceDto -> QuizChoice.builder()
-                        .choiceContent(choiceDto.getChoiceContent())
-                        .isAnswer(choiceDto.isAnswer())
-                        .quiz(quiz)
-                        .build())
+        createRequest.getChoices().stream()
+                .map(choiceDto -> {
+                    if (choiceDto.getContent() == null || choiceDto.getContent().isEmpty()) {
+                        throw new QuizCustomException(QuizExceptionCode.NOT_FOUND_QUIZ_CHOICE);
+                    }
+                    QuizChoice choice = QuizChoice.builder()
+                            .choiceContent(choiceDto.getContent())
+                            .isAnswer(choiceDto.getIsAnswer())
+                            .build();
+                    quiz.addChoice(choice);
+                    return choice;
+                })
                 .toList();
-        for (QuizChoice choice : quizChoices) {
-            quiz.addChoice(choice);
-        }
-        quizRepository.save(quiz);
     }
 
     public List<QuizRandomResponse> getRandomNonAttemptedQuizzes(QuizCategory category, User user) {
@@ -237,7 +242,7 @@ public class QuizService {
         return QuizPassResponse.of(quiz.getId());
     }
 
-    public List<QuizSolvedGrassResponse> getSolvedGrassByUser(User user){
+    public List<com.sparta.devquiz.domain.quiz.dto.response.QuizSolvedGrassResponse> getSolvedGrassByUser(User user){
         return quizUserRepository.findSolvedGrassByUser(user);
     }
 
