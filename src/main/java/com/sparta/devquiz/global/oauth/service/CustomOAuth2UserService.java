@@ -66,8 +66,8 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
   
   private String makeUsername(String username) {
     while (userRepository.existsByUsername(username)) {
-      username = UUID.randomUUID().toString().substring(0, 27);
+      username = UUID.randomUUID().toString().substring(0, 30);
     }
-    return "tmp: " + username;
+    return username;
   }
 }
