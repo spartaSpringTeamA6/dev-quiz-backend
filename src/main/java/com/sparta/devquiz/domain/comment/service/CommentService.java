@@ -34,10 +34,7 @@ public class CommentService {
     @Transactional
     public CommentCreateResponse createComment(Long boardId,CommentCreateRequest commentCreateResponseDto, User user) {
         Board board = getBoardById(boardId);
-
-        if(Boolean.TRUE.equals(board.getIsDeleted())) {
-            throw new BoardCustomException(BoardExceptionCode.ALREADY_DELETED_BOARD);
-        }
+        isExistsBoard(board);
 
         Comment comment = Comment.builder()
                 .user(user)
@@ -52,10 +49,7 @@ public class CommentService {
 
     public List<CommentDetailsResponse> getCommentList(Long boardId) {
         Board board = getBoardById(boardId);
-
-        if(Boolean.TRUE.equals(board.getIsDeleted())) {
-            throw new BoardCustomException(BoardExceptionCode.ALREADY_DELETED_BOARD);
-        }
+        isExistsBoard(board);
 
         List<Comment> comments = commentRepository.findAllByBoardIdAndIsDeletedFalse(boardId);
         return CommentDetailsResponse.of(comments);
@@ -69,10 +63,7 @@ public class CommentService {
     @Transactional
     public void updateComment(Long commentId, CommentUpdateRequest commentUpdateRequest, User user) {
         Comment comment = getCommentById(commentId);
-
-        if (!comment.getUser().getId().equals(user.getId())) {
-            throw new CommentCustomException(CommentExceptionCode.UNAUTHORIZED_USER);
-        }
+        isCommentUser(comment,user);
 
         comment.updateContent(commentUpdateRequest.getContent());
     }
@@ -80,14 +71,8 @@ public class CommentService {
     @Transactional
     public void deleteComment(Long commentId, User user) {
         Comment comment = getCommentById(commentId);
-
-        if (!comment.getUser().getId().equals(user.getId())) {
-            throw new CommentCustomException(CommentExceptionCode.UNAUTHORIZED_USER);
-        }
-
-        if(Boolean.TRUE.equals(comment.getIsDeleted())) {
-            throw new CommentCustomException(CommentExceptionCode.ALREADY_DELETED_COMMENT);
-        }
+        isCommentUser(comment,user);
+        isExistsComment(comment);
 
         comment.setDeleted(true);
     }
@@ -95,10 +80,7 @@ public class CommentService {
     @Transactional
     public void likeComment(Long commentId, User user) {
         Comment comment = getCommentById(commentId);
-
-        if(Boolean.TRUE.equals(comment.getIsDeleted())) {
-            throw new BoardCustomException(BoardExceptionCode.ALREADY_DELETED_BOARD);
-        }
+        isExistsComment(comment);
 
         CommentLikeId commentLikeId = new CommentLikeId(user.getId(), commentId);
 
@@ -119,12 +101,9 @@ public class CommentService {
     public void unlikeComment(Long commentId, User user) {
 
         Comment comment = getCommentById(commentId);
-
         CommentLikeId commentLikeId = new CommentLikeId(user.getId(), commentId);
 
-        if(Boolean.TRUE.equals(comment.getIsDeleted())) {
-            throw new BoardCustomException(BoardExceptionCode.ALREADY_DELETED_BOARD);
-        }
+        isExistsComment(comment);
 
         if (commentLikeRepository.existsById(commentLikeId)) {
             commentLikeRepository.deleteById(commentLikeId);
@@ -141,6 +120,24 @@ public class CommentService {
     private Comment getCommentById(Long commentId) {
         return commentRepository.findById(commentId)
                 .orElseThrow(() -> new CommentCustomException(CommentExceptionCode.NOT_FOUND_COMMENT));
+    }
+
+    public void isCommentUser(Comment comment, User user){
+        if (!comment.getUser().getId().equals(user.getId())) {
+            throw new CommentCustomException(CommentExceptionCode.UNAUTHORIZED_USER);
+        }
+    }
+
+    public void isExistsBoard(Board board){
+        if(Boolean.TRUE.equals(board.getIsDeleted())) {
+            throw new BoardCustomException(BoardExceptionCode.ALREADY_DELETED_BOARD);
+        }
+    }
+
+    public void isExistsComment(Comment comment){
+        if(Boolean.TRUE.equals(comment.getIsDeleted())) {
+            throw new CommentCustomException(CommentExceptionCode.ALREADY_DELETED_COMMENT);
+        }
     }
 
 }
