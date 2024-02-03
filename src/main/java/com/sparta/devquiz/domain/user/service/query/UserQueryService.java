@@ -6,6 +6,8 @@ import com.sparta.devquiz.domain.comment.dto.response.CommentInfoResponse;
 import com.sparta.devquiz.domain.comment.service.CommentService;
 import com.sparta.devquiz.domain.quiz.dto.response.QuizGetByUserResponse;
 import com.sparta.devquiz.domain.quiz.dto.response.QuizSolvedGrassResponse;
+import com.sparta.devquiz.domain.quiz.repository.QuizRepository;
+import com.sparta.devquiz.domain.quiz.repository.QuizUserRepository;
 import com.sparta.devquiz.domain.quiz.service.QuizService;
 import com.sparta.devquiz.domain.skill.entity.Skill;
 import com.sparta.devquiz.domain.skill.service.SkillService;
@@ -38,6 +40,7 @@ public class UserQueryService {
   private final UserRepository userRepository;
   private final SkillService skillService;
   private final QuizService quizService;
+  private final QuizUserRepository quizUserRepository;
   private final TeamUserRepository teamUserRepository;
 
   public UserDetailResponse getMyProfile(User authUser) {
@@ -77,31 +80,31 @@ public class UserQueryService {
 
   public UserQuizzesResponse getMyQuizzes(User authUser, Long userId) {
     User findUser = validateUser(authUser, userId);
-    List<QuizGetByUserResponse> quizList = quizService.getAllQuizzesForUser(findUser);
+    List<QuizGetByUserResponse> quizList = quizUserRepository.getAllQuizzesForUser(findUser);
     return UserQuizzesResponse.of(findUser, quizList);
   }
 
   public UserQuizzesResponse getMyCorrectQuizzes(User authUser, Long userId) {
     User findUser = validateUser(authUser, userId);
-    List<QuizGetByUserResponse> correctQuizList = quizService.getCorrectQuizzesForUser(findUser);
+    List<QuizGetByUserResponse> correctQuizList = quizUserRepository.getCorrectQuizzesForUser(findUser);
     return UserQuizzesResponse.of(findUser, correctQuizList);
   }
 
   public UserQuizzesResponse getMyFailQuizzes(User authUser, Long userId) {
     User findUser = validateUser(authUser, userId);
-    List<QuizGetByUserResponse> failQuizList = quizService.getFailQuizzesForUser(findUser);
+    List<QuizGetByUserResponse> failQuizList = quizUserRepository.getFailQuizzesForUser(findUser);
     return UserQuizzesResponse.of(findUser, failQuizList);
   }
 
   public UserQuizzesResponse getMyPassQuizzes(User authUser, Long userId) {
     User findUser = validateUser(authUser, userId);
-    List<QuizGetByUserResponse> passQuizList = quizService.getPassQuizzesForUser(findUser);
+    List<QuizGetByUserResponse> passQuizList = quizUserRepository.getPassQuizzesForUser(findUser);
     return UserQuizzesResponse.of(findUser, passQuizList);
   }
 
   public List<QuizSolvedGrassResponse> getMyGrasses(User authUser, Long userId) {
     validateUser(authUser,userId);
-    return quizService.getSolvedGrassByUser(authUser);
+    return quizUserRepository.getSolvedGrassByUser(authUser);
   }
 
   private User validateUser(User authUser, Long userId) {
