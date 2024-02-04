@@ -2,13 +2,10 @@ package com.sparta.devquiz.domain.coin.enums;
 
 import com.sparta.devquiz.domain.coin.exception.CoinCustomException;
 import com.sparta.devquiz.domain.coin.exception.CoinExceptionCode;
-import com.sparta.devquiz.domain.quiz.entity.Quiz;
 import com.sparta.devquiz.domain.quiz.enums.UserQuizStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.function.Supplier;
 
 @Getter
 @NoArgsConstructor
@@ -34,9 +31,10 @@ public enum CoinContent {
 
     public static CoinContent matchingQuizStatus(UserQuizStatus status) {
         return switch (status) {
-            case PASS -> PASS;
+            case FIRST -> FIRST;
             case CORRECT -> CORRECT;
             case FAIL -> FAIL;
+            case PASS -> PASS;
             default -> throw new CoinCustomException(CoinExceptionCode.BAD_REQUEST_INVALID_QUIZ_STATUS);
         };
     }
