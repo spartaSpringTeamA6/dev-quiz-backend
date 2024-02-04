@@ -1,3 +1,5 @@
+package com.sparta.devquiz.domain.quiz.service;
+
 import com.sparta.devquiz.domain.category.entity.Category;
 import com.sparta.devquiz.domain.category.enums.QuizCategory;
 import com.sparta.devquiz.domain.category.repository.CategoryRepository;
@@ -6,11 +8,7 @@ import com.sparta.devquiz.domain.coin.service.CoinService;
 import com.sparta.devquiz.domain.quiz.dto.request.QuizAnswerSubmitRequest;
 import com.sparta.devquiz.domain.quiz.dto.request.QuizCreateRequest;
 import com.sparta.devquiz.domain.quiz.dto.request.QuizUpdateRequest;
-import com.sparta.devquiz.domain.quiz.dto.response.QuizDetailInfoResponse;
-import com.sparta.devquiz.domain.quiz.dto.response.QuizPassResponse;
-import com.sparta.devquiz.domain.quiz.dto.response.QuizQueryResponse;
-import com.sparta.devquiz.domain.quiz.dto.response.QuizRandomResponse;
-import com.sparta.devquiz.domain.quiz.dto.response.QuizResultResponse;
+import com.sparta.devquiz.domain.quiz.dto.response.*;
 import com.sparta.devquiz.domain.quiz.entity.Quiz;
 import com.sparta.devquiz.domain.quiz.entity.QuizChoice;
 import com.sparta.devquiz.domain.quiz.entity.UserQuiz;
@@ -47,6 +45,7 @@ public class QuizService {
     private final QuizUserRepository quizUserRepository;
     private final CoinService coinService;
     private final QuizChoiceRepository quizChoiceRepository;
+
 
     @Transactional(readOnly = true)
     public List<QuizRandomResponse> getRandomNonAttemptedQuizzes(QuizCategory quizCategory, User user) {
@@ -90,7 +89,7 @@ public class QuizService {
 
     public QuizResultResponse submitQuizAnswer(Long quizId, User user, QuizAnswerSubmitRequest request) {
         Quiz quiz = quizRepository.findQuizByIdOrElseThrow(quizId);
-        UserQuizStatus status, coinStatus;
+        UserQuizStatus status;
 
         int choiceSequence = request.getChoiceSequence();
         QuizChoice quizChoice = quizChoiceRepository.findByQuizChoiceByChoiceSequenceOrElseThrow(quizId, choiceSequence);
@@ -107,18 +106,9 @@ public class QuizService {
                     quiz.getSolveCount() + 1);
         }
 
-
         if (user != null) {
-            coinStatus = status;
             User findUser = userRepository.findByIdOrElseThrow(user.getId());
-
             int score = status.getScore();
-
-            if (isCorrect && quizUserRepository.isFirst(user)) {
-                coinStatus = UserQuizStatus.FIRST;
-                score = UserQuizStatus.FIRST.getScore();
-            }
-
             UserQuiz userQuiz = UserQuiz.builder()
                     .user(findUser)
                     .quiz(quiz)
@@ -126,7 +116,7 @@ public class QuizService {
                     .score(score)
                     .build();
 
-            CoinContent coinContent = CoinContent.matchingQuizStatus(coinStatus);
+            CoinContent coinContent = CoinContent.matchingQuizStatus(status);
             coinService.saveCoin(findUser.getId(), coinContent, findUser);
             findUser.updateWeekScore(score);
 
