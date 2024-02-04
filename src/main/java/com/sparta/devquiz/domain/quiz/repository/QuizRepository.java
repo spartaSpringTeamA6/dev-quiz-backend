@@ -13,7 +13,7 @@ import java.util.Optional;
 
 public interface QuizRepository extends JpaRepository<Quiz, Long> {
 
-    Optional<Quiz> findById(Long quizId);
+    Optional<Quiz> findByIdAndIsDeletedFalse(Long quizId);
 
     List<Quiz> findQuizByCategoryAndIsDeletedFalse(Category category, Pageable pageable);
 
@@ -26,7 +26,7 @@ public interface QuizRepository extends JpaRepository<Quiz, Long> {
     long countByCategoryAndIsDeletedFalse(Category category);
 
     default Quiz findQuizByIdOrElseThrow(Long quizId) {
-        return findById(quizId)
+        return findByIdAndIsDeletedFalse(quizId)
                 .orElseThrow(() -> new QuizCustomException(QuizExceptionCode.NOT_FOUND_QUIZ));
     }
 }
