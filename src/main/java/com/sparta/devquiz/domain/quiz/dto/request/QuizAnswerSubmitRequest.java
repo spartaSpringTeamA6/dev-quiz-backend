@@ -12,7 +12,4 @@ public class QuizAnswerSubmitRequest {
     @Schema(description = "선택된 답안의 순서")
     private int choiceSequence;
 
-    @NotBlank
-    @Schema(description = "선택된 답안의 내용")
-    private String content;
 }

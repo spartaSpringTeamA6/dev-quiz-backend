@@ -39,7 +39,7 @@ public class QuizController {
     private final QuizService quizService;
 
     @Operation(operationId = "QUIZ-001", summary = "카테고리 별 퀴즈 랜덤 출제")
-    @GetMapping("/categories/{categoryId}/quizzes")
+    @GetMapping("/quizzes")
     public ResponseEntity<CommonResponseDto> getRandomQuiz(
             @RequestParam QuizCategory category,
             @AuthUser User user
@@ -85,7 +85,7 @@ public class QuizController {
     }
 
     @Operation(operationId = "ADMIN-001", summary = "각 카테고리 별 퀴즈 전체 조회")
-    @GetMapping("/admin/categories/{categoryId}/quizzes")
+    @GetMapping("/admin/quizzes")
     public ResponseEntity<CommonResponseDto> getQuizzesByCategory(
             @RequestParam QuizCategory category,
             @AuthUser User user
@@ -97,13 +97,13 @@ public class QuizController {
     }
 
     @Operation(operationId = "ADMIN-002", summary = "관리자 퀴즈 생성")
-    @PostMapping("/admin/categories/{categoryId}/quizzes")
+    @PostMapping("/admin/quizzes")
     public ResponseEntity<CommonResponseDto> createQuiz(
             @AuthUser User user,
-            @RequestParam Long categoryId,
+            @RequestParam QuizCategory category,
             @RequestBody QuizCreateRequest request
     ) {
-        quizService.createQuiz(request, user, categoryId);
+        quizService.createQuiz(request, user, category);
 
         return ResponseEntity.status(QuizResponseCode.CREATED_QUIZ.getHttpStatus())
                 .body(CommonResponseDto.of(QuizResponseCode.CREATED_QUIZ));

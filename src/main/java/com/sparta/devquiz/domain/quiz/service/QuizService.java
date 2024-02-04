@@ -66,7 +66,7 @@ public class QuizService {
             }
         }
         if (randomQuizzes.size() < 10) {
-            throw new QuizCustomException(QuizExceptionCode.NOT_FOUND_QUIZ);
+            throw new QuizCustomException(QuizExceptionCode.NOT_ENOUGH_QUIZ);
         }
         return randomQuizzes.stream()
                 .map(QuizRandomResponse::of)
@@ -94,13 +94,6 @@ public class QuizService {
 
         int choiceSequence = request.getChoiceSequence();
         QuizChoice quizChoice = quizChoiceRepository.findByQuizChoiceByChoiceSequenceOrElseThrow(quizId, choiceSequence);
-
-        //어느 용도인지 몰라서 질문용으로 남겨두었습니다.
-//        QuizChoice submittedChoice = quiz.getQuizChoices().stream()
-//                .filter(choice -> quizChoice.getChoiceContent().equals(request.getChoiceId()))
-//                .findFirst()
-//                .orElseThrow(() -> new QuizCustomException(QuizExceptionCode.NOT_FOUND_QUIZ_CHOICE));
-
 
         boolean isCorrect = quizChoice.getIsAnswer();
 
@@ -170,7 +163,7 @@ public class QuizService {
                 .toList();
     }
 
-    public void createQuiz(QuizCreateRequest createRequest, User user, Long categoryId) {
+    public void createQuiz(QuizCreateRequest createRequest, User user, QuizCategory quizCategory) {
 
         if (user == null) {
             throw new UserCustomException(UserExceptionCode.UNAUTHORIZED_USER);
@@ -179,7 +172,7 @@ public class QuizService {
             throw new UserCustomException(UserExceptionCode.UNAUTHORIZED_USER);
         }
 
-        Category category = categoryRepository.findByIdOrElseThrow(categoryId);
+        Category category = categoryRepository.findByCategoryTitleOrElseThrow(quizCategory.get());
 
         Quiz quiz = quizRepository.save(Quiz.builder()
                 .quizTitle(createRequest.getTitle())
