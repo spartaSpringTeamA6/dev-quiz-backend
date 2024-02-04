@@ -88,6 +88,7 @@ public class QuizService {
                 .build();
     }
 
+
     public QuizResultResponse submitQuizAnswer(Long quizId, User user, QuizAnswerSubmitRequest request) {
         Quiz quiz = quizRepository.findQuizByIdOrElseThrow(quizId);
         UserQuizStatus status;
