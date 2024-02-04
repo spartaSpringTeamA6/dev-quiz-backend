@@ -55,7 +55,7 @@ public class QuizService {
         Category category = categoryRepository.findByCategoryTitleOrElseThrow(quizCategory.get());
 
         if (user == null) {
-            randomQuizzes = quizRepository.findQuizByCategory(category, pageable);
+            randomQuizzes = quizRepository.findQuizByCategoryAndIsDeletedFalse(category, pageable);
         } else {
             List<Long> correctQuizIds = quizUserRepository.findCorrectQuizIdsByUser(user);
 
@@ -156,7 +156,7 @@ public class QuizService {
 
         Pageable pageable = PageRequest.of(0, 30);
         Category category = categoryRepository.findByCategoryTitleOrElseThrow(quizCategory.get());
-        List<Quiz> quizzes = quizRepository.findQuizByCategory(category, pageable);
+        List<Quiz> quizzes = quizRepository.findQuizByCategoryAndIsDeletedFalse(category, pageable);
 
         return quizzes.stream()
                 .map(QuizQueryResponse::of)

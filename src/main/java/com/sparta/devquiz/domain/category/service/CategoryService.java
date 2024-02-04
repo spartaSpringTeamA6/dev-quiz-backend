@@ -28,7 +28,7 @@ public class CategoryService {
     @Transactional(readOnly = true)
     public List<CategoryGetResponse> getCategories() {
         return categoryRepository.findAll().stream()
-            .map(category -> CategoryGetResponse.of(category, quizRepository.countByCategory(category)))
+            .map(category -> CategoryGetResponse.of(category, quizRepository.countByCategoryAndIsDeletedFalse(category)))
             .toList();
     }
 
