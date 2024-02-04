@@ -62,7 +62,7 @@ public class QBoard extends EntityPathBase<Board> {
 
     public QBoard(Class<? extends Board> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.quiz = inits.isInitialized("quiz") ? new com.sparta.devquiz.domain.quiz.entity.QQuiz(forProperty("quiz"), inits.get("quiz")) : null;
+        this.quiz = inits.isInitialized("quiz") ? new com.sparta.devquiz.domain.quiz.entity.QQuiz(forProperty("quiz")) : null;
         this.user = inits.isInitialized("user") ? new com.sparta.devquiz.domain.user.entity.QUser(forProperty("user")) : null;
     }
 

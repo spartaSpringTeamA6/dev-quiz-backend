@@ -1,6 +1,9 @@
 package com.sparta.devquiz.domain.quiz.repository;
 
 
+import static com.sparta.devquiz.domain.quiz.entity.QQuiz.quiz;
+import static com.sparta.devquiz.domain.quiz.entity.QUserQuiz.userQuiz;
+
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.dsl.DateTemplate;
 import com.querydsl.core.types.dsl.Expressions;
@@ -12,15 +15,11 @@ import com.sparta.devquiz.domain.quiz.entity.QUserQuiz;
 import com.sparta.devquiz.domain.quiz.entity.UserQuiz;
 import com.sparta.devquiz.domain.quiz.enums.UserQuizStatus;
 import com.sparta.devquiz.domain.user.entity.User;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
-
 import java.sql.Date;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static com.sparta.devquiz.domain.quiz.entity.QQuiz.quiz;
-import static com.sparta.devquiz.domain.quiz.entity.QUserQuiz.userQuiz;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
 
 @Repository
 @RequiredArgsConstructor
@@ -48,9 +47,7 @@ public class QuizUserRepositoryCustomImpl implements QuizUserRepositoryCustom {
                 )
                 .fetch();
 
-        return resultUserQuiz.stream()
-                .map(QuizGetByUserResponse::of)
-                .toList();
+        return resultUserQuiz.stream().map(QuizGetByUserResponse::of).toList();
     }
 
     @Override
