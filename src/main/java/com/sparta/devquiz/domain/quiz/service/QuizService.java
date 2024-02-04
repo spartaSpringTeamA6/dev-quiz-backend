@@ -1,5 +1,3 @@
-package com.sparta.devquiz.domain.quiz.service;
-
 import com.sparta.devquiz.domain.category.entity.Category;
 import com.sparta.devquiz.domain.category.enums.QuizCategory;
 import com.sparta.devquiz.domain.category.repository.CategoryRepository;
@@ -29,15 +27,14 @@ import com.sparta.devquiz.domain.user.enums.UserRole;
 import com.sparta.devquiz.domain.user.exception.UserCustomException;
 import com.sparta.devquiz.domain.user.exception.UserExceptionCode;
 import com.sparta.devquiz.domain.user.repository.UserRepository;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 @Service
 @RequiredArgsConstructor
@@ -90,7 +87,6 @@ public class QuizService {
                 .quizChoices(quizChoices)
                 .build();
     }
-
 
     public QuizResultResponse submitQuizAnswer(Long quizId, User user, QuizAnswerSubmitRequest request) {
         Quiz quiz = quizRepository.findQuizByIdOrElseThrow(quizId);
