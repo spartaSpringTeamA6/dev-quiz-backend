@@ -18,13 +18,13 @@ public class QQuiz extends EntityPathBase<Quiz> {
 
     private static final long serialVersionUID = 1853659847L;
 
-    private static final PathInits INITS = PathInits.DIRECT2;
-
     public static final QQuiz quiz = new QQuiz("quiz");
 
     public final com.sparta.devquiz.global.entity.QBaseTimeEntity _super = new com.sparta.devquiz.global.entity.QBaseTimeEntity(this);
 
-    public final com.sparta.devquiz.domain.category.entity.QCategory category;
+    public final StringPath answer = createString("answer");
+
+    public final EnumPath<com.sparta.devquiz.domain.quiz.enums.QuizCategory> category = createEnum("category", com.sparta.devquiz.domain.quiz.enums.QuizCategory.class);
 
     public final NumberPath<Long> correctCount = createNumber("correctCount", Long.class);
 
@@ -32,6 +32,8 @@ public class QQuiz extends EntityPathBase<Quiz> {
     public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
 
     public final DateTimePath<java.time.LocalDateTime> deletedAt = createDateTime("deletedAt", java.time.LocalDateTime.class);
+
+    public final StringPath example = createString("example");
 
     public final NumberPath<Long> failCount = createNumber("failCount", Long.class);
 
@@ -42,31 +44,22 @@ public class QQuiz extends EntityPathBase<Quiz> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> modifiedAt = _super.modifiedAt;
 
-    public final ListPath<QuizChoice, QQuizChoice> quizChoices = this.<QuizChoice, QQuizChoice>createList("quizChoices", QuizChoice.class, QQuizChoice.class, PathInits.DIRECT2);
-
-    public final StringPath quizTitle = createString("quizTitle");
+    public final StringPath question = createString("question");
 
     public final NumberPath<Long> solveCount = createNumber("solveCount", Long.class);
 
+    public final ListPath<UserQuiz, QUserQuiz> userQuizList = this.<UserQuiz, QUserQuiz>createList("userQuizList", UserQuiz.class, QUserQuiz.class, PathInits.DIRECT2);
+
     public QQuiz(String variable) {
-        this(Quiz.class, forVariable(variable), INITS);
+        super(Quiz.class, forVariable(variable));
     }
 
     public QQuiz(Path<? extends Quiz> path) {
-        this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
+        super(path.getType(), path.getMetadata());
     }
 
     public QQuiz(PathMetadata metadata) {
-        this(metadata, PathInits.getFor(metadata, INITS));
-    }
-
-    public QQuiz(PathMetadata metadata, PathInits inits) {
-        this(Quiz.class, metadata, inits);
-    }
-
-    public QQuiz(Class<? extends Quiz> type, PathMetadata metadata, PathInits inits) {
-        super(type, metadata, inits);
-        this.category = inits.isInitialized("category") ? new com.sparta.devquiz.domain.category.entity.QCategory(forProperty("category")) : null;
+        super(Quiz.class, metadata);
     }
 
 }
