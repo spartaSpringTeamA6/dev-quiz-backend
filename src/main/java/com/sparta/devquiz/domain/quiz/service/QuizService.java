@@ -89,7 +89,7 @@ public class QuizService {
 
     public QuizResultResponse submitQuizAnswer(Long quizId, User user, QuizAnswerSubmitRequest request) {
         Quiz quiz = quizRepository.findQuizByIdOrElseThrow(quizId);
-        UserQuizStatus status;
+        UserQuizStatus status, coinStatus;
 
         int choiceSequence = request.getChoiceSequence();
         QuizChoice quizChoice = quizChoiceRepository.findByQuizChoiceByChoiceSequenceOrElseThrow(quizId, choiceSequence);
@@ -107,22 +107,29 @@ public class QuizService {
         }
 
         if (user != null) {
+            coinStatus = status;
             User findUser = userRepository.findByIdOrElseThrow(user.getId());
-            int score = status.getScore();
-            UserQuiz userQuiz = UserQuiz.builder()
-                    .user(findUser)
-                    .quiz(quiz)
-                    .status(status)
-                    .score(score)
-                    .build();
 
-            CoinContent coinContent = CoinContent.matchingQuizStatus(status);
+            int score = status.getScore();
+
+            if (isCorrect && quizUserRepository.isFirst(user)) {
+                coinStatus = UserQuizStatus.FIRST;
+                score = UserQuizStatus.FIRST.getScore();
+            }
+
+            UserQuiz userQuiz = UserQuiz.builder()
+                .user(findUser)
+                .quiz(quiz)
+                .status(status)
+                .score(score)
+                .build();
+
+            CoinContent coinContent = CoinContent.matchingQuizStatus(coinStatus);
             coinService.saveCoin(findUser.getId(), coinContent, findUser);
             findUser.updateWeekScore(score);
 
             quizUserRepository.save(userQuiz);
         }
-
         return QuizResultResponse.of(quiz, choiceSequence, quizChoice.getChoiceContent(), status, isCorrect);
     }
 
