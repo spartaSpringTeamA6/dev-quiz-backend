@@ -58,7 +58,7 @@ public class QUserQuiz extends EntityPathBase<UserQuiz> {
 
     public QUserQuiz(Class<? extends UserQuiz> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.quiz = inits.isInitialized("quiz") ? new QQuiz(forProperty("quiz")) : null;
+        this.quiz = inits.isInitialized("quiz") ? new QQuiz(forProperty("quiz"), inits.get("quiz")) : null;
         this.user = inits.isInitialized("user") ? new com.sparta.devquiz.domain.user.entity.QUser(forProperty("user")) : null;
     }
 

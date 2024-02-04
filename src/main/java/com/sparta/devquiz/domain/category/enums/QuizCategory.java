@@ -1,4 +1,4 @@
-package com.sparta.devquiz.domain.quiz.enums;
+package com.sparta.devquiz.domain.category.enums;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -54,7 +54,9 @@ public enum QuizCategory {
     GIT("GIT"),
     LINUX("LINUX");
 
-
     private final String major;
 
+    public String get() {
+        return major;
+    }
 }

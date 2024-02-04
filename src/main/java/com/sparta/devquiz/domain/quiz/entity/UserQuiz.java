@@ -35,4 +35,7 @@ public class UserQuiz extends BaseTimeEntity {
 
     @Column(nullable = false)
     private int score;
+
+
+
 }
