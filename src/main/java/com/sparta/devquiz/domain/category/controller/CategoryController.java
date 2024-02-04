@@ -22,14 +22,14 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/categories")
+@RequestMapping("/api")
 @Tag(name = "6. Category API", description = "Category 관련 API 입니다.")
 public class CategoryController {
     private final CategoryService categoryService;
 
     @Operation(operationId = "CATEGORY-001", summary = "카테고리 조회")
-    @GetMapping
-    public ResponseEntity<CommonResponseDto<List<CategoryGetResponse>>> getCategories(
+    @GetMapping("/categories")
+    public ResponseEntity<CommonResponseDto> getCategories(
     ) {
         List<CategoryGetResponse> categoryResponseList = categoryService.getCategories();
 
@@ -37,7 +37,7 @@ public class CategoryController {
     }
 
     @Operation(operationId = "ADMIN-009", summary = "카테고리 생성")
-    @PostMapping
+    @PostMapping("/admin/categories")
     public ResponseEntity<CommonResponseDto> createCategory(
             @AuthUser User user,
             @RequestBody CategoryCreateRequest request

@@ -20,29 +20,18 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
-
+@Transactional
 public class CategoryService {
     private final CategoryRepository categoryRepository;
     private final QuizRepository quizRepository;
-    private com.sparta.devquiz.domain.category.enums.QuizCategory QuizCategory;
 
     @Transactional(readOnly = true)
     public List<CategoryGetResponse> getCategories() {
         return categoryRepository.findAll().stream()
-                .map(category -> {
-                    Long quizCount = quizRepository.countByCategory(QuizCategory);
-                    return CategoryGetResponse.builder()
-                            .categoryId(category.getId())
-                            .categoryTitle(category.getCategoryTitle())
-                            .categoryDescription(category.getCategoryDescription())
-                            .quizCount(quizCount)
-                            .build();
-                })
-                .toList();
+            .map(category -> CategoryGetResponse.of(category, quizRepository.countByCategory(category)))
+            .toList();
     }
 
-    @Transactional
     public void createCategory(CategoryCreateRequest request, User user) {
         verifyAdminRole(user);
 

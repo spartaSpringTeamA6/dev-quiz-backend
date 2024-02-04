@@ -2,15 +2,13 @@ package com.sparta.devquiz.domain.quiz.repository;
 
 import com.sparta.devquiz.domain.category.entity.Category;
 import com.sparta.devquiz.domain.quiz.entity.Quiz;
-import com.sparta.devquiz.domain.category.enums.QuizCategory;
 import com.sparta.devquiz.domain.quiz.exception.QuizCustomException;
 import com.sparta.devquiz.domain.quiz.exception.QuizExceptionCode;
+import java.util.List;
+import java.util.Optional;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-
-import java.util.List;
-import java.util.Optional;
 
 public interface QuizRepository extends JpaRepository<Quiz, Long> {
 
@@ -24,8 +22,7 @@ public interface QuizRepository extends JpaRepository<Quiz, Long> {
     @Query("SELECT q FROM Quiz q WHERE q.category = :category AND q.isDeleted = false ORDER BY FUNCTION('RAND')")
     List<Quiz> findQuizzesByCategoryExcludingIds(Category category, Pageable pageable);
 
-    Long countByCategory(QuizCategory category);
-
+    long countByCategory(Category category);
 
     default Quiz findQuizByIdOrElseThrow(Long quizId) {
         return findById(quizId)

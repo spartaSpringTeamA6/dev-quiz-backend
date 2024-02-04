@@ -49,21 +49,22 @@ public class WebSecurityConfig {
     http.sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
     http.authorizeHttpRequests(authReq -> authReq
-            .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-            .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
-            .requestMatchers("/api/quizzes/{quizId}/boards", "/api/boards/{boardId}", "/api/boards/{boardId}/comments").permitAll()
-            .requestMatchers("/api/categories/{categoryId}/quizzes", "/api/quizzes/{quizId}", "/api/quizzes/{quizId}/pass").permitAll()
-            .requestMatchers("/api/auth/reissue").permitAll()
-            .anyRequest().authenticated()
+        .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
+        .requestMatchers("/api/quizzes/{quizId}/boards", "/api/boards/{boardId}", "/api/boards/{boardId}/comments").permitAll()
+        .requestMatchers("/api/quizzes", "/api/quizzes/{quizId}", "/api/quizzes/{quizId}/pass").permitAll()
+        .requestMatchers("/api/categories").permitAll()
+        .requestMatchers("/api/auth/reissue").permitAll()
+        .anyRequest().authenticated()
     );
 
     http.oauth2Login(
-            login -> login
+        login -> login
             .loginPage("https://devquiz.pro/login")
-                    .authorizationEndpoint(endPoint -> endPoint.authorizationRequestRepository(cookieOAuth2RequestRepository))
-                    .userInfoEndpoint(userInfo -> userInfo.userService(oAuth2UserService))
-                    .successHandler(oAuth2LoginSuccessHandler)
-                    .failureHandler(oAuth2LoginFailureHandler)
+            .authorizationEndpoint(endPoint -> endPoint.authorizationRequestRepository(cookieOAuth2RequestRepository))
+            .userInfoEndpoint(userInfo -> userInfo.userService(oAuth2UserService))
+            .successHandler(oAuth2LoginSuccessHandler)
+            .failureHandler(oAuth2LoginFailureHandler)
     );
 
     http.addFilterBefore(jwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
