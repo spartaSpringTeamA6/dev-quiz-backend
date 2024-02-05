@@ -12,7 +12,6 @@ import com.sparta.devquiz.domain.quiz.repository.QuizUserRepository;
 import com.sparta.devquiz.domain.skill.repository.SkillRepository;
 import com.sparta.devquiz.domain.team.entity.TeamUser;
 import com.sparta.devquiz.domain.team.repository.TeamUserRepository;
-import com.sparta.devquiz.domain.team.service.TeamUserService;
 import com.sparta.devquiz.domain.skill.entity.Skill;
 import com.sparta.devquiz.domain.user.dto.request.UserSkillsUpdateRequest;
 import com.sparta.devquiz.domain.user.dto.request.UsernameUpdateRequest;
@@ -42,7 +41,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
   private final UserRepository userRepository;
-  private final TeamUserService teamUserService;
   private final BoardRepository boardRepository;
   private final CommentRepository commentRepository;
   private final SkillRepository skillRepository;
@@ -86,21 +84,21 @@ public class UserService {
   public void deleteMyProfile(User authUser, Long userId) {
     User findUser = validateUser(authUser, userId);
     findUser.deleteUser();
-    findUser.getTeamUserList()
-        .forEach(teamUser ->
-            teamUserService.deleteTeamUser(teamUser.getTeam().getId(), teamUser.getUser().getId()));
+    teamUserRepository.deleteAll(findUser.getTeamUserList());
   }
 
   @Transactional
   public void acceptInvitation(User authUser, Long userId, Long teamId) {
     User findUser = validateUser(authUser, userId);
-    teamUserService.acceptInvitation(teamId, findUser.getId());
+    TeamUser findTeamUser = teamUserRepository.getTeamUserWaitOrElseThrow(teamId, userId);
+    findTeamUser.acceptInvitation();
   }
 
   @Transactional
   public void rejectInvitation(User authUser, Long userId, Long teamId) {
     User findUser = validateUser(authUser, userId);
-    teamUserService.rejectInvitation(teamId, findUser.getId());
+    TeamUser findTeamUser = teamUserRepository.getTeamUserWaitOrElseThrow(teamId, userId);
+    teamUserRepository.delete(findTeamUser);
   }
 
   public UserDetailResponse getMyProfile(User authUser) {
@@ -112,7 +110,6 @@ public class UserService {
     User findUser = userRepository.findByIdOrElseThrow(userId);
     return UserDetailResponse.of(findUser);
   }
-
 
   public UserSkillResponse getMySkills(User authUser, Long userId) {
     User findUser = validateUser(authUser, userId);
