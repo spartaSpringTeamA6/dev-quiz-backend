@@ -17,8 +17,6 @@ pipeline {
 		   dockerImage.push("${gitTag}")
 		   dockerImage.push("latest")
 		}
-
-		sh "docker rmi tkdtls/dev-quiz-backend:${gitTag}"
 	     }
 	   }
 	}
