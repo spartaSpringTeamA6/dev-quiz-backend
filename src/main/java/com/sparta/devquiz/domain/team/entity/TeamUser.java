@@ -58,6 +58,24 @@ public class TeamUser extends BaseTimeEntity {
         this.isAccepted = isAccepted;
     }
 
+    public static TeamUser createTeamAdmin(Team team, User user){
+        return TeamUser.builder()
+                .user(user)
+                .team(team)
+                .userRole(TeamUserRole.ADMIN)
+                .isAccepted(true)
+                .build();
+    }
+
+    public static TeamUser inviteTeamUser(Team team, User user){
+        return TeamUser.builder()
+                .team(team)
+                .user(user)
+                .userRole(TeamUserRole.USER)
+                .isAccepted(false)
+                .build();
+    }
+
     public void updateTeamUserRole(TeamUserRole teamUserRole){
         this.userRole = teamUserRole;
     }
