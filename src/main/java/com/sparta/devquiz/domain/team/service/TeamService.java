@@ -16,7 +16,6 @@ import com.sparta.devquiz.domain.team.repository.TeamRepository;
 import com.sparta.devquiz.domain.team.repository.TeamUserRepository;
 import com.sparta.devquiz.domain.user.entity.User;
 import com.sparta.devquiz.domain.user.repository.UserRepository;
-import com.sparta.devquiz.domain.user.service.command.UserService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

@@ -8,7 +8,6 @@ import java.util.List;
 
 public interface QuizUserRepositoryCustom {
     List<QuizGetByUserResponse> findCorrectQuizzesByUsers(User loginUser);
-    List<QuizGetByUserResponse> findCorrectQuizzesByUsers(User loginUser,
-            UserQuizStatus status);
+    List<QuizGetByUserResponse> findCorrectQuizzesByUsers(User loginUser, UserQuizStatus status);
     List<QuizSolvedGrassResponse> findSolvedGrassByUser(User loginUser);
 }
