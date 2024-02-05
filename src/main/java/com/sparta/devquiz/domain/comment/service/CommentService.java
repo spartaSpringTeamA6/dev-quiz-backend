@@ -54,12 +54,7 @@ public class CommentService {
         List<Comment> comments = commentRepository.findAllByBoardIdAndIsDeletedFalse(boardId);
         return CommentDetailsResponse.of(comments);
     }
-
-    public List<CommentInfoResponse> getCommentListByUserId(Long userId) {
-        List<Comment> comments = commentRepository.findAllByUserIdAndIsDeletedFalse(userId);
-        return CommentInfoResponse.of(comments);
-    }
-
+    
     @Transactional
     public void updateComment(Long commentId, CommentUpdateRequest commentUpdateRequest, User user) {
         Comment comment = commentRepository.findCommentByIdOrElseThrow(commentId);
