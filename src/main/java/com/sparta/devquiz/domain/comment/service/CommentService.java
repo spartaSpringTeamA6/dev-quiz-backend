@@ -8,7 +8,6 @@ import com.sparta.devquiz.domain.comment.dto.request.CommentCreateRequest;
 import com.sparta.devquiz.domain.comment.dto.request.CommentUpdateRequest;
 import com.sparta.devquiz.domain.comment.dto.response.CommentCreateResponse;
 import com.sparta.devquiz.domain.comment.dto.response.CommentDetailsResponse;
-import com.sparta.devquiz.domain.comment.dto.response.CommentInfoResponse;
 import com.sparta.devquiz.domain.comment.entity.Comment;
 import com.sparta.devquiz.domain.comment.entity.CommentLike;
 import com.sparta.devquiz.domain.comment.entity.CommentLikeId;
