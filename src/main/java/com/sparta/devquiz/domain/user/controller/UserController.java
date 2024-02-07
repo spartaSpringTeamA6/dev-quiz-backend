@@ -94,8 +94,8 @@ public class UserController {
   }
 
   @Operation(operationId = "USER-009",summary = "유저가 속한 그룹 조회")
-  @GetMapping("/users/{userId}")
-  public ResponseEntity<CommonResponseDto> getMyGroups(@AuthUser User authUser, @PathVariable Long userId) {
+  @GetMapping("/{userId}/teams")
+  public ResponseEntity<CommonResponseDto> getMyTeams(@AuthUser User authUser, @PathVariable Long userId) {
     UserTeamsResponse result = userService.getMyTeams(authUser, userId);
     return ResponseEntity.status(UserResponseCode.GET_MY_TEAM.getHttpStatus())
             .body(CommonResponseDto.of(UserResponseCode.GET_MY_TEAM, result));
