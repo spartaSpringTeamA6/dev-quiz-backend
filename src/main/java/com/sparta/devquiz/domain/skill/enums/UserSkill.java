@@ -32,5 +32,4 @@ public enum UserSkill {
     NETWORK("Network");
 
     private final String major;
-
 }
