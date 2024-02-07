@@ -34,7 +34,7 @@ public class QSkill extends EntityPathBase<Skill> {
 
     public final com.sparta.devquiz.domain.user.entity.QUser user;
 
-    public final EnumPath<com.sparta.devquiz.domain.user.enums.UserSkill> userSkill = createEnum("userSkill", com.sparta.devquiz.domain.user.enums.UserSkill.class);
+    public final EnumPath<com.sparta.devquiz.domain.skill.enums.UserSkill> userSkill = createEnum("userSkill", com.sparta.devquiz.domain.skill.enums.UserSkill.class);
 
     public QSkill(String variable) {
         this(Skill.class, forVariable(variable), INITS);

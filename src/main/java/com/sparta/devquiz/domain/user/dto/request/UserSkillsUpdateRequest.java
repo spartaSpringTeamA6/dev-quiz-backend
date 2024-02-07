@@ -1,10 +1,8 @@
 package com.sparta.devquiz.domain.user.dto.request;
 
 import com.sparta.devquiz.domain.user.annotation.UserSkillEnum;
-import com.sparta.devquiz.domain.user.enums.UserSkill;
+import com.sparta.devquiz.domain.skill.enums.UserSkill;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import java.util.List;
 import lombok.Getter;
 

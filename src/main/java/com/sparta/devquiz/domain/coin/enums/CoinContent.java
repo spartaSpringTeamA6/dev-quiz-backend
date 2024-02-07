@@ -35,6 +35,7 @@ public enum CoinContent {
     public static CoinContent matchingQuizStatus(UserQuizStatus status) {
         return switch (status) {
             case PASS -> PASS;
+            case FIRST -> FIRST;
             case CORRECT -> CORRECT;
             case FAIL -> FAIL;
             default -> throw new CoinCustomException(CoinExceptionCode.BAD_REQUEST_INVALID_QUIZ_STATUS);

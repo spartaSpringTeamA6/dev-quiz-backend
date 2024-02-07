@@ -9,7 +9,9 @@ import com.sparta.devquiz.domain.coin.exception.CoinCustomException;
 import com.sparta.devquiz.domain.coin.exception.CoinExceptionCode;
 import com.sparta.devquiz.domain.coin.repository.CoinRepository;
 import com.sparta.devquiz.domain.user.entity.User;
-import com.sparta.devquiz.domain.user.service.command.UserService;
+import com.sparta.devquiz.domain.user.exception.UserCustomException;
+import com.sparta.devquiz.domain.user.exception.UserExceptionCode;
+import com.sparta.devquiz.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,11 +23,14 @@ import org.springframework.transaction.annotation.Transactional;
 public class CoinService {
 
     private final CoinRepository coinRepository;
-    private final UserService userService;
+    private final UserRepository userRepository;
 
     @Transactional
     public void saveCoin(Long userId, CoinContent coinContent, User authUser) {
-        User user = userService.validateUser(authUser, userId);
+        if (!authUser.getId().equals(userId)) {
+            throw new UserCustomException(UserExceptionCode.BAD_REQUEST_USER_ID);
+        }
+        User user = userRepository.findByIdOrElseThrow(userId);
 
         if (coinContent == null) {
             throw new CoinCustomException(CoinExceptionCode.BAD_REQUEST_COIN);
@@ -38,7 +43,10 @@ public class CoinService {
 
     @Transactional
     public CoinUseResponse useCoin(Long userId, CoinUseRequest coinUseRequest, User authUser) {
-        userService.validateUser(authUser, userId);
+        if (!authUser.getId().equals(userId)) {
+            throw new UserCustomException(UserExceptionCode.BAD_REQUEST_USER_ID);
+        }
+        userRepository.findByIdOrElseThrow(userId);
 
         int totalCoin = getTotalCoin(userId);
 
@@ -58,7 +66,10 @@ public class CoinService {
     }
 
     public CoinGetInfoResponse getCoinInfo(Long userId, User authUser) {
-        userService.validateUser(authUser, userId);
+        if (!authUser.getId().equals(userId)) {
+            throw new UserCustomException(UserExceptionCode.BAD_REQUEST_USER_ID);
+        }
+        userRepository.findByIdOrElseThrow(userId);
 
         int totalCoin = getTotalCoin(userId);
 

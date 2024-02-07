@@ -6,6 +6,7 @@ import com.sparta.devquiz.global.jwt.service.JwtService;
 import com.sparta.devquiz.global.oauth.handler.OAuth2LoginFailureHandler;
 import com.sparta.devquiz.global.oauth.handler.OAuth2LoginSuccessHandler;
 import com.sparta.devquiz.global.oauth.repository.CookieOAuth2RequestRepository;
+import com.sparta.devquiz.global.redis.RedisService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -27,6 +28,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class WebSecurityConfig {
 
   private final JwtService jwtService;
+  private final RedisService redisService;
   private final OAuth2UserService oAuth2UserService;
   private final UserDetailsService userDetailsService;
   private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
@@ -36,7 +38,7 @@ public class WebSecurityConfig {
 
   @Bean
   public JwtAuthorizationFilter jwtAuthorizationFilter() {
-    return new JwtAuthorizationFilter(jwtService, userDetailsService);
+    return new JwtAuthorizationFilter(jwtService, redisService, userDetailsService);
   }
 
   @Bean
@@ -47,12 +49,13 @@ public class WebSecurityConfig {
     http.sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
     http.authorizeHttpRequests(authReq -> authReq
-          .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-          .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
-          .requestMatchers("/api/boards/{boardId}", "/api/boards/{boardId}/comments").permitAll()
-          .requestMatchers("/api/quizzes", "/api/quizzes/{quizId}","/api/quizzes/{quizId}/boards").permitAll()
-          .requestMatchers("/api/auth/reissue").permitAll()
-          .anyRequest().authenticated()
+        .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
+        .requestMatchers("/api/quizzes/{quizId}/boards", "/api/boards/{boardId}", "/api/boards/{boardId}/comments").permitAll()
+        .requestMatchers("/api/quizzes", "/api/quizzes/{quizId}", "/api/quizzes/{quizId}/pass").permitAll()
+        .requestMatchers("/api/categories").permitAll()
+        .requestMatchers("/api/auth/reissue").permitAll()
+        .anyRequest().authenticated()
     );
 
     http.oauth2Login(

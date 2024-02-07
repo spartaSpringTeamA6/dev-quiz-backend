@@ -8,7 +8,6 @@ import com.sparta.devquiz.domain.comment.dto.request.CommentCreateRequest;
 import com.sparta.devquiz.domain.comment.dto.request.CommentUpdateRequest;
 import com.sparta.devquiz.domain.comment.dto.response.CommentCreateResponse;
 import com.sparta.devquiz.domain.comment.dto.response.CommentDetailsResponse;
-import com.sparta.devquiz.domain.comment.dto.response.CommentInfoResponse;
 import com.sparta.devquiz.domain.comment.entity.Comment;
 import com.sparta.devquiz.domain.comment.entity.CommentLike;
 import com.sparta.devquiz.domain.comment.entity.CommentLikeId;
@@ -33,11 +32,8 @@ public class CommentService {
 
     @Transactional
     public CommentCreateResponse createComment(Long boardId,CommentCreateRequest commentCreateResponseDto, User user) {
-        Board board = getBoardById(boardId);
-
-        if(Boolean.TRUE.equals(board.getIsDeleted())) {
-            throw new BoardCustomException(BoardExceptionCode.ALREADY_DELETED_BOARD);
-        }
+        Board board = boardRepository.findBoardByIdOrElseThrow(boardId);
+        isExistsBoard(board);
 
         Comment comment = Comment.builder()
                 .user(user)
@@ -51,54 +47,34 @@ public class CommentService {
     }
 
     public List<CommentDetailsResponse> getCommentList(Long boardId) {
-        Board board = getBoardById(boardId);
-
-        if(Boolean.TRUE.equals(board.getIsDeleted())) {
-            throw new BoardCustomException(BoardExceptionCode.ALREADY_DELETED_BOARD);
-        }
+        Board board = boardRepository.findBoardByIdOrElseThrow(boardId);
+        isExistsBoard(board);
 
         List<Comment> comments = commentRepository.findAllByBoardIdAndIsDeletedFalse(boardId);
         return CommentDetailsResponse.of(comments);
     }
-
-    public List<CommentInfoResponse> getCommentListByUserId(Long userId) {
-        List<Comment> comments = commentRepository.findAllByUserIdAndIsDeletedFalse(userId);
-        return CommentInfoResponse.of(comments);
-    }
-
+    
     @Transactional
     public void updateComment(Long commentId, CommentUpdateRequest commentUpdateRequest, User user) {
-        Comment comment = getCommentById(commentId);
-
-        if (!comment.getUser().getId().equals(user.getId())) {
-            throw new CommentCustomException(CommentExceptionCode.UNAUTHORIZED_USER);
-        }
+        Comment comment = commentRepository.findCommentByIdOrElseThrow(commentId);
+        isCommentUser(comment,user);
 
         comment.updateContent(commentUpdateRequest.getContent());
     }
 
     @Transactional
     public void deleteComment(Long commentId, User user) {
-        Comment comment = getCommentById(commentId);
-
-        if (!comment.getUser().getId().equals(user.getId())) {
-            throw new CommentCustomException(CommentExceptionCode.UNAUTHORIZED_USER);
-        }
-
-        if(Boolean.TRUE.equals(comment.getIsDeleted())) {
-            throw new CommentCustomException(CommentExceptionCode.ALREADY_DELETED_COMMENT);
-        }
+        Comment comment = commentRepository.findCommentByIdOrElseThrow(commentId);
+        isCommentUser(comment,user);
+        isExistsComment(comment);
 
         comment.setDeleted(true);
     }
 
     @Transactional
     public void likeComment(Long commentId, User user) {
-        Comment comment = getCommentById(commentId);
-
-        if(Boolean.TRUE.equals(comment.getIsDeleted())) {
-            throw new BoardCustomException(BoardExceptionCode.ALREADY_DELETED_BOARD);
-        }
+        Comment comment = commentRepository.findCommentByIdOrElseThrow(commentId);
+        isExistsComment(comment);
 
         CommentLikeId commentLikeId = new CommentLikeId(user.getId(), commentId);
 
@@ -118,13 +94,10 @@ public class CommentService {
     @Transactional
     public void unlikeComment(Long commentId, User user) {
 
-        Comment comment = getCommentById(commentId);
-
+        Comment comment = commentRepository.findCommentByIdOrElseThrow(commentId);
         CommentLikeId commentLikeId = new CommentLikeId(user.getId(), commentId);
 
-        if(Boolean.TRUE.equals(comment.getIsDeleted())) {
-            throw new BoardCustomException(BoardExceptionCode.ALREADY_DELETED_BOARD);
-        }
+        isExistsComment(comment);
 
         if (commentLikeRepository.existsById(commentLikeId)) {
             commentLikeRepository.deleteById(commentLikeId);
@@ -133,14 +106,22 @@ public class CommentService {
         }
     }
 
-    private Board getBoardById(Long boardId) {
-        return boardRepository.findById(boardId)
-                .orElseThrow(() -> new CommentCustomException(CommentExceptionCode.NOT_FOUND_BOARD));
+    public void isCommentUser(Comment comment, User user){
+        if (!comment.getUser().getId().equals(user.getId())) {
+            throw new CommentCustomException(CommentExceptionCode.UNAUTHORIZED_USER);
+        }
     }
 
-    private Comment getCommentById(Long commentId) {
-        return commentRepository.findById(commentId)
-                .orElseThrow(() -> new CommentCustomException(CommentExceptionCode.NOT_FOUND_COMMENT));
+    public void isExistsBoard(Board board){
+        if(Boolean.TRUE.equals(board.getIsDeleted())) {
+            throw new BoardCustomException(BoardExceptionCode.ALREADY_DELETED_BOARD);
+        }
+    }
+
+    public void isExistsComment(Comment comment){
+        if(Boolean.TRUE.equals(comment.getIsDeleted())) {
+            throw new CommentCustomException(CommentExceptionCode.ALREADY_DELETED_COMMENT);
+        }
     }
 
 }
