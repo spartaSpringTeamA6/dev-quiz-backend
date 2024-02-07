@@ -12,7 +12,6 @@ import com.sparta.devquiz.domain.user.entity.User;
 import com.sparta.devquiz.domain.user.exception.UserCustomException;
 import com.sparta.devquiz.domain.user.exception.UserExceptionCode;
 import com.sparta.devquiz.domain.user.repository.UserRepository;
-import com.sparta.devquiz.domain.user.service.command.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

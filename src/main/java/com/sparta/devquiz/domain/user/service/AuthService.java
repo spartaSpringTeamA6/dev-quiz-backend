@@ -1,4 +1,4 @@
-package com.sparta.devquiz.domain.user.service.command;
+package com.sparta.devquiz.domain.user.service;
 
 import static com.sparta.devquiz.global.jwt.service.JwtService.ACCESS_COOKIE_NAME;
 import static com.sparta.devquiz.global.jwt.service.JwtService.COOKIE_TIME;

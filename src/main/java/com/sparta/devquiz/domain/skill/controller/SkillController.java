@@ -1,10 +1,12 @@
 package com.sparta.devquiz.domain.skill.controller;
 
 import com.sparta.devquiz.domain.skill.response.SkillResponseCode;
-import com.sparta.devquiz.domain.user.enums.UserSkill;
+import com.sparta.devquiz.domain.skill.enums.UserSkill;
 import com.sparta.devquiz.global.response.CommonResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +23,9 @@ public class SkillController {
   @GetMapping
   public ResponseEntity<CommonResponseDto> getAllSkills() {
     return ResponseEntity.status(SkillResponseCode.OK.getHttpStatus())
-        .body(CommonResponseDto.of(SkillResponseCode.OK, UserSkill.values()));
+        .body(CommonResponseDto.of(SkillResponseCode.OK,
+                Arrays.stream(UserSkill.values())
+                .map(UserSkill::getMajor)
+                .collect(Collectors.toList())));
   }
 }

@@ -51,8 +51,9 @@ public class WebSecurityConfig {
     http.authorizeHttpRequests(authReq -> authReq
         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
-        .requestMatchers("/api/boards/{boardId}", "/api/boards/{boardId}/comments").permitAll()
-        .requestMatchers("/api/quizzes", "/api/quizzes/{quizId}","/api/quizzes/{quizId}/boards").permitAll()
+        .requestMatchers("/api/quizzes/{quizId}/boards", "/api/boards/{boardId}", "/api/boards/{boardId}/comments").permitAll()
+        .requestMatchers("/api/quizzes", "/api/quizzes/{quizId}", "/api/quizzes/{quizId}/pass").permitAll()
+        .requestMatchers("/api/categories").permitAll()
         .requestMatchers("/api/auth/reissue").permitAll()
         .anyRequest().authenticated()
     );

@@ -9,7 +9,9 @@ import com.sparta.devquiz.domain.team.dto.response.TeamCreateResponse;
 import com.sparta.devquiz.domain.team.dto.response.TeamGetResponse;
 import com.sparta.devquiz.domain.team.response.TeamResponseCode;
 import com.sparta.devquiz.domain.team.service.TeamService;
+import com.sparta.devquiz.domain.user.dto.response.UserTeamsResponse;
 import com.sparta.devquiz.domain.user.entity.User;
+import com.sparta.devquiz.domain.user.response.UserResponseCode;
 import com.sparta.devquiz.global.annotation.AuthUser;
 import com.sparta.devquiz.global.response.CommonResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -143,6 +145,22 @@ public class TeamController {
 
         return ResponseEntity.status(TeamResponseCode.OK_INVITE_TEAM_USER.getHttpStatus())
                 .body(CommonResponseDto.of(TeamResponseCode.OK_INVITE_TEAM_USER));
+    }
+
+    @Operation(operationId = "TEAM-009", summary = "그룹 초대 수락")
+    @PostMapping("/{teamId}/accept")
+    public ResponseEntity<CommonResponseDto> acceptInvitation(@AuthUser User authUser, @PathVariable Long teamId) {
+        teamService.acceptInvitation(authUser, teamId);
+        return ResponseEntity.status(TeamResponseCode.ACCEPT_TEAM_INVITATION.getHttpStatus())
+                .body(CommonResponseDto.of(TeamResponseCode.ACCEPT_TEAM_INVITATION));
+    }
+
+    @Operation(operationId = "TEAM-010", summary = "그룹 초대 거절")
+    @DeleteMapping("/{teamId}/reject")
+    public ResponseEntity<CommonResponseDto> rejectInvitation(@AuthUser User authUser, @PathVariable Long teamId) {
+        teamService.rejectInvitation(authUser, teamId);
+        return ResponseEntity.status(TeamResponseCode.REJECT_TEAM_INVITATION.getHttpStatus())
+                .body(CommonResponseDto.of(TeamResponseCode.REJECT_TEAM_INVITATION));
     }
 
 //    @SecurityRequirement(name = "Bearer Authentication")
