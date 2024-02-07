@@ -135,6 +135,18 @@ public class TeamService {
         teamUserRepository.save(TeamUser.inviteTeamUser(team,inviteUser));
     }
 
+    @Transactional
+    public void acceptInvitation(User authUser, Long teamId) {
+        TeamUser findTeamUser = teamUserRepository.getTeamUserWaitOrElseThrow(teamId, authUser.getId());
+        findTeamUser.acceptInvitation();
+    }
+
+    @Transactional
+    public void rejectInvitation(User authUser, Long teamId) {
+        TeamUser findTeamUser = teamUserRepository.getTeamUserWaitOrElseThrow(teamId, authUser.getId());
+        teamUserRepository.delete(findTeamUser);
+    }
+
 //    public TeamGetUserRankingResponse getUserRankingInTeam(User user, Long teamId, Long userId, TeamGetUserRankingResponse request) {
 //        if(!user.getId().equals(userId)){
 //

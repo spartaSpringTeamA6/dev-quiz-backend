@@ -68,21 +68,6 @@ public class UserController {
         .body(CommonResponseDto.of(UserResponseCode.DELETE_USER));
   }
 
-  @Operation(operationId = "USER-004", summary = "그룹 초대 수락")
-  @PostMapping("/{userId}/teams/{teamId}/accept")
-  public ResponseEntity<CommonResponseDto> acceptInvitation(@AuthUser User authUser, @PathVariable Long userId, @PathVariable Long teamId) {
-    userService.acceptInvitation(authUser, userId, teamId);
-    return ResponseEntity.status(UserResponseCode.ACCEPT_TEAM_INVITATION.getHttpStatus())
-        .body(CommonResponseDto.of(UserResponseCode.ACCEPT_TEAM_INVITATION));
-  }
-
-  @Operation(operationId = "USER-005", summary = "그룹 초대 거절")
-  @DeleteMapping("/{userId}/teams/{teamId}/reject")
-  public ResponseEntity<CommonResponseDto> rejectInvitation(@AuthUser User authUser, @PathVariable Long userId, @PathVariable Long teamId) {
-    userService.rejectInvitation(authUser, userId, teamId);
-    return ResponseEntity.status(UserResponseCode.REJECT_TEAM_INVITATION.getHttpStatus())
-        .body(CommonResponseDto.of(UserResponseCode.REJECT_TEAM_INVITATION));
-  }
 
   @Operation(operationId = "USER-006", summary = "내 정보 조회")
   @GetMapping("mypage")
@@ -108,16 +93,16 @@ public class UserController {
         .body(CommonResponseDto.of(UserResponseCode.GET_MY_SKILL, result));
   }
 
-  @Operation(operationId = "USER-009",summary = "내가 속한 그룹 조회")
-  @GetMapping("/{userId}/teams")
+  @Operation(operationId = "USER-009",summary = "유저가 속한 그룹 조회")
+  @GetMapping("/users/{userId}")
   public ResponseEntity<CommonResponseDto> getMyGroups(@AuthUser User authUser, @PathVariable Long userId) {
     UserTeamsResponse result = userService.getMyTeams(authUser, userId);
     return ResponseEntity.status(UserResponseCode.GET_MY_TEAM.getHttpStatus())
-        .body(CommonResponseDto.of(UserResponseCode.GET_MY_TEAM, result));
+            .body(CommonResponseDto.of(UserResponseCode.GET_MY_TEAM, result));
   }
 
-  @Operation(operationId = "USER-010", summary = "내가 받은 초대 조회")
-  @GetMapping("/{userId}/teams/invitations")
+  @Operation(operationId = "USER-010", summary = "내가 받은 초대 목록 조회")
+  @GetMapping("/{userId}/invitations")
   public ResponseEntity<CommonResponseDto> getMyInvitations(@AuthUser User authUser, @PathVariable Long userId) {
     UserInvitationsResponse result = userService.getMyInvitations(authUser, userId);
     return ResponseEntity.status(UserResponseCode.GET_TEAM_INVITATION.getHttpStatus())

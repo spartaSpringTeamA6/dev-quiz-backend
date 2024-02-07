@@ -87,23 +87,8 @@ public class UserService {
     teamUserRepository.deleteAll(findUser.getTeamUserList());
   }
 
-  @Transactional
-  public void acceptInvitation(User authUser, Long userId, Long teamId) {
-    User findUser = validateUser(authUser, userId);
-    TeamUser findTeamUser = teamUserRepository.getTeamUserWaitOrElseThrow(teamId, userId);
-    findTeamUser.acceptInvitation();
-  }
-
-  @Transactional
-  public void rejectInvitation(User authUser, Long userId, Long teamId) {
-    User findUser = validateUser(authUser, userId);
-    TeamUser findTeamUser = teamUserRepository.getTeamUserWaitOrElseThrow(teamId, userId);
-    teamUserRepository.delete(findTeamUser);
-  }
-
   public UserDetailResponse getMyProfile(User authUser) {
-    User findUser = userRepository.findByIdOrElseThrow(authUser.getId());
-    return UserDetailResponse.of(findUser);
+    return UserDetailResponse.of(authUser);
   }
 
   public UserDetailResponse getUserProfile(Long userId) {
