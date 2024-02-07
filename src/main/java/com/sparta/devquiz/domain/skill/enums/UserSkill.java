@@ -7,29 +7,29 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum UserSkill {
 
-    COMPUTER_SCIENCE("Computer Science"),
+    COMPUTER_SCIENCE("COMPUTER_SCIENCE"),
 
-    JAVA("Java"),
+    JAVA("JAVA"),
 
-    SPRING("Spring"),
+    SPRING("SPRING"),
 
-    PYTHON("Python"),
+    PYTHON("PYTHON"),
 
-    DJANGO("Django"),
+    DJANGO("DJANGO"),
 
     C("C"),
 
-    JAVASCRIPT("JavaScript"),
+    JAVASCRIPT("JAVASCRIPT"),
 
-    REACT("React"),
+    REACT("REACT"),
 
-    DATABASE("Database"),
+    DATABASE("DATABASE"),
 
     JPA("JPA"),
 
-    LINUX("Linux"),
+    LINUX("LINUX"),
 
-    NETWORK("Network");
+    NETWORK("NETWORK");
 
     private final String major;
 }
