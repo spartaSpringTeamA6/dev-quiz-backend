@@ -14,10 +14,14 @@ public class QuizPassResponse {
     @Schema(description = "상태", defaultValue = "PASS")
     private final String status;
 
-    public static QuizPassResponse of(Long id) {
+    @Schema(description = "정답", defaultValue = "1")
+    private final int correctAnswer;
+
+    public static QuizPassResponse of(Long id, int correctAnswer) {
         return QuizPassResponse.builder()
                 .quizId(id)
                 .status("PASS")
+                .correctAnswer(correctAnswer)
                 .build();
     }
 }

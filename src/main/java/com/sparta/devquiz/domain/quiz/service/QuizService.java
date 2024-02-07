@@ -8,7 +8,11 @@ import com.sparta.devquiz.domain.coin.service.CoinService;
 import com.sparta.devquiz.domain.quiz.dto.request.QuizAnswerSubmitRequest;
 import com.sparta.devquiz.domain.quiz.dto.request.QuizCreateRequest;
 import com.sparta.devquiz.domain.quiz.dto.request.QuizUpdateRequest;
-import com.sparta.devquiz.domain.quiz.dto.response.*;
+import com.sparta.devquiz.domain.quiz.dto.response.QuizDetailInfoResponse;
+import com.sparta.devquiz.domain.quiz.dto.response.QuizPassResponse;
+import com.sparta.devquiz.domain.quiz.dto.response.QuizQueryResponse;
+import com.sparta.devquiz.domain.quiz.dto.response.QuizRandomResponse;
+import com.sparta.devquiz.domain.quiz.dto.response.QuizResultResponse;
 import com.sparta.devquiz.domain.quiz.entity.Quiz;
 import com.sparta.devquiz.domain.quiz.entity.QuizChoice;
 import com.sparta.devquiz.domain.quiz.entity.UserQuiz;
@@ -25,14 +29,15 @@ import com.sparta.devquiz.domain.user.enums.UserRole;
 import com.sparta.devquiz.domain.user.exception.UserCustomException;
 import com.sparta.devquiz.domain.user.exception.UserExceptionCode;
 import com.sparta.devquiz.domain.user.repository.UserRepository;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Service
 @RequiredArgsConstructor
@@ -130,7 +135,7 @@ public class QuizService {
 
             quizUserRepository.save(userQuiz);
         }
-        return QuizResultResponse.of(quiz, choiceSequence, quizChoice.getChoiceContent(), status, isCorrect);
+        return QuizResultResponse.of(quiz, choiceSequence, quizChoice.getChoiceContent(), status, isCorrect ? choiceSequence : quiz.getCorrectChoiceSequence());
     }
 
     public QuizPassResponse passQuiz(Long quizId, User user){
@@ -148,7 +153,7 @@ public class QuizService {
             quizUserRepository.save(userQuiz);
         }
 
-        return QuizPassResponse.of(quiz.getId());
+        return QuizPassResponse.of(quiz.getId(), quiz.getCorrectChoiceSequence());
     }
 
     @Transactional(readOnly = true)
@@ -160,7 +165,7 @@ public class QuizService {
             throw new UserCustomException(UserExceptionCode.UNAUTHORIZED_USER);
         }
 
-        Pageable pageable = PageRequest.of(0, 30);
+        Pageable pageable = PageRequest.of(0, 50);
         Category category = categoryRepository.findByCategoryTitleOrElseThrow(quizCategory.get());
         List<Quiz> quizzes = quizRepository.findQuizByCategoryAndIsDeletedFalse(category, pageable);
 
@@ -203,7 +208,7 @@ public class QuizService {
                     quiz.addChoice(choice);
                     return choice;
                 })
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public void updateQuiz(QuizUpdateRequest updateRequest, User User, Long quizId) {
