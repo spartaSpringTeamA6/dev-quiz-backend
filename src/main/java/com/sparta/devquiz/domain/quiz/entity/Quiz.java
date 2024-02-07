@@ -109,4 +109,12 @@ public class Quiz extends BaseTimeEntity {
         this.failCount = failCount;
         this.solveCount = solveCount;
     }
+
+    public int getCorrectChoiceSequence() {
+        return this.quizChoices.stream()
+                .filter(QuizChoice::getIsAnswer)
+                .findFirst()
+                .map(QuizChoice::getChoiceSequence)
+                .orElseThrow(() -> new IllegalArgumentException("정답이 없는 퀴즈입니다."));
+    }
 }

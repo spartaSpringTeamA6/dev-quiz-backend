@@ -24,12 +24,12 @@ public class QuizResultResponse {
     private final String status;
 
     @Schema(description = "정답", defaultValue = "1")
-    private final Boolean correctAnswer;
+    private final int correctAnswer;
 
     @Schema(description = "답안에 대한 결과 메시지", defaultValue = "정답입니다!")
     private final String resultMessage;
 
-    public static QuizResultResponse of(Quiz quiz, int choiceSequence, String choiceContent, UserQuizStatus userQuizStatus, Boolean correctAnswer ) {
+    public static QuizResultResponse of(Quiz quiz, int choiceSequence, String choiceContent, UserQuizStatus userQuizStatus, int correctAnswer ) {
         return QuizResultResponse.builder()
                 .quizId(quiz.getId())
                 .choiceSequence(choiceSequence)
