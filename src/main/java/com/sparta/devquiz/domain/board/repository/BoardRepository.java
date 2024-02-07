@@ -18,5 +18,4 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
                 return findById(boardId)
                         .orElseThrow(() -> new BoardCustomException(BoardExceptionCode.NOT_FOUND_BOARD));
         }
-
 }
