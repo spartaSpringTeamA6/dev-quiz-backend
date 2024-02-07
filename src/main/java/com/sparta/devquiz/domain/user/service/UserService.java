@@ -23,7 +23,7 @@ import com.sparta.devquiz.domain.user.dto.response.UserQuizzesResponse;
 import com.sparta.devquiz.domain.user.dto.response.UserSkillResponse;
 import com.sparta.devquiz.domain.user.dto.response.UserTeamsResponse;
 import com.sparta.devquiz.domain.user.entity.User;
-import com.sparta.devquiz.domain.user.enums.UserSkill;
+import com.sparta.devquiz.domain.skill.enums.UserSkill;
 import com.sparta.devquiz.domain.user.exception.UserCustomException;
 import com.sparta.devquiz.domain.user.exception.UserExceptionCode;
 import com.sparta.devquiz.domain.user.repository.UserRepository;
@@ -88,7 +88,8 @@ public class UserService {
   }
 
   public UserDetailResponse getMyProfile(User authUser) {
-    return UserDetailResponse.of(authUser);
+    User findUser = userRepository.findByIdOrElseThrow(authUser.getId());
+    return UserDetailResponse.of(findUser);
   }
 
   public UserDetailResponse getUserProfile(Long userId) {

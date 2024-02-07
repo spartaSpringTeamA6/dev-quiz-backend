@@ -1,7 +1,7 @@
 package com.sparta.devquiz.domain.skill.controller;
 
 import com.sparta.devquiz.domain.skill.response.SkillResponseCode;
-import com.sparta.devquiz.domain.user.enums.UserSkill;
+import com.sparta.devquiz.domain.skill.enums.UserSkill;
 import com.sparta.devquiz.global.response.CommonResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
