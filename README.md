@@ -69,6 +69,8 @@ DevQuiz
 
 ## 🐾 Demo Video
 
+<img src="https://github.com/Junghwan1106/KIOSK/blob/master/%EB%AC%B8%EC%A0%9C%2012%EA%B0%9C%20%EC%9E%88%EB%8A%94.gif?raw=true" />
+
 ## 🐾 프로젝트 관련 Links
 
 - [Github - Backend](https://github.com/spartaSpringTeamA6/dev-quiz-backend)
