@@ -46,9 +46,9 @@
         <tr>
             <td width="200">OPENAI API<br>Quiz API<br>Category API</td>
             <td width="200">Leader<br>Board API<br>Comment API<br>Comment Like API</td>
-            <td width="200">Deputy leader<br>Team API<br>FrontEnd<br></td>
-            <td width="200">CICD<br>Coin API</td>
-            <td width="200">OAuth<br>User API</td>
+            <td width="200">Deputy Leader<br>Team API<br>FrontEnd<br></td>
+            <td width="200">CICD<br>Coin API<br>Quiz API</td>
+            <td width="200">OAuth<br>User API<br>FrontEnd</td>
         </tr>
     </tbody>
 </table>
@@ -482,4 +482,4 @@ devquiz
 
 ### 🐾 Jenkins
 
-## 🐾 Trouble Shootin
+## 🐾 Trouble Shooting
